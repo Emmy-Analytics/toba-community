@@ -1,0 +1,24 @@
+{
+  "name": "project-6",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gallery.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Emmy-Analytics/toba-community.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Emmy-Analytics/toba-community/issues"
+  },
+  "homepage": "https://github.com/Emmy-Analytics/toba-community#readme",
+  "dependencies": {
+    "puppeteer": "^25.16.0"
+  }
+}

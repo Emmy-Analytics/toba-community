@@ -18,11 +18,18 @@
   intro.innerHTML = `
     <div class="tdl-stage">
       <svg class="tdl-court" viewBox="0 0 1200 700" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
-        <rect class="tob" x="70" y="90" width="1060" height="520" rx="2"/>
-        <line class="tob" x1="600" y1="90" x2="600" y2="610"/>
-        <path class="tob" d="M600 250 h200 v200 h-200"/>
-        <circle class="tob" cx="800" cy="350" r="70"/>
-        <path class="tob-arc" d="M330 610 A 320 320 0 0 1 870 610"/>
+        <!-- FIBA top-view, same anatomy; burnt orange, bold right-weighted framing -->
+        <rect class="tob" x="80" y="70" width="1040" height="560"/>
+        <line class="tob" x1="600" y1="70" x2="600" y2="630"/>
+        <circle class="tob" cx="600" cy="350" r="64"/>
+        <path class="tob" d="M80 246 h207 v208 h-207"/>
+        <circle class="tob" cx="287" cy="350" r="64"/>
+        <path class="tob tob-dash" d="M287 286 a64 64 0 0 0 0 128"/>
+        <path class="tob" d="M80 575 L 190 575 A 241 241 0 0 0 190 125 L 80 125"/>
+        <path class="tob" d="M1120 246 h-207 v208 h207"/>
+        <circle class="tob" cx="913" cy="350" r="64"/>
+        <path class="tob tob-dash" d="M913 286 a64 64 0 0 1 0 128"/>
+        <path class="tob" d="M1120 575 L 1010 575 A 241 241 0 0 1 1010 125 L 1120 125"/>
       </svg>
       <div class="tdl-atmosphere" aria-hidden="true"></div>
       <div class="tdl-ball-wrap">
@@ -33,7 +40,7 @@
         <div class="tdl-shadow"></div>
       </div>
       <div class="tdl-copy">
-        <p class="tdl-eyebrow">KOMUNITAS BASKET PUTRA · JAKARTA TIMUR</p>
+        <p class="tdl-eyebrow">KOMUNITAS BASKET PRIA · JAKARTA TIMUR</p>
         <h2 class="tdl-wordmark">TOBA<span>DELI</span></h2>
         <p class="tdl-welcome">Satu lapangan. Satu tim. Satu tujuan.</p>
         <a class="tdl-cta" href="#top">Kenalan dengan Tobadeli</a>

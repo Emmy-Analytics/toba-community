@@ -23,13 +23,18 @@
   intro.innerHTML = `
     <div class="tld-stage">
       <svg class="tld-court" viewBox="0 0 1200 700" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
-        <rect class="tcl" x="70" y="90" width="1060" height="520" rx="2"/>
-        <line class="tcl" x1="600" y1="90" x2="600" y2="610"/>
-        <circle class="tcl" cx="600" cy="350" r="86"/>
-        <path class="tcl" d="M600 250 h200 v200 h-200"/>
-        <circle class="tcl" cx="800" cy="350" r="70"/>
-        <circle class="tcl-soft" cx="800" cy="350" r="5"/>
-        <circle class="tcl-soft" cx="205" cy="400" r="6"/>
+        <!-- FIBA top-view, same anatomy as TOBA intro; pink accent, expressive left-weighted framing -->
+        <rect class="tcl" x="80" y="70" width="1040" height="560"/>
+        <line class="tcl" x1="600" y1="70" x2="600" y2="630"/>
+        <circle class="tcl" cx="600" cy="350" r="64"/>
+        <path class="tcl" d="M80 246 h207 v208 h-207"/>
+        <circle class="tcl" cx="287" cy="350" r="64"/>
+        <path class="tcl tcl-dash" d="M287 286 a64 64 0 0 0 0 128"/>
+        <path class="tcl" d="M80 575 L 190 575 A 241 241 0 0 0 190 125 L 80 125"/>
+        <path class="tcl" d="M1120 246 h-207 v208 h207"/>
+        <circle class="tcl" cx="913" cy="350" r="64"/>
+        <path class="tcl tcl-dash" d="M913 286 a64 64 0 0 1 0 128"/>
+        <path class="tcl" d="M1120 575 L 1010 575 A 241 241 0 0 1 1010 125 L 1120 125"/>
       </svg>
       <div class="tld-ball-wrap"><svg class="tld-ball" viewBox="0 0 100 100" aria-hidden="true">
         <circle cx="50" cy="50" r="46" fill="#E4793D"/>
@@ -37,7 +42,7 @@
       </svg><div class="tld-shadow"></div></div>
       <div class="tld-mascot-wrap"><img src="assets/logomascpinkpng (3).png" alt="Maskot Tobaladies"></div>
       <div class="tld-copy">
-        <p class="tld-eyebrow">KOMUNITAS BASKET PUTRI · JAKARTA TIMUR</p>
+        <p class="tld-eyebrow">KOMUNITAS BASKET PEREMPUAN · JAKARTA TIMUR</p>
         <h2 class="tld-wordmark">TOBA<span>LADIES</span></h2>
         <p class="tld-welcome">Ini lapanganmu.</p>
         <a class="tld-cta" href="#top">Kenalan dengan Tobaladies</a>
