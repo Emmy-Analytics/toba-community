@@ -5,23 +5,33 @@
 const ASSET = 'assets/';
 /* Local, curated cinematic basketball photography (assets/img, Unsplash license).
    Replacing remote hotlinks keeps pages fast and stable. */
+const IMG = 'assets/img/web/';
 const photos = {
+  /* real TOBA documentation (web-optimized derivatives in assets/img/web; originals untouched) */
   court: 'assets/img/court-wide.jpg',
-  women: 'assets/img/court-floor.jpg',  /* placeholder until a licensed women's-game photo is added */
-  men: 'assets/img/men-action.jpg',
-  team: 'assets/img/game-bw.jpg',
+  women: IMG + 'toba-052.jpg',      /* Tobaladies game */
+  women2: IMG + 'toba-053.jpg',     /* Tobaladies session */
+  women3: IMG + 'toba-017.jpg',     /* Biru vs Pink game */
+  men: IMG + 'toba-019.jpg',        /* GameTime action */
+  men2: IMG + 'toba-023.jpg',       /* Pink vs Merah */
+  team: IMG + 'toba-045.jpg',       /* Misc group */
   ball: 'assets/img/ball-close.jpg',
-  arena: 'assets/img/arena-lights.jpg',
-  hoop: 'assets/img/game-bw.jpg',
-  floor: 'assets/img/court-floor.jpg'
+  arena: IMG + 'toba-015.jpg',      /* @abandmotret wide shot */
+  hoop: IMG + 'toba-047.jpg',       /* SHOWTIME moment */
+  floor: 'assets/img/court-floor.jpg',
+  training: IMG + 'toba-008.jpg',   /* @abandmotret practice */
+  founder: IMG + 'founder-cut.png',
+  deli: IMG + 'toba-060.jpg',       /* deli-hero portrait */
+  game2: IMG + 'toba-026.jpg',      /* Pink vs Hitam */
+  ladies3: IMG + 'toba-056.jpg'     /* Tobaladies Game 05 */
 };
 const events = [
-    { date: 'SAB', month: 'PEKANAN', year: '', title: 'TOBA Weekly Fun Game', type: 'Open Run', community: 'All Community', place: 'Brickhouse The East, Duren Sawit — Jakarta Timur', time: '18.00 – 20.00 WIB', img: photos.arena, memberOnly: true },
-    { date: '06', month: 'DEC', year: '2026', title: 'Tobaladies Friendly Game', type: 'Friendly Game', community: 'Tobaladies', place: 'Venue akan dikonfirmasi', time: '15.00 – 17.00 WIB', img: photos.women },
-    { date: '13', month: 'DEC', year: '2026', title: 'Tobadeli Sparring', type: 'Open Run', community: 'Tobadeli', place: 'Venue akan dikonfirmasi', time: '18.00 – 20.00 WIB', img: photos.men },
-    { date: '18', month: 'JAN', year: '2027', title: 'TOBA 3x3 Day', type: 'Tournament', community: 'All Community', place: 'Venue akan dikonfirmasi', time: '08.00 – selesai', img: photos.court },
-    { date: '24', month: 'JAN', year: '2027', title: 'Basketball Basics', type: 'Workshop', community: 'All Community', place: 'Venue akan dikonfirmasi', time: '10.00 – 12.00 WIB', img: photos.ball },
-    { date: '07', month: 'FEB', year: '2027', title: 'Ladies Skill Session', type: 'Workshop', community: 'Tobaladies', place: 'Venue akan dikonfirmasi', time: '09.00 – 11.00 WIB', img: photos.team }
+    { date: 'SAB', month: 'weekly', year: '', title: 'TOBA Weekly Fun Game', type: 'Open Run', community: 'All Community', place: 'Brickhouse The East, Duren Sawit — Jakarta Timur', time: '18.00 – 20.00 WIB', img: photos.arena, memberOnly: true },
+    { date: '06', month: 'DEC', year: '2026', title: 'Tobaladies Friendly Game', type: 'Friendly Game', community: 'Tobaladies', place: 'tbc', time: '15.00 – 17.00 WIB', img: photos.women },
+    { date: '13', month: 'DEC', year: '2026', title: 'Tobadeli Sparring', type: 'Open Run', community: 'Tobadeli', place: 'tbc', time: '18.00 – 20.00 WIB', img: photos.men },
+    { date: '18', month: 'JAN', year: '2027', title: 'TOBA 3x3 Day', type: 'Tournament', community: 'All Community', place: 'tbc', time: '08.00 – selesai', img: photos.court },
+    { date: '24', month: 'JAN', year: '2027', title: 'Basketball Basics', type: 'Workshop', community: 'All Community', place: 'tbc', time: '10.00 – 12.00 WIB', img: photos.ball },
+    { date: '07', month: 'FEB', year: '2027', title: 'Ladies Skill Session', type: 'Workshop', community: 'Tobaladies', place: 'tbc', time: '09.00 – 11.00 WIB', img: photos.team }
 ];
 const products = [
     { name: 'Tobaladies Jersey', price: 299000, cat: 'Jersey', tone: 'pink' },
@@ -34,66 +44,139 @@ const products = [
     { name: 'TOBA Water Bottle', price: 99000, cat: 'Accessories', tone: 'orange' }
 ];
 const money = n => 'Rp ' + n.toLocaleString('id-ID');
-const eventCard = e => `<article class="event-card" data-category="${e.type} ${e.community}"><img src="${e.img}" alt="${t('ui.illust.basket')} — ${e.title}" loading="lazy"><div class="date-badge">${e.date}<small>${e.month} ${e.year}</small></div><div class="pad"><span class="tag">${e.type}</span><h3>${e.title}</h3><p>${e.place}<br>${e.time}</p><div class="meta"><span>${e.community}</span></div><button class="pill event-interest" data-event="${e.title}">${t('ui.interest')}</button></div></article>`;
+const eventCard = e => { const place = e.place === 'tbc' ? t('events.venue.tbc') : e.place; const month = e.month === 'weekly' ? t('events.weekly') : e.month;
+    return `<article class="event-card" data-category="${e.type} ${e.community}"><img src="${e.img}" alt="${t('ui.illust.basket')} — ${e.title}" loading="lazy"><div class="date-badge">${e.date}<small>${month} ${e.year}</small></div><div class="pad"><span class="tag">${e.type}</span><h3>${e.title}</h3><p>${place}<br>${e.time}</p><div class="meta"><span>${e.community}</span></div><button class="pill event-interest" data-event="${e.title}">${t('ui.interest')}</button></div></article>`; };
+const eventScroller = cards => `<div class="event-scroll-wrap"><div class="event-grid events-scroll">${cards}</div></div>`;
+
+/* editorial facts block under the gallery — replaces flat info columns */
+const infoEditorial = () => `<aside class="info-editorial"><div class="ie-lead"><p class="eyebrow">${t('info.eyebrow')}</p><h2>${t('info.h')}</h2><p>${t('info.p')}</p><a class="text-link" href="events.html">${t('info.link')}</a></div><dl class="ie-facts">
+  <div class="ie-fact"><dt>${t('info.f1')}</dt><dd>${t('info.f1v')}</dd><small>${t('info.f1s')}</small></div>
+  <div class="ie-fact"><dt>${t('info.f2')}</dt><dd>${t('info.f2v')}</dd><small>${t('info.f2s')}</small></div>
+  <div class="ie-fact"><dt>${t('info.f3')}</dt><dd>${t('info.f3v')}</dd><small>${t('info.f3s')}</small></div>
+</dl></aside>`;
 const productCard = (p, i) => `<article class="product-card" data-category="${p.cat}"><div class="product-art ${p.tone}"><span class="product-word">${p.name.split(' ').slice(-1)[0].toUpperCase()}</span></div><div class="pad"><div class="product-name">${p.name}</div><div class="price-row"><span class="price">${money(p.price)}</span><button class="add-cart" data-product="${i}" aria-label="${t('merch.aria')} ${p.name}">+</button></div></div></article>`;
 
 /* ---------- HOME — cinematic scroll journey ---------- */
-/* FIBA half-court markings, single coordinate system 0..1000 x 0..600.
-   Hoop at (150,300), free-throw line x=250, three-point arc r=675 from hoop.
-   All geometry derived from the hoop so lines never collide. */
-const courtSVG = cls => `<svg class="hero-court ${cls || ''}" viewBox="0 0 1000 600" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMid slice" data-parallax="0.045" data-pointer-depth="14">
-  <rect x="20" y="20" width="960" height="560"/><line x1="500" y1="20" x2="500" y2="580"/>
-  <circle cx="500" cy="300" r="90"/><line x1="500" y1="210" x2="500" y2="390"/>
-  <rect x="20" y="230" width="230" height="140"/>
-  <circle cx="250" cy="300" r="90"/>
-  <path d="M20 155 A 265 265 0 0 1 20 445"/>
-  <circle cx="150" cy="300" r="12"/>
-</svg>`;
+/* FIBA full-court master geometry — ONE coordinate system for every page.
+   Scale 35.7 px/m. Origin (0,0) = centre of the half-court line.
+   All values derived from official FIBA dimensions, not eyeballed:
+     boundary 28×15m · centre circle r=1.8m · key 5.8×5.8m
+     free-throw circle r=1.8m (dashed away from basket, solid toward it)
+     three-point: 0.9m corner straights + 6.75m arc from ring centre
+     restricted area r=1.25m · backboard 1.2m inside the baseline */
+const PX = 35.7;               // px per metre
+const HH = PX * 7.5;           // half height (15m / 2)
+const HW = PX * 14;            // half length (28m / 2)
+const RING = PX * 12.575;      // ring centre distance from half-court line
+const BACKBOARD = PX * 13.2;   // backboard line (1.2m from baseline)
+const KEYD = PX * 5.8;         // key depth from baseline
+const KEYW = PX * 2.9;         // key half width
+const CORNER = PX * 6.6;       // three-point corner straight y (0.9m from sideline)
+const TP_R = PX * 6.75;        // three-point arc radius
+const R_FT = PX * 1.8;         // free-throw / centre circle radius
+const R_RES = PX * 1.25;       // restricted area radius
+const courtHalf = S => {
+  const bx = S * HW, kx = S * (HW - KEYD), cx = S * BACKBOARD, rx = S * RING;
+  /* three-point corner straight meets the 6.75m arc exactly (Pythagoras):
+     tangent x measured from the ring centre */
+  const tx = rx - S * Math.sqrt(TP_R * TP_R - CORNER * CORNER);
+  /* arc sweeps toward half-court: sweep flag depends on side */
+  const tpSweep = S > 0 ? 0 : 1;
+  const ftSweep = S > 0 ? 0 : 1;   /* dashed half of FT circle faces half-court */
+  const resSweep = S > 0 ? 0 : 1;  /* restricted arc bulges toward half-court */
+  return `
+  <path d="M ${bx.toFixed(1)} ${-CORNER.toFixed(1)} L ${tx.toFixed(1)} ${-CORNER.toFixed(1)} A ${TP_R.toFixed(1)} ${TP_R.toFixed(1)} 0 0 ${tpSweep} ${tx.toFixed(1)} ${CORNER.toFixed(1)} L ${bx.toFixed(1)} ${CORNER.toFixed(1)}"/>
+  <path d="M ${bx.toFixed(1)} ${-KEYW.toFixed(1)} L ${kx.toFixed(1)} ${-KEYW.toFixed(1)} L ${kx.toFixed(1)} ${KEYW.toFixed(1)} L ${bx.toFixed(1)} ${KEYW.toFixed(1)}"/>
+  <circle cx="${kx.toFixed(1)}" cy="0" r="${R_FT.toFixed(1)}"/>
+  <path d="M ${kx.toFixed(1)} ${-R_FT.toFixed(1)} A ${R_FT.toFixed(1)} ${R_FT.toFixed(1)} 0 0 ${ftSweep} ${kx.toFixed(1)} ${R_FT.toFixed(1)}"/>
+  <path d="M ${rx.toFixed(1)} ${-R_RES.toFixed(1)} A ${R_RES.toFixed(1)} ${R_RES.toFixed(1)} 0 0 ${resSweep} ${rx.toFixed(1)} ${R_RES.toFixed(1)}"/>
+  <line x1="${cx.toFixed(1)}" y1="${-PX * 0.9}" x2="${cx.toFixed(1)}" y2="${PX * 0.9}" stroke-width="3"/>
+  <circle cx="${rx.toFixed(1)}" cy="0" r="2.6"/>`;
+};
+const COURT_MARKINGS = `
+  <rect x="${-HW}" y="${-HH}" width="${HW * 2}" height="${HH * 2}"/>
+  <line x1="0" y1="${-HH}" x2="0" y2="${HH}"/>
+  <circle cx="0" cy="0" r="${R_FT}"/>
+  ${courtHalf(-1)}
+  ${courtHalf(1)}`;
+
+const courtSVG = cls => `<svg class="hero-court ${cls || ''}" viewBox="${-HW} ${-HH} ${HW * 2} ${HH * 2}" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMid slice" data-parallax="0.045" data-pointer-depth="14">${COURT_MARKINGS}</svg>`;
 
 function home() {
     return `
 <section class="hero hero-home kinetic">
   <div class="hero-atmosphere" aria-hidden="true" data-pointer-depth="7"></div>
-  ${courtSVG()}
-  <div class="hero-court-photo" aria-hidden="true"></div>
-  <div class="hero-head"><p class="eyebrow">${t('hero.eyebrow')}</p>
-    <h1 data-parallax="0.03" data-parallax-x="-0.015">${t('hero.h1a')}<br><span>${t('hero.h1b')}</span></h1></div>
-  <div class="hero-visual">
-    <div class="hero-ball" aria-hidden="true"></div>
-    <img class="hero-mascot" src="assets/crocodile-head.png" alt="${t('ui.alt.mascot')}" data-parallax="0.06" data-parallax-rotate="-1.6" data-pointer-depth="24">
-  </div>
+  <div class="hero-head"><p class="hero-identity">${t('hero.identity').replace(/Community$/i, '<span class="id-comm">Community</span>')}<small>${t('hero.identity.sub')}</small></p></div>
   <div class="hero-body">
-    <p class="hero-subtitle">${t('hero.sub')}</p>
-    <div class="hero-actions"><a class="pill" href="partnership.html">${t('hero.cta1')}</a><a class="pill secondary" href="events.html">${t('hero.cta2')}</a><a class="text-link" href="game.html">${t('hero.cta3')}</a></div>
-    <div class="hero-info"><div class="hero-info-item"><strong>${t('hero.info.game')}</strong><span>${t('hero.info.time')}</span></div><div class="hero-info-item"><strong>${t('hero.info.place')}</strong><span>${t('hero.info.comm')}</span></div></div>
+    <div class="hero-actions"><a class="pill" href="partnership.html">${t('hero.cta1')}</a><a class="pill secondary" href="events.html">${t('hero.cta2')}</a></div>
+    <div class="hero-info"><div class="hero-info-item"><strong>${t('hero.info.game')}</strong><span>${t('hero.info.time')}</span></div><div class="hero-info-item"><strong>${t('hero.info.place')}</strong><span>${t('hero.info.place.v')}</span></div><div class="hero-info-item"><strong>${t('hero.info.comm')}</strong><span>${t('hero.info.comm.v')}</span></div></div>
   </div>
-  <div class="scroll-cue"><span>${t('ui.scroll')}</span><span class="cue-line"></span></div></section>
+</section>
 
-<section class="section-wrap shortcuts"><div class="section-heading"><div><p class="eyebrow">${t('home.meet.eyebrow')}</p><h2>${t('home.meet.h')}</h2><p class="brand-note">${t('brand.note')}</p></div><p class="lede">${t('home.meet.lede')}</p></div>
-  <div class="shortcut-grid">
-    <a class="shortcut sc-ladies" href="tobaladies.html"><span class="shortcut-name">TOBALADIES</span><span class="shortcut-full">${t('hero.sc.ladies.k')}</span><span class="shortcut-desc">${t('hero.sc.ladies.d')}</span></a>
-    <a class="shortcut sc-deli" href="tobadeli.html"><span class="shortcut-name">TOBADELI</span><span class="shortcut-full">${t('hero.sc.deli.k')}</span><span class="shortcut-desc">${t('hero.sc.deli.d')}</span></a>
-    <a class="shortcut sc-court" href="game.html"><span class="shortcut-name">TOBA COURT</span><span class="shortcut-full">${t('game.subtitle')}</span><span class="shortcut-desc">${t('hero.sc.court.d')}</span></a>
+<section class="section-wrap comm-cards"><div class="section-heading"><div><p class="eyebrow">${t('comm.cards.eyebrow')}</p><h2>${t('comm.cards.h')}</h2><p class="section-sub">${t('comm.cards.sub')}</p></div></div>
+<div class="community-photo-grid">
+    <a class="comm-photo-card card-pink" href="tobaladies.html">
+    <div class="comm-photo"><img src="${photos.women}" alt="${t('ui.illust.women')}" loading="lazy"></div>
+    <div class="comm-copy"><span class="comm-flag" aria-hidden="true"></span><h3>TOBALADIES</h3><p>${t('hero.sc.ladies.d')}</p><span class="comm-link">${t('comm.cards.link')} <span aria-hidden="true">→</span></span></div>
+    </a>
+    <a class="comm-photo-card card-orange" href="tobadeli.html">
+    <div class="comm-photo"><img src="${photos.men}" alt="${t('ui.illust.men')}" loading="lazy"></div>
+    <div class="comm-copy"><span class="comm-flag" aria-hidden="true"></span><h3>TOBADELI</h3><p>${t('hero.sc.deli.d')}</p><span class="comm-link">${t('comm.cards.link')} <span aria-hidden="true">→</span></span></div>
+    </a>
   </div>
-  <div class="feature-strip"><div class="feature"><strong>${t('home.f1')}</strong><span>${t('home.f1s')}</span></div><div class="feature"><strong>${t('home.f2')}</strong><span>${t('home.f2s')}</span></div><div class="feature"><strong>${t('home.f3')}</strong><span>${t('home.f3s')}</span></div><div class="feature"><strong>${t('home.f4')}</strong><span>${t('home.f4s')}</span></div></div></section>
+  <div class="feature-strip feature-checklist" role="list"><div class="feature feature-check" role="listitem"><span class="check-ind" aria-hidden="true"><svg viewBox="0 0 16 16" width="10" height="10" fill="none"><path d="M2.5 8.5l3.5 3.5 7-8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="check-copy"><strong>${t('home.f1')}</strong><span>${t('home.f1s')}</span></div></div><div class="feature feature-check" role="listitem"><span class="check-ind" aria-hidden="true"><svg viewBox="0 0 16 16" width="10" height="10" fill="none"><path d="M2.5 8.5l3.5 3.5 7-8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="check-copy"><strong>${t('home.f2')}</strong><span>${t('home.f2s')}</span></div></div><div class="feature feature-check" role="listitem"><span class="check-ind" aria-hidden="true"><svg viewBox="0 0 16 16" width="10" height="10" fill="none"><path d="M2.5 8.5l3.5 3.5 7-8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="check-copy"><strong>${t('home.f3')}</strong><span>${t('home.f3s')}</span></div></div><div class="feature feature-check" role="listitem"><span class="check-ind" aria-hidden="true"><svg viewBox="0 0 16 16" width="10" height="10" fill="none"><path d="M2.5 8.5l3.5 3.5 7-8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="check-copy"><strong>${t('home.f4')}</strong><span>${t('home.f4s')}</span></div></div></div></section>
+
+<section class="story-ed" id="storyline" aria-label="${t('story.h')}">
+  <div class="story-ed-inner">
+    <div class="story-ed-chapter story-ch1" data-reveal-step>
+      <p class="eyebrow accent-green">${t('story.kicker')}</p>
+      <h2 class="story-ed-title" data-parallax="0.03">${t('story.h')}</h2>
+      <p class="story-ed-lede" data-reveal-step>${t('story.lead')}</p>
+    </div>
+    <figure class="story-ed-photo" data-parallax="0.07">
+      <img src="${photos.training}" alt="${t('ui.illust.basket')}" loading="lazy">
+    </figure>
+    <div class="story-ed-chapter story-ch2">
+      <div class="story-circle story-circle-ladies" data-reveal-step>
+        <p class="story-circle-name">TOBALADIES</p>
+        <h3>${t('story.ladies.name')}</h3>
+        <p>${t('story.ladies.d')}</p>
+      </div>
+      <div class="story-circle story-circle-deli" data-reveal-step>
+        <p class="story-circle-name">TOBADELI</p>
+        <h3>${t('story.deli.name')}</h3>
+        <p>${t('story.deli.d')}</p>
+      </div>
+      <p class="story-circle-lede" data-reveal-step>${t('story.circle.lede')}</p>
+    </div>
+    <div class="story-ed-chapter story-ch3" data-reveal-step>
+      <h3 class="story-bridge-title">${t('story.bridge.h')}</h3>
+      <p class="story-bridge-p">${t('story.bridge.p')}</p>
+    </div>
+  </div>
+</section>
+
+<section class="section-wrap founder-story founder-block founder-parallax"><div class="founder-grid">
+  <div class="photo-frame founder-photo"><img src="${photos.founder}" alt="${t('founder.name')} — ${t('founder.role')}" onerror="this.parentElement.classList.add('img-broken')"></div>
+  <div class="founder-copy">
+    <p class="eyebrow accent-green">${t('founder.eyebrow')}</p>
+    <h2>${t('founder.name')}</h2>
+    <p class="founder-role">${t('founder.role')}</p>
+    <p class="story-copy">${t('founder.body')}</p>
+    <p class="founder-note"><small>${t('founder.note')}</small></p>
+  </div>
+</div></section>
 
 <section class="dark-section"><div class="dark-section-inner"><div class="section-heading"><div><p class="eyebrow">${t('home.story.eyebrow')}</p><h2>${t('home.story.h')}</h2></div><p class="lede">${t('home.story.lede')}</p></div>
   <div class="two-col"><div class="photo-frame img-reveal" data-parallax="0.06"><img src="${photos.women}" alt="${t('ui.illust.women')}" loading="lazy"><span class="frame-caption accent-pink">TOBALADIES</span></div>
   <div class="photo-frame img-reveal" data-parallax="-0.05" style="margin-top:clamp(24px,4vw,56px)"><img src="${photos.men}" alt="${t('ui.illust.men')}" loading="lazy"><span class="frame-caption accent-orange">TOBADELI</span></div></div>
   <p style="margin-top:28px"><a class="text-link on-dark" href="gallery.html">${t('home.story.link')}</a></p></div></section>
 
-<section class="section-wrap brand-story"><div class="section-heading"><div><p class="eyebrow">TOBA — TONGKRONGAN BASKET</p><h2>${t('brand.h')}</h2></div></div>
-  <div class="brand-story-grid">
-    <div><h3>TOBA</h3><p>${t('brand.p1')}</p></div>
-    <div><h3 class="accent-pink">TOBALADIES</h3><p>${t('brand.p2')}</p></div>
-    <div><h3 class="accent-orange">TOBADELI</h3><p>${t('brand.p3')}</p></div>
-  </div></section>
+<section class="section-wrap agenda-section"><div class="section-heading"><div><p class="eyebrow">${t('home.events.eyebrow')}</p><h2>${t('home.events.h')}</h2></div><a class="text-link" href="events.html">${t('home.events.link')}</a></div>${eventScroller(events.slice(0, 4).map(eventCard).join(''))}</section>
 
-<section class="section-wrap"><div class="section-heading"><div><p class="eyebrow">${t('home.events.eyebrow')}</p><h2>${t('home.events.h')}</h2></div><a class="text-link" href="events.html">${t('home.events.link')}</a></div><div class="event-grid">${events.slice(0, 3).map(eventCard).join('')}</div></section>
+<section class="section-wrap merch-section"><div class="section-heading"><div><p class="eyebrow">${t('home.merch.eyebrow')}</p><h2>${t('home.merch.h')}</h2></div><a class="text-link" href="merchandise.html">${t('home.merch.link')}</a></div><div class="product-grid">${products.slice(0, 4).map(productCard).join('')}</div></section>
 
-<section class="section-wrap"><div class="section-heading"><div><p class="eyebrow">${t('home.merch.eyebrow')}</p><h2>${t('home.merch.h')}</h2></div><a class="text-link" href="merchandise.html">${t('home.merch.link')}</a></div><div class="product-grid">${products.slice(0, 4).map(productCard).join('')}</div></section>
-
-<section class="section-wrap"><div class="callout"><div><p class="eyebrow">${t('home.call.eyebrow')}</p><h3>${t('home.call.h')}</h3><p class="lede">${t('home.call.lede')}</p></div><a class="pill" href="partnership.html">${t('home.call.cta')}</a></div></section>`
+<section class="section-wrap contact-section"><a class="contact-card" href="partnership.html"><div class="contact-copy"><p class="eyebrow">${t('home.call.eyebrow')}</p><h3>${t('home.call.h')}</h3><p class="lede">${t('home.call.lede')}</p></div><span class="pill contact-cta">${t('home.call.cta')}</span></a></section>`
 }
 
 /* ---------- COMMUNITY PAGES — distinct editorial rhythm ---------- */
@@ -103,44 +186,66 @@ function communityPage(which) {
     const sub = women ? t('comm.hero.lede1') : t('comm.hero.lede2'), desc = women ? t('comm.desc1') : t('comm.desc2');
     const img = women ? photos.women : photos.men;
     return `
-<section class="hero section-wrap kinetic">
-  <svg class="hero-court ${women ? 'court-pink' : 'court-orange'}" viewBox="0 0 1200 700" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMid slice" data-parallax="0.05" data-pointer-depth="12">
-    <!-- FIBA geometry, half-court emphasis: mascot side gets the key + arc -->
-    <rect x="80" y="70" width="1040" height="560"/>
-    <line x1="600" y1="70" x2="600" y2="630"/>
-    <circle cx="600" cy="350" r="64"/>
-    <path d="M80 246 h207 v208 h-207"/>
-    <circle cx="287" cy="350" r="64"/>
-    <path d="M287 286 a64 64 0 0 0 0 128"/>
-    <path d="M80 575 L 190 575 A 241 241 0 0 0 190 125 L 80 125"/>
-    <path d="M1120 246 h-207 v208 h207"/>
-    <circle cx="913" cy="350" r="64"/>
-    <path d="M913 286 a64 64 0 0 1 0 128"/>
-    <path d="M1120 575 L 1010 575 A 241 241 0 0 1 1010 125 L 1120 125"/>
-    <path d="M125 350 a45 45 0 0 1 90 0"/>
-    <path d="M1075 350 a45 45 0 0 0 -90 0"/>
-    <line x1="80" y1="290" x2="80" y2="410" stroke-width="4"/>
-    <line x1="1120" y1="290" x2="1120" y2="410" stroke-width="4"/>
+<section class="hero hero-community-flow section-wrap kinetic">
+  <svg class="hero-court ${women ? 'court-pink' : 'court-orange'}" viewBox="${-HW} ${-HH} ${HW * 2} ${HH * 2}" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMid slice" data-parallax="0.05" data-pointer-depth="12">
+    ${COURT_MARKINGS}
   </svg>
   <div class="hero-croc" data-parallax="-0.1" data-parallax-rotate="1.2" data-parallax-x="0.02"><img src="assets/crocodile-head.png" alt="${t('ui.alt.mascot')}"></div>
-  <div class="hero-copy"><p class="eyebrow">${women ? 'TOBALADIES · BASKET PEREMPUAN JAKARTA TIMUR' : 'TOBADELI · BASKET PRIA JAKARTA TIMUR'}</p>
+  <div class="hero-copy"><p class="eyebrow">${women ? 'TOBALADIES BASKET PEREMPUAN JAKARTA TIMUR' : 'TOBADELI BASKET PRIA JAKARTA TIMUR'}</p>
     <h1>${women ? '<span class="accent-pink">TOBA</span>LADIES' : '<span class="accent-orange">TOBA</span>DELI'}</h1>
     <p class="brand-fullname">${women ? t('brand.name.ladies') : t('brand.name.deli')}</p>
     <p class="hero-subtitle">${sub}. ${desc}</p>
     <div class="hero-actions"><a class="pill pill-${tone}" href="partnership.html">${t('comm.cta1')}</a><a class="pill secondary" href="events.html">${t('comm.cta2')}</a></div>
-    <p class="eyebrow" style="color:var(--muted)">${t('comm.eyebrow2')}</p></div>
-  <div class="scroll-cue"><span>${t('ui.scroll')}</span><span class="cue-line"></span></div></section>
+    <p class="eyebrow" style="color:var(--muted)">${t('comm.eyebrow2')}</p></div></section>
 
 <section class="section-wrap"><div class="two-col"><div class="photo-frame img-reveal" data-parallax="${women ? '0.07' : '-0.06'}"><img src="${img}" alt="${t('comm.illust')} ${name}" loading="lazy">${women ? '<img class="mascot mascot-wordmark" src="assets/logopinkpng.png" alt="Logo Tobaladies">' : ''}<span class="frame-caption accent-${tone}">${name}</span></div>
   <div style="align-self:end;padding-bottom:8px"><p class="eyebrow">${t('comm.about')}</p><h2>${t('comm.h')}</h2><p class="lede">${t('comm.lede')}</p>${women ? '' : `<p class="brand-note">${t('brand.deli.note')}</p>`}<a class="text-link" href="events.html">${t('comm.link')}</a></div></div></section>
 
 <section class="dark-section"><div class="dark-section-inner">
   <div class="section-heading"><div><p class="eyebrow">NEXT UP</p><h2>COMMUNITY <span class="accent-${tone}">SCHEDULE.</span></h2></div><a class="text-link" href="events.html">${t('home.events.link')}</a></div>
-  <div class="event-grid">${events.filter(e => e.community === (women ? 'Tobaladies' : 'Tobadeli') || e.community === 'All Community').slice(0, 3).map(eventCard).join('')}</div>
+  ${eventScroller(events.filter(e => e.community === (women ? 'Tobaladies' : 'Tobadeli') || e.community === 'All Community').slice(0, 4).map(eventCard).join(''))}
   <div class="feature-strip" style="border-color:rgba(237,233,222,.18);margin-top:clamp(40px,6vh,64px)"><div class="feature" style="border-color:rgba(237,233,222,.18)"><strong>${t('comm.f1')}</strong><span>${t('comm.f1s')}</span></div><div class="feature" style="border-color:rgba(237,233,222,.18)"><strong>${t('comm.f2')}</strong><span>${t('comm.f2s')}</span></div><div class="feature" style="border-color:rgba(237,233,222,.18)"><strong>${t('comm.f3')}</strong><span>${t('comm.f3s')}</span></div><div class="feature" style="border-color:rgba(237,233,222,.18)"><strong>${t('comm.f4')}</strong><span>${t('comm.f4s')}</span></div></div>
 </div></section>
 
-<section class="section-wrap"><div class="callout"><div><p class="eyebrow">${t('comm.join.eyebrow')}</p><h3>${t('comm.join.h')}</h3><p class="lede">${t('comm.pill.d')}</p></div><a class="pill" href="partnership.html">${t('comm.cta1')}</a></div></section>`
+<section class="section-wrap"><div class="callout"><div><p class="eyebrow">${t('comm.join.eyebrow')}</p><h3>${t('comm.join.h')}</h3><p class="lede">${t('comm.pill.d')}</p></div><a class="pill" href="partnership.html">${t('comm.cta1')}</a></div></section>${women ? ladiesStory() : ''}`
+}
+
+/* ---------- FAQ accordion + Weekly Fun Game facts ---------- */
+function faqSection() {
+    const items = [1,2,3,4,5,6,7].map(i => `
+    <div class="faq-item"><button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-a${i}">${t('faq.q'+i)}<span class="faq-chev" aria-hidden="true"></span></button>
+    <div class="faq-a" id="faq-a${i}" hidden><p>${t('faq.a'+i)}</p></div></div>`).join('');
+    const wfg = [1,2,3,4,5,6,7].map(i => `<div class="ie-fact"><dt>${t('faq.wfg.item'+i)}</dt><dd>${t('faq.wfg.v'+i)}</dd></div>`).join('');
+    return `
+<section class="section-wrap faq-wrap"><div class="faq-grid">
+  <div class="faq-head"><p class="eyebrow">${t('faq.eyebrow')}</p><h2>${t('faq.h')}</h2><p class="lede">${t('faq.lede')}</p>
+    <div class="wfg-card"><h3>${t('faq.wfg.h')}</h3><dl class="ie-facts">${wfg}</dl><p class="wfg-note"><small>${t('faq.wfg.pricing.note')}</small></p></div>
+  </div>
+  <div class="faq-list">${items}</div>
+</div></section>`;
+}
+
+/* ---------- TOBALADIES storyline + founder (editorial) ---------- */
+function ladiesStory() {
+    return `
+<section class="tl-story section-wrap"><div class="tl-story-grid">
+  <div class="tl-story-copy">
+    <p class="eyebrow accent-pink">${t('tl.story.eyebrow')}</p>
+    <h2>${t('tl.story.h')}</h2>
+    <p class="tl-lead">${t('tl.story.lead')}</p>
+    <p>${t('tl.story.p1')}</p>
+    <p>${t('tl.story.p2')}</p>
+    <div class="photo-frame tl-story-photo img-reveal" data-parallax="0.05"><img src="${photos.women2}" alt="${t('ui.illust.women')}" loading="lazy"><span class="frame-caption accent-pink">TOBALADIES</span></div>
+    <p>${t('tl.story.p3')}</p>
+    <p>${t('tl.story.p4')}</p>
+  </div>
+  <div class="tl-story-side">
+    <div class="photo-frame tl-story-photo img-reveal" data-parallax="-0.04"><img src="${photos.ladies3}" alt="${t('ui.illust.women')}" loading="lazy"></div>
+    <div class="tl-acts"><p class="tl-acts-label">${t('tl.story.acts')}</p>
+      <ul><li>${t('tl.story.acts.1')}</li><li>${t('tl.story.acts.2')}</li><li>${t('tl.story.acts.3')}</li><li>${t('tl.story.acts.4')}</li></ul>
+    </div>
+  </div>
+</div></section>`
 }
 
 /* ---------- EVENTS — editorial timeline + preserved filters ---------- */
@@ -150,15 +255,15 @@ function eventsPage() {
 <section class="hero section-wrap" style="min-height:auto"><div class="hero-copy"><p class="eyebrow">${t('events.hero.eyebrow')}</p><h1>${t('events.hero.h')}</h1><p class="hero-subtitle">${t('events.hero.lede')}</p></div>
   <div class="page-hero" style="padding:0;grid-template-columns:1fr"><div class="photo-frame img-reveal" data-parallax="0.05"><img src="${photos.arena}" alt="${t('ui.illust.court')}"></div></div></section>
 <section class="section-wrap"><div class="filters" id="eventFilters">${labels.map((x, i) => `<button class="filter-btn ${i === 0 ? 'active' : ''}" data-filter="${x}">${x}</button>`).join('')}</div>
-  <div class="event-grid" id="eventGrid">${events.map(eventCard).join('')}</div>
-  <div class="venue-note" style="margin-top:28px"><strong>${t('events.note.strong')}</strong> ${t('events.note')}<a class="venue-link" href="https://www.gelora.id/v/brickhouse" target="_blank" rel="noreferrer">Brickhouse The East, Duren Sawit</a>${t('events.note2')}</div></section>`
+  <div class="event-grid events-scroll" id="eventGrid">${events.map(eventCard).join('')}</div>
+  <div class="venue-note" style="margin-top:28px"><strong>${t('events.note.strong')}</strong> ${t('events.note')}<a class="venue-link" href="https://www.gelora.id/v/brickhouse" target="_blank" rel="noreferrer">Brickhouse The East, Duren Sawit</a>${t('events.note2')}</div></section>${faqSection()}`
 }
 
 /* ---------- MERCH — product focus, preserved filters + cart ---------- */
 function merchPage() {
     const labels = t('merch.filters').split('|');
     return `
-<section class="hero section-wrap" style="min-height:auto"><div class="hero-copy"><p class="eyebrow">${t('home.merch.eyebrow')}</p><h1>TOBA<br><span class="accent-orange">MERCH.</span></h1><p class="hero-subtitle">${t('merch.hero.lede')}</p><p><span class="tag orange">${t('merch.tag')}</span></p></div></section>
+<section class="hero section-wrap" style="min-height:auto"><div class="hero-copy"><p class="eyebrow">${t('home.merch.eyebrow')}</p><h1>TOBA<br><span class="accent-orange">MERCH.</span></h1><p class="hero-subtitle">${t('merch.hero.lede')}</p></div></section>
 <section class="section-wrap"><div class="filters" id="productFilters">${labels.map((x, i) => `<button class="filter-btn ${i === 0 ? 'active' : ''}" data-filter="${x}">${x}</button>`).join('')}<span style="margin-left:auto;font-size:12px;font-weight:700;align-self:center">${t('merch.bag')} <span id="cartCount">0</span></span></div>
   <div class="product-grid" id="productGrid">${products.map(productCard).join('')}</div>
   <div class="callout"><div><p class="eyebrow">${t('merch.call.eyebrow')}</p><h3>${t('merch.call.h')}</h3><p class="lede">${t('merch.call.lede')}</p></div><button class="pill" id="checkoutDemo">${t('merch.checkout')}</button></div></section>`
@@ -168,10 +273,10 @@ function merchPage() {
 function galleryPage() {
     const labels = t('gallery.filters').split('|');
     return `
-<section class="hero section-wrap" style="min-height:auto"><div class="hero-copy"><p class="eyebrow">${t('gallery.hero.eyebrow')}</p><h1>${t('gallery.hero.h')}</h1><p class="hero-subtitle">${t('gallery.hero.lede.live')}</p></div></section>
-<section class="section-wrap wide"><div class="filters" id="galleryFilters">${labels.map((x, i) => `<button class="filter-btn ${i === 0 ? 'active' : ''}" data-filter="${x}">${x}</button>`).join('')}</div>
+<section class="gallery-hero-blur"><section class="hero section-wrap" style="min-height:auto"><div class="hero-copy"><p class="eyebrow">${t('gallery.hero.eyebrow')}</p><h1>${t('gallery.hero.h')}</h1><p class="hero-subtitle">${t('gallery.hero.lede.live')}</p></div></section></section>
+<section class="gallery-shell"><div class="section-wrap wide" style="padding-top:clamp(28px,4vh,56px)"><div class="filters" id="galleryFilters">${labels.map((x, i) => `<button class="filter-btn ${i === 0 ? 'active' : ''}" data-filter="${x}">${x}</button>`).join('')}</div>
   <div id="galleryStatus"></div><div class="gallery-grid" id="galleryGrid"></div>
-  <div class="venue-note" style="margin-top:35px">${t('gallery.hero.lede')}</div></section>`
+  <div class="venue-note" style="margin-top:35px">${t('gallery.hero.lede')}</div></div>${infoEditorial()}</section>`
 }
 
 /* ---------- PARTNERSHIP — professional & simple ---------- */
@@ -188,8 +293,7 @@ const renderers = { home, tobaladies: () => communityPage('tobaladies'), tobadel
 if (page !== 'game') { appEl.innerHTML = (renderers[page] || home)(); }
 document.querySelector(`[data-nav="${page}"]`)?.classList.add('active'); document.getElementById('year').textContent = new Date().getFullYear();
 
-/* ---------- nav ---------- */
-/* ---------- nav: mega menu + mobile accordion ---------- */
+/* ---------- nav: mega menu (desktop) + accordion drawer (mobile) ---------- */
 (function () {
   const explore = document.getElementById('navExplore');
   const mega = document.getElementById('megaMenu');
@@ -198,57 +302,77 @@ document.querySelector(`[data-nav="${page}"]`)?.classList.add('active'); documen
   const mq = window.matchMedia('(max-width: 1000px)');
 
   function openMega() { mega.hidden = false; requestAnimationFrame(() => { mega.classList.add('open'); explore.setAttribute('aria-expanded', 'true'); header?.classList.add('menu-context') }) }
-  function closeMega() { mega.classList.remove('open'); explore.setAttribute('aria-expanded', 'false'); header?.classList.remove('menu-context'); if (!mq.matches) setTimeout(() => { if (!mega.classList.contains('open')) mega.hidden = true }, 300); else mega.hidden = true; }
+  function closeMega() { mega.classList.remove('open'); explore.setAttribute('aria-expanded', 'false'); header?.classList.remove('menu-context'); setTimeout(() => { if (!mega.classList.contains('open')) mega.hidden = true }, 300) }
 
-  explore.addEventListener('click', e => { e.stopPropagation(); mega.classList.contains('open') ? closeMega() : openMega() });
-  mega.addEventListener('click', e => {
-    const label = e.target.closest('.mega-label');
-    if (!label || !mq.matches) return;
-    e.preventDefault();
-    /* accordion: only one group open at a time */
-    const group = label.parentElement;
-    const wasOpen = group.classList.contains('open');
-    mega.querySelectorAll('.mega-group.open').forEach(g => g.classList.remove('open'));
-    if (!wasOpen) group.classList.add('open');
-  });
-  mega.querySelectorAll('.nav-link').forEach(a => a.addEventListener('click', () => { closeMega(); closeNav(); }));
+  explore.addEventListener('click', e => { e.stopPropagation(); e.preventDefault(); mega.classList.contains('open') ? closeMega() : openMega() });
   document.addEventListener('click', e => { if (mega.classList.contains('open') && !e.target.closest('.main-nav') && !e.target.closest('#navExplore')) closeMega() });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && mega.classList.contains('open')) { closeMega(); explore.focus() } });
-  window.addEventListener('resize', () => { if (mq.matches) { closeMega() } else { mega.hidden = false } });
 })();
 
 const menuToggle = document.getElementById('menuToggle'), nav = document.getElementById('mainNav');
 const backdrop = document.createElement('div');
 backdrop.className = 'nav-backdrop';
+/* the scrollable middle of the drawer — head + footer stay fixed */
+nav.querySelector('.mega')?.classList.add('drawer-scroll');
 document.body.appendChild(backdrop);
+
+function setGroup(group, open) {
+  group.classList.toggle('open', open);
+  group.querySelector('.mega-label')?.setAttribute('aria-expanded', String(open));
+}
+
 function closeNav() {
   nav.classList.remove('open');
   menuToggle.classList.remove('open');
   menuToggle.setAttribute('aria-expanded', 'false');
   backdrop.classList.remove('show');
   document.documentElement.style.overflow = '';
+  document.body.style.overflow = '';
   /* reset accordion state so no group stays open for the next visit */
-  nav.querySelectorAll('.mega-group.open').forEach(g => g.classList.remove('open'));
+  nav.querySelectorAll('.mega-group.open').forEach(g => setGroup(g, false));
 }
 window.closeNav = closeNav;
+
 menuToggle.addEventListener('click', () => {
   const open = nav.classList.toggle('open');
   menuToggle.classList.toggle('open', open);
   menuToggle.setAttribute('aria-expanded', String(open));
+  /* lock the page behind the drawer */
   document.documentElement.style.overflow = open ? 'hidden' : '';
+  document.body.style.overflow = open ? 'hidden' : '';
   backdrop.classList.toggle('show', open);
-  /* mobile drawer needs the mega markup visible inside the drawer */
-  const megaMenu = document.getElementById('megaMenu');
-  if (open && megaMenu && window.innerWidth <= 1000) megaMenu.hidden = false;
-  /* the Join CTA is static markup inside the drawer — no cloning needed */
-  requestAnimationFrame(() => open ? nav.querySelector('.drawer-close')?.focus() : menuToggle.focus());
+  if (open) {
+    /* the mega markup renders as the drawer accordion — always visible */
+    const megaMenu = document.getElementById('megaMenu');
+    if (megaMenu) megaMenu.hidden = false;
+    nav.querySelector('.drawer-close')?.focus();
+  } else {
+    menuToggle.focus();
+  }
 });
+
+/* single-open accordion on the drawer groups (keyboard accessible) */
+nav.querySelectorAll('.mega-group').forEach(group => {
+  const label = group.querySelector('.mega-label');
+  if (!label) return;
+  label.setAttribute('role', 'button');
+  label.setAttribute('tabindex', '0');
+  label.setAttribute('aria-expanded', 'false');
+  const toggle = () => {
+    const wasOpen = group.classList.contains('open');
+    nav.querySelectorAll('.mega-group.open').forEach(g => setGroup(g, false));
+    if (!wasOpen) setGroup(group, true);
+  };
+  label.addEventListener('click', toggle);
+  label.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle() } });
+});
+
 /* backdrop click closes */
 backdrop.addEventListener('click', () => closeNav());
 nav.querySelector('.drawer-close')?.addEventListener('click', () => closeNav());
 nav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeNav));
 /* Escape also closes the drawer */
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && nav.classList.contains('open')) closeNav() });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && nav.classList.contains('open')) { closeNav(); menuToggle.focus() } });
 
 /* ---------- toast ---------- */
 let toastTimer; function toast(msg) { const el = document.getElementById('toast'); el.textContent = msg; el.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), 2600) }
@@ -267,16 +391,37 @@ document.getElementById('backTop').addEventListener('click', e => { e.preventDef
 /* ---------- live gallery: fetch after render (preserved) ---------- */
 if (page === 'gallery') { loadGallery(); }
 
+/* ---------- FAQ accordion behavior (single-open, keyboard friendly) ---------- */
+function initFaq() {
+  document.querySelectorAll('.faq-item').forEach(item => {
+    const q = item.querySelector('.faq-q');
+    if (!q || q.dataset.bound) return;
+    q.dataset.bound = '1';
+    q.addEventListener('click', () => {
+      const open = q.getAttribute('aria-expanded') === 'true';
+      document.querySelectorAll('.faq-q[aria-expanded="true"]').forEach(other => {
+        if (other !== q) {
+          other.setAttribute('aria-expanded', 'false');
+          other.parentElement.classList.remove('open');
+        }
+      });
+      q.setAttribute('aria-expanded', String(!open));
+      item.classList.toggle('open', !open);
+    });
+  });
+}
+
 /* ---------- language re-render (preserved) ---------- */
-document.addEventListener('toba:langchange', () => { if (page === 'game') return; appEl.innerHTML = (renderers[page] || home)(); document.querySelector(`[data-nav="${page}"]`)?.classList.add('active'); if (page === 'gallery') { galleryState === 'ok' ? renderGalleryUI() : loadGallery(); } initReveal(); initParallax(); initKinetic(); initPointerScene(); initMerchTilt(); });
+document.addEventListener('toba:langchange', () => { if (page === 'game') return; appEl.innerHTML = (renderers[page] || home)(); document.querySelector(`[data-nav="${page}"]`)?.classList.add('active'); if (page === 'gallery') { galleryState === 'ok' ? renderGalleryUI() : loadGallery(); } initReveal(); initStorySteps(); initParallax(); initKinetic(); initPointerScene(); initMerchTilt(); initFaq(); });
 
 /* ---------- reveal system (preserved + clip reveal for images) ---------- */
 const revealObserver = ('IntersectionObserver' in window) ? new IntersectionObserver(es => { es.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); revealObserver.unobserve(en.target) } }) }, { threshold: .12 }) : null;
 function initReveal() {
-    const els = document.querySelectorAll('.section-wrap,.event-card,.product-card,.community-card,.photo-frame,.dark-section');
+    const els = document.querySelectorAll('.section-wrap,.event-card,.product-card,.community-card,.photo-frame,.dark-section,.tl-founder-photo,.tl-story-photo');
     els.forEach((el, i) => {
         if (!revealObserver) { el.classList.add('in'); return }
-        el.classList.add(el.classList.contains('photo-frame') ? 'img-reveal' : 'reveal');
+        /* never stack .reveal on elements that already carry img-reveal (would double-hide) */
+        if (!el.classList.contains('img-reveal')) el.classList.add(el.classList.contains('photo-frame') ? 'img-reveal' : 'reveal');
         if (el.getBoundingClientRect().top < window.innerHeight) el.classList.add('in');
         else { el.style.transitionDelay = (Math.min(i % 6, 5) * 60) + 'ms'; revealObserver.observe(el) }
     })
@@ -293,6 +438,20 @@ function initReveal() {
     }, 3500);
 }
 initReveal();
+
+/* ---------- Prompt 40: staged reveal untuk editorial storytelling ---------- */
+const stepObserver = ('IntersectionObserver' in window) ? new IntersectionObserver(es => {
+  es.forEach(en => { if (en.isIntersecting) { en.target.classList.add('step-in'); stepObserver.unobserve(en.target) } })
+}, { threshold: .2 }) : null;
+function initStorySteps() {
+  document.querySelectorAll('[data-reveal-step]').forEach(el => {
+    if (el.dataset.stepBound) return;
+    el.dataset.stepBound = '1';
+    if (!stepObserver || window.matchMedia('(prefers-reduced-motion: reduce)').matches) { el.classList.add('step-in'); return }
+    stepObserver.observe(el);
+  });
+}
+initStorySteps();
 
 /* ---------- advanced parallax engine (multi-axis, transform-only, no scroll lock) ----------
    data-parallax        vertical speed (e.g. 0.08 = moves 8% of viewport offset)
@@ -385,6 +544,8 @@ if (!reduceMotion && window.matchMedia('(pointer: fine)').matches) {
 /* first paint: run after all definitions (no TDZ issues) */
 initKinetic();
 initPointerScene();
+initFaq();
+
 
 /* ---------- merch tilt + event stagger (re-runnable) ---------- */
 function initMerchTilt() {
@@ -418,5 +579,10 @@ initMerchTilt();
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const settle = () => requestAnimationFrame(() => hero.classList.add('in'));
   if (reduce || !document.getElementById('tobaIntro')) settle();
-  else document.addEventListener('toba:introdone', settle, { once: true });
+  else {
+    document.addEventListener('toba:introdone', settle, { once: true });
+    /* safety nets: intro removed externally, or its script never fires */
+    const poll = setInterval(() => { if (!document.getElementById('tobaIntro')) { clearInterval(poll); settle(); } }, 300);
+    setTimeout(() => { clearInterval(poll); settle(); }, 3000);
+  }
 })();

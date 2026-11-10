@@ -1,8 +1,13 @@
-/* TOBA COMMUNITY — "THE COURT IS OPEN" welcome experience (~4.2s desktop, ~3s mobile)
+/* TOBA COMMUNITY — PROMPT 72 · MAIN INTRO (restored, approved design)
+   "THE COURT IS OPEN" (~4.2s desktop, ~3s mobile)
    Bright ivory + sage atmosphere (matches the approved homepage gradient),
    basketball court geometry draws itself around the mascot, the croc head
    surfaces as the focal point, wordmark + welcome line, then dissolves
-   into the real hero. Session-based, skippable, reduced-motion pass-through. */
+   into the real hero. Session-based, skippable, reduced-motion pass-through.
+
+   NOTE: this intro is deliberately KEPT SEPARATE from the in-homepage
+   welcome invitation (script.js · PROMPT 75). Two experiences, one screen
+   opening only: intro here, invitation inside the homepage after the hero. */
 (function () {
   const KEY = 'toba-intro-seen';
   const page = document.body.dataset.page;
@@ -19,30 +24,19 @@
     <div class="obi-stage">
       <svg class="obi-court" viewBox="0 0 1200 700" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
         <!-- FIBA top-view proportions: 28m x 15m court -> viewBox scale ~35.7px/m -->
-        <!-- court boundary: 80,70 to 1120,630 -->
         <rect class="ocl" x="80" y="70" width="1040" height="560"/>
-        <!-- center line -->
         <line class="ocl" x1="600" y1="70" x2="600" y2="630"/>
-        <!-- center circle (r 1.8m ~ 64px) -->
         <circle class="ocl" cx="600" cy="350" r="64"/>
-        <!-- left key/paint: 5.8m wide (~207px), 5.8m from baseline -->
         <path class="ocl" d="M80 246 h207 v208 h-207"/>
-        <!-- left free-throw circle (top half solid, bottom dashed) -->
         <circle class="ocl" cx="287" cy="350" r="64"/>
         <path class="ocl ocl-dash" d="M287 286 a64 64 0 0 0 0 128"/>
-        <!-- left three-point arc (6.75m radius ~241px, corner straight lines) -->
         <path class="ocl" d="M80 575 L 190 575 A 241 241 0 0 0 190 125 L 80 125"/>
-        <!-- right key/paint -->
         <path class="ocl" d="M1120 246 h-207 v208 h207"/>
-        <!-- right free-throw circle -->
         <circle class="ocl" cx="913" cy="350" r="64"/>
         <path class="ocl ocl-dash" d="M913 286 a64 64 0 0 1 0 128"/>
-        <!-- right three-point arc -->
         <path class="ocl" d="M1120 575 L 1010 575 A 241 241 0 0 1 1010 125 L 1120 125"/>
-        <!-- restricted area arcs (1.25m ~45px) -->
         <path class="ocl" d="M125 350 a45 45 0 0 1 90 0"/>
         <path class="ocl" d="M1075 350 a45 45 0 0 0 -90 0"/>
-        <!-- backboards: 1.2m from baseline inside -->
         <line class="ocl" x1="80" y1="290" x2="80" y2="410" stroke-width="4"/>
         <line class="ocl" x1="1120" y1="290" x2="1120" y2="410" stroke-width="4"/>
       </svg>
@@ -82,6 +76,10 @@
     setTimeout(() => intro.remove(), 700);
   }
   skip.addEventListener('click', finish);
+  /* Escape never traps the user */
+  document.addEventListener('keydown', function esc(e) {
+    if (e.key === 'Escape' && !done) { document.removeEventListener('keydown', esc); finish() }
+  });
 
   requestAnimationFrame(() => stage.classList.add('run'));     /* 1-3 ivory, atmosphere, court draws */
   later(() => figure.classList.add('in'), D.court);            /* 4 mascot surfaces */

@@ -30,11 +30,13 @@
         <path class="tcl" d="M80 246 h207 v208 h-207"/>
         <circle class="tcl" cx="287" cy="350" r="64"/>
         <path class="tcl tcl-dash" d="M287 286 a64 64 0 0 0 0 128"/>
-        <path class="tcl" d="M80 575 L 190 575 A 241 241 0 0 0 190 125 L 80 125"/>
+        <path class="tcl" d="M80 231.2 L 163.6 231.2 A 241 241 0 0 0 163.6 468.8 L 80 468.8"/>
         <path class="tcl" d="M1120 246 h-207 v208 h207"/>
         <circle class="tcl" cx="913" cy="350" r="64"/>
         <path class="tcl tcl-dash" d="M913 286 a64 64 0 0 1 0 128"/>
-        <path class="tcl" d="M1120 575 L 1010 575 A 241 241 0 0 1 1010 125 L 1120 125"/>
+        <path class="tcl" d="M1120 468.8 L 1036.4 468.8 A 241 241 0 0 1 1036.4 231.2 L 1120 231.2"/>
+        <path class="tcl" d="M125 305 a45 45 0 0 1 0 90"/>
+        <path class="tcl" d="M1075 305 a45 45 0 0 0 0 90"/>
       </svg>
       <div class="tld-ball-wrap"><svg class="tld-ball" viewBox="0 0 100 100" aria-hidden="true">
         <circle cx="50" cy="50" r="46" fill="#E4793D"/>

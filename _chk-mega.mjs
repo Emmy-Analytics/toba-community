@@ -1,0 +1,13 @@
+import puppeteer from 'puppeteer';
+const b = await puppeteer.launch({ headless: 'new' });
+const p = await b.newPage();
+await p.setViewport({ width: 1440, height: 900 });
+p.on('pageerror', e => console.log('PAGEERR:', e.message));
+await p.goto('http://127.0.0.1:8321/index.html', { waitUntil: 'networkidle2' });
+const info = await p.evaluate(() => ({ explore: !!document.getElementById('navExplore'), mega: !!document.getElementById('megaMenu'), megaHidden: document.getElementById('megaMenu')?.hidden }));
+console.log('BEFORE:', JSON.stringify(info));
+await p.click('#navExplore');
+await new Promise(r => setTimeout(r, 500));
+const st = await p.evaluate(() => ({ open: document.getElementById('megaMenu').classList.contains('open'), hidden: document.getElementById('megaMenu').hidden, w: document.getElementById('megaMenu').getBoundingClientRect().width }));
+console.log('AFTER CLICK:', JSON.stringify(st));
+await b.close();

@@ -148,19 +148,15 @@ p {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 0;
+  text-align: center;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 1.8px;
   text-transform: uppercase
 }
 
-.announcement .dot {
-  width: 5px;
-  height: 5px;
-  background: var(--accent);
-  border-radius: 50%
-}
+/* decorative dot removed (Prompt 49) */
 
 .site-header {
   height: var(--header-h);
@@ -174,8 +170,18 @@ p {
   position: sticky;
   top: 0;
   z-index: 40;
-  backdrop-filter: blur(14px);
   transition: background .3s
+}
+
+/* blur lives on a pseudo-element: backdrop-filter on the header itself would
+   turn the header into a containing block and break the fixed mobile drawer */
+.site-header:before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 .site-header:has(.mega.open),
@@ -241,10 +247,13 @@ p {
   gap: clamp(14px, 2vw, 26px)
 }
 
-/* mobile drawer header + CTA never render on desktop */
+/* mobile drawer header + CTA never render on desktop.
+   On ≤1000px the drawer overrides these with its own rules. */
 .drawer-head,
+.drawer-intro,
+.drawer-footer,
 .drawer-cta {
-  display: none
+  display: none !important
 }
 
 /* ---------- grouped editorial mega menu ---------- */
@@ -1056,28 +1065,7 @@ section:first-child {
 .sc-court .shortcut-full { color: var(--accent) }
 .sc-court { border-top: 3px solid var(--accent) }
 
-/* basketball supporting visual next to the mascot */
-.hero-ball {
-  position: absolute;
-  width: clamp(44px, 5vw, 72px);
-  height: clamp(44px, 5vw, 72px);
-  border-radius: 50%;
-  background: radial-gradient(circle at 32% 30%, #E6873F 0%, #B4421C 58%, #7A2A10 100%);
-  box-shadow: inset -6px -8px 14px rgba(20, 37, 26, .35), 0 16px 28px rgba(36, 39, 34, .18);
-  right: clamp(-8px, 2vw, 40px);
-  bottom: clamp(16px, 12vh, 120px);
-  z-index: 2
-}
-
-.hero-ball:after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background:
-    linear-gradient(transparent 46%, rgba(20, 37, 26, .35) 47%, transparent 49%, transparent 71%, rgba(20, 37, 26, .35) 72%, transparent 74%),
-    linear-gradient(90deg, transparent 46%, rgba(20, 37, 26, .35) 47%, transparent 49%, transparent 71%, rgba(20, 37, 26, .35) 72%, transparent 74%);
-}
+/* PROMPT 84: .hero-ball styles removed with the interactive ball */
 
 .stat strong {
   display: block;
@@ -1947,10 +1935,22 @@ section:first-child {
   width: min(var(--container), calc(100% - 48px));
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1.3fr .7fr 1fr;
-  gap: clamp(28px, 5vw, 72px);
-  padding: clamp(48px, 7vh, 72px) 0;
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr) minmax(0, .8fr);
+  gap: clamp(24px, 4vw, 48px);
+  padding: clamp(36px, 5vh, 56px) 0;
   align-items: start
+}
+
+/* PROMPT 82: keep the three groups visually adjacent, not pushed apart */
+.footer-main > :nth-child(2) { justify-self: start }
+.footer-main > :last-child { justify-self: start }
+
+@media (max-width: 900px) {
+  .footer-main {
+    grid-template-columns: 1fr;
+    gap: 26px;
+    padding: 40px 0;
+  }
 }
 
 .footer-main .footer-brand {
@@ -2075,9 +2075,21 @@ html.intro-lock {
   z-index: 200;
   background: #F7F6F0;
   overflow: hidden;
+  contain: layout paint;
   user-select: none;
   opacity: 1;
   transition: opacity .55s ease
+}
+
+/* the intro is a full-screen overlay: children may overflow it, but the
+   page itself must never scroll horizontally because of the SVG */
+body:has(#tobaIntro),
+html:has(#tobaIntro) {
+  overflow-x: clip;
+}
+
+html:has(#tobaIntro) {
+  overflow-y: hidden;
 }
 
 #tobaIntro.obi-out {
@@ -2220,12 +2232,12 @@ html.intro-lock {
   opacity: .65
 }
 
-/* ---------- homepage hero court: same geometry, softer for readability ---------- */
+/* homepage hero court: same FIBA geometry, softer for readability on desktop */
 .hero-court rect,
 .hero-court line,
 .hero-court circle,
 .hero-court path {
-  stroke: rgba(73, 96, 80, .14);
+  stroke: rgba(73, 96, 80, .18);
   stroke-width: 1.6;
   fill: none;
   vector-effect: non-scaling-stroke
@@ -2256,12 +2268,12 @@ body:not([data-page="home"]) .hero-court circle { animation: obiDraw 1.5s var(--
 body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ease-out) 1.3s forwards }
 
 @media (max-width: 760px) {
-  /* simplified on mobile: lighter, geometry stays but visually quieter */
-  .hero-court { opacity: .55 }
+  /* mobile: court stays clearly visible — soft but readable, never washed out */
+  .hero-court { opacity: .8 }
   .hero-court rect,
   .hero-court line,
   .hero-court circle,
-  .hero-court path { stroke: rgba(73, 96, 80, .16) }
+  .hero-court path { stroke: rgba(73, 96, 80, .28); stroke-width: 1.8 }
 }
 
 @media(prefers-reduced-motion:reduce) {
@@ -2807,10 +2819,313 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 @media(max-width:1000px) {
 
   /* collapse full nav into burger earlier so the header never overflows */
-  .main-nav { display: none }
   .menu-toggle { display: block }
   .nav-explore { display: none }
   .header-tools .header-cta { display: none }
+
+  /* mobile drawer: full-height panel, sticky head, controlled scroll.
+     One layout for every width ≤1000px — 760px no longer restyles it. */
+  .main-nav {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    height: 100vh;
+    height: 100dvh;
+    background: var(--bg);
+    flex-direction: column;
+    align-items: stretch; /* reset the desktop centering — children fill the width */
+    padding: 0;
+    z-index: 45;
+    transform: translateX(100%);
+    transition: transform .32s var(--ease-out);
+    visibility: hidden;
+  }
+
+  .main-nav.open {
+    transform: none;
+    visibility: visible;
+  }
+
+  /* drawer chrome: shown only when the drawer is open — the !important
+     base rule above hides them on desktop, so the open-state rules need
+     their own !important to win inside the media query */
+  .main-nav.open .drawer-head,
+  .main-nav.open .drawer-intro,
+  .main-nav.open .drawer-scroll,
+  .main-nav.open .drawer-footer {
+    display: block !important;
+    margin-left: 18px;
+    margin-right: 18px;
+  }
+
+  .main-nav.open .drawer-head {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .main-nav.open .drawer-cta {
+    display: flex !important;
+  }
+
+  .main-nav.open .drawer-head {
+    height: 64px;
+    padding: 0 4px;
+    margin-top: calc(10px + env(safe-area-inset-top, 0px));
+    margin-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+    flex-shrink: 0;
+    margin-left: 18px;
+    margin-right: 18px;
+  }
+
+  .main-nav.open .drawer-intro {
+    display: block;
+    margin-left: 18px;
+    margin-right: 18px;
+    padding: 16px 2px 14px;
+    flex-shrink: 0;
+  }
+
+  .main-nav.open .drawer-scroll {
+    display: block;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    padding: 0 2px 12px;
+    margin-left: 18px;
+    margin-right: 18px;
+  }
+
+  .main-nav.open .drawer-footer {
+    display: block;
+    flex-shrink: 0;
+    padding: 14px 2px calc(14px + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid var(--line);
+    background: var(--bg);
+    margin-left: 18px;
+    margin-right: 18px;
+  }
+
+  .main-nav.open .drawer-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    width: 100%;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 999px;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 14.5px;
+  }
+
+  .drawer-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px
+  }
+
+  .drawer-brand .brand-mark {
+    width: 28px;
+    height: 28px
+  }
+
+  .drawer-name {
+    font-family: var(--font-head);
+    font-size: 17px;
+    font-weight: 800;
+    line-height: .9
+  }
+
+  .drawer-name small {
+    display: block;
+    font-family: var(--font-body);
+    font-size: 8px;
+    letter-spacing: 2px;
+    margin-top: 3px;
+    color: var(--muted)
+  }
+
+  .drawer-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    font-size: 17px;
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background .2s
+  }
+
+  .drawer-close:hover {
+    background: color-mix(in srgb, var(--ink) 7%, transparent)
+  }
+
+  /* brand introduction — compact, not a banner */
+  .drawer-intro {
+    padding: 16px 2px 14px;
+    flex-shrink: 0
+  }
+
+  .drawer-intro-title {
+    font-family: var(--font-head);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -.01em;
+    color: var(--ink);
+    margin: 0 0 4px
+  }
+
+  .drawer-intro-sub {
+    font-size: 12.5px;
+    color: var(--muted);
+    margin: 0
+  }
+
+  /* drawer footer + CTA (redundant with the .open rules above but kept for clarity) */
+  .nav-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 28, 22, .42);
+    z-index: 39;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .3s ease
+  }
+
+  .nav-backdrop.show {
+    opacity: 1;
+    pointer-events: auto
+  }
+
+  /* the mega markup renders as an accordion inside the drawer */
+  .main-nav .mega {
+    position: static;
+    display: block;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    border: 0;
+    background: transparent;
+    box-shadow: none
+  }
+
+  .main-nav .mega[hidden] { display: block }
+
+  .mega-panel {
+    display: block;
+    width: 100%;
+    padding: 0
+  }
+
+  /* photography panel is desktop-only — keep the drawer lean */
+  .mega-visual { display: none }
+
+  .mega-groups { display: block }
+
+  /* supporting text lives under each group title on mobile */
+  .mega-title {
+    font-family: var(--font-body);
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0;
+    margin: 2px 0 0
+  }
+
+  .mega-sub { display: none }
+
+  .mega-group {
+    border-top: 1px solid var(--line);
+    padding: 2px 0
+  }
+
+  .mega-group:last-child {
+    border-bottom: 1px solid var(--line)
+  }
+
+  .mega-label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 2px;
+    min-height: 56px;
+    width: 100%;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0;
+    padding: 6px 0;
+    margin: 0;
+    cursor: pointer;
+    color: var(--ink);
+    position: relative;
+    -webkit-tap-highlight-color: transparent
+  }
+
+  /* chevron indicator only — never an X on accordion rows */
+  .mega-label:after {
+    content: '';
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: translateY(-70%) rotate(45deg);
+    transition: transform .25s var(--ease-out)
+  }
+
+  .mega-group.open .mega-label:after {
+    transform: translateY(-30%) rotate(-135deg)
+  }
+
+  .mega-group .nav-link {
+    display: none;
+    font-size: 14.5px;
+    min-height: 48px;
+    padding: 0 0 0 14px;
+    align-items: center
+  }
+
+  .mega-group.open .nav-link {
+    display: flex
+  }
+
+  .main-nav .nav-link {
+    font-size: 14.5px;
+    font-family: var(--font-body);
+    font-weight: 500;
+    border-bottom: 0;
+    color: var(--ink)
+  }
+
+  .main-nav .nav-link[data-nav="tobaladies"] {
+    color: #C42E60
+  }
+
+  .main-nav .nav-link[data-nav="tobadeli"] {
+    color: #B4421C
+  }
+
+  .menu-toggle {
+    z-index: 46
+  }
+
+  /* the drawer has its own close button — hide the burger while open */
+  body:has(#mainNav.open) .menu-toggle {
+    visibility: hidden;
+    pointer-events: none
+  }
 
   .hero,
   .page-hero {
@@ -2853,14 +3168,6 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
     padding: 40px 22px
   }
 
-  .main-nav {
-    gap: 12px
-  }
-
-  .nav-link {
-    font-size: 11.5px
-  }
-
   .footer-main {
     grid-template-columns: 1fr;
     gap: 32px
@@ -2879,209 +3186,6 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   }
 }
 
-/* ---------- mobile drawer (applies ≤1000px where the burger is active) ---------- */
-@media(max-width:1000px) {
-  .main-nav .nav-explore { display: none !important }
-
-  /* desktop-only controls never leak into the drawer */
-  .main-nav .header-cta { display: none }
-
-  .main-nav {
-    transform: translateX(100%);
-    transition: transform .32s var(--ease-out)
-  }
-
-  .main-nav.open {
-    transform: none
-  }
-
-  .nav-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(20, 28, 22, .42);
-    z-index: 39;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .3s ease
-  }
-
-  .nav-backdrop.show {
-    opacity: 1;
-    pointer-events: auto
-  }
-
-  /* drawer header: logo left, single close right, ~64px */
-  .drawer-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 64px;
-    padding: 0;
-    margin: 0 0 4px;
-    flex-shrink: 0
-  }
-
-  .drawer-brand {
-    display: flex;
-    align-items: center;
-    gap: 8px
-  }
-
-  .drawer-brand .brand-mark {
-    width: 26px;
-    height: 26px
-  }
-
-  .drawer-name {
-    font-family: var(--font-head);
-    font-size: 16px;
-    font-weight: 800;
-    line-height: .9
-  }
-
-  .drawer-name small {
-    display: block;
-    font-family: var(--font-body);
-    font-size: 7px;
-    letter-spacing: 2px;
-    margin-top: 2px;
-    color: var(--muted)
-  }
-
-  .drawer-close {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    font-size: 18px;
-    color: var(--ink);
-    background: transparent;
-    border: 0;
-    cursor: pointer
-  }
-
-  .main-nav .mega {
-    position: static;
-    display: block;
-    opacity: 1;
-    transform: none;
-    pointer-events: auto;
-    border: 0;
-    background: transparent;
-    box-shadow: none
-  }
-
-  .main-nav .mega[hidden] { display: block }
-
-  .mega-panel {
-    display: block;
-    width: 100%;
-    padding: 0
-  }
-
-  .mega-visual { display: none }
-
-  .mega-groups { display: block }
-
-  /* editorial titles are desktop-only — the drawer stays lean */
-  .mega-title,
-  .mega-sub { display: none }
-
-  .mega-group {
-    border-top: 1px solid var(--line);
-    padding: 0
-  }
-
-  .mega-group:last-child {
-    border-bottom: 1px solid var(--line)
-  }
-
-  .mega-label {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 52px;
-    width: 100%;
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0;
-    padding: 0;
-    margin: 0;
-    cursor: pointer;
-    color: var(--ink)
-  }
-
-  /* chevron indicator only — never an X on accordion rows */
-  .mega-label:after {
-    content: '';
-    width: 8px;
-    height: 8px;
-    border-right: 1.5px solid currentColor;
-    border-bottom: 1.5px solid currentColor;
-    transform: rotate(45deg);
-    transition: transform .25s var(--ease-out)
-  }
-
-  .mega-group.open .mega-label:after {
-    transform: rotate(-135deg)
-  }
-
-  .mega-group .nav-link {
-    display: none;
-    font-size: 14px;
-    min-height: 46px;
-    padding: 0 0 0 14px;
-    align-items: center
-  }
-
-  .mega-group.open .nav-link {
-    display: flex
-  }
-
-  .main-nav .nav-link {
-    font-size: 14px;
-    font-family: var(--font-body);
-    font-weight: 500;
-    border-bottom: 0;
-    color: var(--ink)
-  }
-
-  /* single Join CTA pinned at the bottom of the drawer */
-  .drawer-cta {
-    display: none;
-    margin-top: auto;
-    padding: 14px 22px;
-    background: var(--accent);
-    color: #fff;
-    border-radius: 999px;
-    text-align: center;
-    font-family: var(--font-head);
-    font-weight: 700;
-    font-size: 14px
-  }
-
-  .main-nav.open .drawer-cta { display: block }
-
-  /* keep breathing room between the last submenu and the CTA */
-  .mega-group:last-child {
-    margin-bottom: 24px
-  }
-
-  .menu-toggle {
-    z-index: 46
-  }
-
-  /* the drawer has its own close button — hide the burger while open */
-  body:has(#mainNav.open) .menu-toggle {
-    visibility: hidden;
-    pointer-events: none
-  }
-
-  .header-tools .header-cta {
-    display: none
-  }
-}
 
 @media(max-width:760px) {
   .site-header {
@@ -3091,229 +3195,6 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 
   .menu-toggle {
     display: block
-  }
-
-  .main-nav {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 100svh;
-    background: var(--bg);
-    padding: 12px 20px 24px;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 4px;
-    z-index: 45;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch
-  }
-
-  .main-nav.open {
-    display: flex
-  }
-
-  /* mobile: grouped accordion instead of a long flat list */
-  .main-nav .nav-explore { display: none !important }
-
-  .main-nav {
-    transform: translateX(100%);
-    transition: transform .32s var(--ease-out)
-  }
-
-  .main-nav.open {
-    transform: none
-  }
-
-  .nav-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(20, 28, 22, .42);
-    z-index: 39; /* below the sticky header so the drawer stays above it */
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .3s ease
-  }
-
-  .nav-backdrop.show {
-    opacity: 1;
-    pointer-events: auto
-  }
-
-  .drawer-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 64px;
-    padding: 0;
-    margin: 0 0 12px;
-    flex-shrink: 0
-  }
-
-  .drawer-brand {
-    display: flex;
-    align-items: center;
-    gap: 8px
-  }
-
-  .drawer-brand .brand-mark {
-    width: 26px;
-    height: 26px
-  }
-
-  .drawer-name {
-    font-family: var(--font-head);
-    font-size: 16px;
-    font-weight: 800;
-    line-height: .9
-  }
-
-  .drawer-name small {
-    display: block;
-    font-family: var(--font-body);
-    font-size: 7px;
-    letter-spacing: 2px;
-    margin-top: 2px;
-    color: var(--muted)
-  }
-
-  .drawer-close {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    font-size: 18px;
-    color: var(--ink);
-    background: transparent;
-    border: 0;
-    cursor: pointer
-  }
-
-  .main-nav .mega {
-    position: static;
-    display: block;
-    opacity: 1;
-    transform: none;
-    pointer-events: auto;
-    border: 0;
-    background: transparent;
-    box-shadow: none
-  }
-
-  .main-nav .mega[hidden] { display: block }
-
-  .mega-panel {
-    display: block;
-    width: 100%;
-    padding: 0
-  }
-
-  /* photography panel is hidden on mobile — keep the drawer lean */
-  .mega-visual { display: none }
-
-  .mega-groups {
-    display: block
-  }
-
-  /* editorial titles are desktop-only — the drawer stays lean */
-  .mega-title,
-  .mega-sub { display: none }
-
-  .mega-group {
-    border-top: 1px solid var(--line);
-    padding: 0
-  }
-
-  .mega-group:last-child {
-    border-bottom: 1px solid var(--line)
-  }
-
-  .mega-label {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 52px;
-    width: 100%;
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0;
-    padding: 0;
-    margin: 0;
-    cursor: pointer;
-    color: var(--ink)
-  }
-
-  /* chevron only — never an X on accordion rows */
-  .mega-label:after {
-    content: '';
-    width: 8px;
-    height: 8px;
-    border-right: 1.5px solid currentColor;
-    border-bottom: 1.5px solid currentColor;
-    transform: rotate(45deg);
-    transition: transform .25s var(--ease-out)
-  }
-
-  .mega-group.open .mega-label:after {
-    transform: rotate(-135deg)
-  }
-
-  .mega-group .nav-link {
-    display: none;
-    font-size: 14px;
-    min-height: 46px;
-    padding: 0 0 0 14px;
-    align-items: center
-  }
-
-  .mega-group.open .nav-link {
-    display: flex
-  }
-
-  .main-nav .nav-link {
-    font-size: 14px;
-    font-family: var(--font-body);
-    font-weight: 500;
-    border-bottom: 0;
-    color: var(--ink)
-  }
-
-  /* Join CTA pinned at the bottom of the drawer (static, not cloned) */
-  .drawer-cta {
-    display: none;
-    margin-top: auto;
-    padding: 14px 22px;
-    background: var(--accent);
-    color: #fff;
-    border-radius: 999px;
-    text-align: center;
-    font-family: var(--font-head);
-    font-weight: 700;
-    font-size: 14px
-  }
-
-  .main-nav.open .drawer-cta { display: block }
-
-  /* keep breathing room between the last submenu and the CTA */
-  .mega-group:last-child {
-    margin-bottom: 24px
-  }
-
-  .menu-toggle {
-    z-index: 46
-  }
-
-  /* the drawer has its own close button — hide the burger while open */
-  body:has(#mainNav.open) .menu-toggle {
-    visibility: hidden;
-    pointer-events: none
-  }
-
-  .header-tools .header-cta {
-    display: none
   }
 
   .section-wrap {
@@ -3427,11 +3308,11 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 .hero-home {
   width: 100%; /* full viewport width, no narrow container */
   grid-template-rows: auto 1fr;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+  grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
-    "head visual"
-    "body visual";
-  column-gap: clamp(28px, 5vw, 72px);
+    "head"
+    "body";
+  column-gap: 0;
   align-content: end;
   padding-top: clamp(28px, 5vh, 56px);
   padding-left: clamp(20px, 4vw, 64px);
@@ -3457,7 +3338,8 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 
 .hero-home .hero-head { grid-area: head; position: relative; z-index: 2; align-self: end }
 .hero-home .hero-body { grid-area: body; position: relative; z-index: 2; align-self: end }
-.hero-home .hero-visual { grid-area: visual; position: relative; z-index: 1; display: grid; place-items: center; align-self: stretch; min-height: 300px }
+/* PROMPT 84: hero visual column retired with the ball — grid is single-column */
+.hero-home .hero-visual { display: none }
 
 /* staged entrance: eyebrow -> headline -> subtitle -> CTA -> info bar, then the river */
 .hero-home .eyebrow,
@@ -3539,15 +3421,8 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   font-size: clamp(2.5rem, 5.4vw, 4.6rem);
 }
 
-.hero-mascot {
-  position: relative;
-  z-index: 2;
-  width: min(100%, 440px);
-  max-height: min(56vh, 520px);
-  object-fit: contain;
-  filter: drop-shadow(0 30px 50px rgba(20, 37, 26, .18));
-  animation: mascotIn 1.2s var(--ease-cine) .15s both;
-}
+/* Prompt 47: mascot removed from hero — asset kept in /assets for other uses */
+.hero-mascot { display: none }
 
 @keyframes mascotIn {
   from { opacity: 0; transform: translateY(26px) scale(.96) }
@@ -3558,10 +3433,9 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 @media (max-width: 760px) {
   .hero-home {
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
+    grid-template-rows: auto auto;
     grid-template-areas:
       "head"
-      "visual"
       "body";
     row-gap: 0;
     min-height: auto;
@@ -3600,27 +3474,21 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
     margin: 12px 0 8px
   }
 
+  /* homepage mascot on mobile: compact signature, ~30–34% width —
+     part of the composition, never the whole hero */
   .hero-mascot {
-    width: min(64vw, 300px);
-    max-height: 40vh
+    width: clamp(120px, 32vw, 160px);
+    max-height: 30vh;
   }
 
-  /* mobile court: only a quiet arc accent — no vertical center line cutting the mascot */
-  .hero-court { opacity: .5 }
-  .hero-court circle { display: none }
+  /* mobile court: full FIBA geometry stays visible — quieter stroke but
+     clearly present; nothing is display:none'd away */
+  .hero-court { opacity: .75 }
   .hero-court rect,
   .hero-court line,
-  .hero-court path { stroke: rgba(73, 96, 80, .10) }
-  .hero-court line,
-  .hero-court rect { display: none }
-  .hero-court path { display: block }
+  .hero-court circle,
+  .hero-court path { stroke: rgba(73, 96, 80, .26) }
 
-  .hero-ball {
-    width: 52px;
-    height: 52px;
-    right: -6px;
-    bottom: 6px
-  }
 
   .hero-court-photo { height: 30%; opacity: .13 }
 }
@@ -3628,6 +3496,22 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 /* community shortcuts stack on small screens */
 @media (max-width: 1000px) {
   .shortcut-grid { grid-template-columns: 1fr }
+}
+
+/* ============================================================
+   PROMPT 53 — mobile: kill oversized vertical gaps between the
+   "LATIHAN DAN SPARRING SETIAP MINGGU" eyebrow and "AKTIVITAS KAMI"
+   (sections collapse tight; rhythm carried by smaller margins)
+   ============================================================ */
+@media (max-width: 760px) {
+  section { margin: clamp(40px, 7vh, 56px) 0 }
+  .hero { margin-bottom: 0 }
+  .eyebrow[style] { margin-block: 18px 0 }
+  .comm-cards + .section-wrap,
+  .brand-story + .section-wrap { margin-top: 32px }
+  .feature-checklist { margin-block: 28px 36px }
+  .story-ed { margin-block: 40px 48px }
+  .comm-copy .eyebrow { margin: 0 0 6px }
 }
 
 @media (max-width: 760px) {
@@ -4334,21 +4218,40 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   /* gentler scene on small devices */
   .kinetic .kline-inner { animation-duration: .7s }
 
-  /* community hero on mobile: mascot sits above copy, never overlapping text */
+  /* community hero on mobile: editorial composition — mascot as a compact
+     signature tucked right of the copy with controlled overlap, not a lone
+     centered object with dead space around it.
+     The court SVG stays absolutely positioned in the background and the
+     mascot flows in normal grid flow — nothing is hidden at any width. */
   .hero .hero-croc {
     position: relative;
     inset: auto;
-    margin: 4px auto 10px;
-    place-items: center;
+    display: flex;
+    justify-content: flex-end;
+    margin: -34px 6px -30px auto;
   }
 
   .hero .hero-croc img {
-    width: min(52vw, 240px);
+    width: clamp(96px, 28vw, 132px);
     opacity: 1;
-    filter: none
+    filter: none;
   }
 
-  /* simpler framing on small screens: quieter accent + no lean offsets */
+  /* FIX: mascot must never swallow the headline on ≥360px phones.
+     The croc drops BELOW the copy as its own row instead of overlapping it. */
+  .hero.hero-community-flow .hero-croc {
+    margin: 18px 6px -6px auto;
+    max-width: 40vw;
+  }
+
+  .hero.hero-community-flow .hero-copy {
+    max-width: calc(100% - 8vw);
+  }
+
+  /* court geometry: always visible on mobile, quietly behind the copy */
+  .hero .hero-court { opacity: .9 }
+
+  /* quieter accent tint on small screens — but still visible */
   .court-pink,
   .court-orange {
     transform: none
@@ -4357,12 +4260,12 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   .court-pink rect,
   .court-pink line,
   .court-pink circle,
-  .court-pink path { stroke: rgba(214, 77, 120, .16) }
+  .court-pink path { stroke: rgba(214, 77, 120, .30) }
 
   .court-orange rect,
   .court-orange line,
   .court-orange circle,
-  .court-orange path { stroke: rgba(200, 80, 40, .18) }
+  .court-orange path { stroke: rgba(200, 80, 40, .32) }
 }
 
 @media(prefers-reduced-motion:reduce) {
@@ -4388,3 +4291,1823 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
     transition: none
   }
 }
+
+/* ============================================================
+   TOBA REFINEMENT PASS — Nov 2026
+   Prioritas: geometry akurat, gambar tak pernah hilang di mobile,
+   keterbacaan, gallery premium, horizontal aktivitas, footer rapi.
+   ============================================================ */
+
+/* ---------- 1. Community hero: layout stabil di semua lebar ---------- */
+/* Croc jadi baris tersendiri di bawah copy di mobile (bukan overlap). */
+.hero-community-flow { display: flex; flex-direction: column; }
+
+@media (max-width: 1000px) {
+  .hero-community-flow .hero-copy { position: relative; z-index: 2; max-width: 92%; }
+  .hero-community-flow .hero-croc {
+    position: relative;
+    inset: auto;
+    display: flex;
+    justify-content: flex-end;
+    margin: 16px 4px 0 auto;
+    z-index: 1;
+  }
+  .hero-community-flow .hero-croc img {
+    width: clamp(110px, 30vw, 170px);
+    opacity: 1;
+    filter: none;
+  }
+}
+
+@media (min-width: 1001px) {
+  .hero-community-flow { display: grid; }
+  .hero-community-flow .hero-croc {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+  }
+  .hero-community-flow .hero-croc img { opacity: .16; filter: grayscale(1) contrast(1.05); }
+}
+
+/* ---------- 2. Horizontal scroll aktivitas (event grid) ---------- */
+/* Mobile: snap-scroll 1.2–1.5 card terlihat, hint visual card berikutnya.
+   Desktop: tetap grid 3 kolom. */
+@media (max-width: 1000px) {
+  .event-grid.events-scroll {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    gap: 14px;
+    padding: 4px 4px 22px;
+    margin-inline: -18px;   /* card bisa melewati tepi aman container */
+    padding-inline: 18px 18px;
+    scrollbar-width: none;
+  }
+  .event-grid.events-scroll::-webkit-scrollbar { display: none; }
+  .event-grid.events-scroll .event-card {
+    flex: 0 0 clamp(255px, 74vw, 330px); /* 1.2–1.5 card terlihat */
+    scroll-snap-align: start;
+  }
+  /* petunjuk visual: card berikutnya muncul sebagian */
+  .event-grid.events-scroll::after {
+    content: '';
+    flex: 0 0 2px;
+  }
+  /* hint fade di tepi kanan */
+  .event-scroll-wrap { position: relative; }
+}
+
+/* di desktop pakai grid normal — tidak ada scrollbar buatan */
+@media (min-width: 1001px) {
+  .event-grid.events-scroll { display: grid; grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ---------- 3. Keterbacaan: kontras teks ---------- */
+/* muted lebih gelap dari sebelumnya (#6E7168 → #5D6058) supaya body text
+   di atas ivory pass kontras AA pada ukuran 14px+ */
+:root { --muted: #565A51; }
+.theme-tobadeli { --muted: #6A5E45; }
+.theme-tobaladies { --muted: #6E5F66; }
+
+.dark-section .lede { color: rgba(237, 233, 222, .82); }
+.dark-section .feature span { color: rgba(237, 233, 222, .78); }
+.dark-section .meta { color: rgba(237, 233, 222, .72); }
+
+.meta { color: var(--muted); font-weight: 600; }
+.venue-note { color: #4A4E45; }
+.footer-bottom { color: #565A51; }
+.footer-links a { color: #454A40; }
+.footer-links a:hover { color: var(--accent); }
+.event-card p { color: #4A4E45; }
+.shortcut-desc { color: var(--muted); }
+.hero-subtitle { color: #4A4E45; }
+.brand-note, .brand-fullname { color: #5D6157; }
+.tag { color: var(--accent-dark); }
+.event-card .meta { color: #3A3E36; }
+.mega-sub { color: #5D6157; }
+
+/* ---------- 4. Event card: kontras judul & metadata ---------- */
+/* Sebelumnya judul krem di atas card terang — sekarang selalu ink di surface */
+.event-card h3 { color: var(--ink); }
+.event-card .tag { background: var(--accent-soft); color: var(--accent-dark); }
+.event-card .pill { color: #fff; }
+
+/* active state di mobile untuk semua card interaktif */
+@media (hover: none) {
+  .event-card:active, .product-card:active, .shortcut:active, .gallery-item:active {
+    transform: scale(.985);
+    transition: transform .15s ease;
+  }
+}
+
+/* ---------- 5. Gallery background: identitas per halaman, tidak hitam ---------- */
+/* TOBA Community: forest green / warm ivory */
+.gallery-shell {
+  background:
+    radial-gradient(120% 90% at 85% -10%, rgba(49, 90, 59, .08) 0%, transparent 60%),
+    linear-gradient(180deg, var(--bg) 0%, var(--bg-warm) 100%);
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  padding: clamp(28px, 4vh, 56px) 0 clamp(40px, 6vh, 72px);
+}
+
+/* Tobaladies: rose dewasa + warm neutral */
+.theme-tobaladies .gallery-shell {
+  background:
+    radial-gradient(110% 80% at 12% 0%, rgba(214, 77, 120, .07) 0%, transparent 58%),
+    linear-gradient(180deg, #F3E9E9 0%, #ECDFDF 100%);
+}
+
+/* Tobadeli: burnt orange + warm sand */
+.theme-tobadeli .gallery-shell {
+  background:
+    radial-gradient(110% 80% at 88% 0%, rgba(230, 92, 37, .07) 0%, transparent 58%),
+    linear-gradient(180deg, #F1E9DC 0%, #E9DFCE 100%);
+}
+
+/* galeri diberi shell terang; foto tetap elemen utama */
+.gallery-shell .gallery-grid { padding-top: 6px; }
+
+/* ---------- 6. Informasi di bawah Gallery: layout editorial ---------- */
+/* Mengganti kolom info biasa dengan komposisi asimetris ber-tipografi kuat */
+.info-editorial {
+  width: min(var(--container), calc(100% - 48px));
+  margin: clamp(56px, 9vh, 110px) auto clamp(40px, 6vh, 72px);
+  padding-top: clamp(32px, 5vh, 56px);
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
+  gap: clamp(28px, 5vw, 72px);
+}
+
+.info-editorial .ie-lead h2 {
+  font-size: clamp(1.9rem, 3.6vw, 3rem);
+  max-width: 14ch;
+  margin-bottom: 18px;
+}
+
+.info-editorial .ie-lead p {
+  font-size: 16.5px;
+  color: #454A40;
+  max-width: 52ch;
+  line-height: 1.7;
+  margin: 0 0 22px;
+}
+
+.info-editorial .ie-facts {
+  display: grid;
+  gap: 0;
+  align-content: start;
+}
+
+.info-editorial .ie-fact {
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px 20px;
+  align-items: baseline;
+}
+
+.info-editorial .ie-fact:first-child { border-top: 1px solid var(--line); }
+
+.info-editorial .ie-fact dt {
+  font-family: var(--font-head);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0;
+}
+
+.info-editorial .ie-fact dd {
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0;
+  text-align: right;
+}
+
+.info-editorial .ie-fact small {
+  grid-column: 1 / -1;
+  font-size: 13px;
+  color: #565A51;
+  line-height: 1.6;
+}
+
+/* garis court samar di belakang blok fakta */
+.info-editorial .ie-facts {
+  position: relative;
+}
+
+@media (max-width: 900px) {
+  .info-editorial { grid-template-columns: 1fr; gap: 30px; }
+  .info-editorial .ie-fact dd { text-align: left; }
+  .info-editorial .ie-fact { grid-template-columns: 1fr; }
+}
+
+/* ---------- 7. Spacing & interaksi card setelah Gallery ---------- */
+.section-after-gallery {
+  margin-top: clamp(48px, 8vh, 96px) !important;
+}
+
+.event-card, .product-card, .shortcut {
+  will-change: transform;
+}
+
+.event-card:hover, .product-card:hover {
+  box-shadow: var(--shadow-lift);
+}
+
+/* transisi gambar halus tanpa layout shift */
+.event-card img, .product-art {
+  transition: transform .5s var(--ease-out), filter .3s ease;
+}
+
+.event-card:hover img { transform: scale(1.03); }
+
+/* overlay samar saat hover card event */
+.event-card { position: relative; }
+.event-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, transparent 55%, rgba(20, 37, 26, .10) 100%);
+  opacity: 0;
+  transition: opacity .35s var(--ease-out);
+  pointer-events: none;
+}
+.event-card:hover::after { opacity: 1; }
+
+@media (hover: none) {
+  .event-card::after, .product-card::after { display: none; }
+}
+
+/* ---------- 8. Footer: lebih rapi & proporsional ---------- */
+.site-footer { margin-top: clamp(48px, 8vh, 88px); }
+
+.footer-main {
+  padding: clamp(40px, 6vh, 64px) 0 clamp(32px, 5vh, 48px);
+  align-items: center;
+}
+
+.footer-bottom {
+  padding: 18px 0;
+  font-size: 12.5px;
+  gap: 12px 24px;
+}
+
+.footer-bottom span { letter-spacing: .2px; }
+
+@media (max-width: 760px) {
+  .footer-main { padding: 36px 0 28px; gap: 26px; }
+  .footer-bottom { padding: 16px 0; font-size: 12px; }
+}
+
+/* ---------- 9. Anti overflow ---------- */
+html, body { overflow-x: clip; }
+img { max-width: 100%; height: auto; }
+
+/* ============================================================
+   PROMPT 10–15 — identity, storyline, founder, FAQ, docs
+   ============================================================ */
+
+/* ---------- Prompt 11: hero identity hierarchy ---------- */
+.hero-identity {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: clamp(1.15rem, 2vw, 1.6rem);
+  letter-spacing: -.01em;
+  line-height: 1.25;
+  color: var(--ink);
+  margin: 0 0 10px;
+  max-width: 22ch;
+}
+
+.hero-identity small {
+  display: block;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: clamp(.85rem, 1.2vw, 1rem);
+  letter-spacing: .01em;
+  color: #4A4E45;
+  margin-top: 3px;
+}
+
+/* ---------- Prompt 13: Tobaladies storyline (editorial) ---------- */
+.tl-story {
+  padding-top: clamp(40px, 6vh, 72px);
+  border-top: 1px solid var(--line);
+}
+
+.tl-story-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: start;
+}
+
+.tl-story-copy h2 {
+  font-size: clamp(2rem, 4vw, 3.1rem);
+  max-width: 16ch;
+  margin-bottom: 22px;
+}
+
+.tl-story-copy p {
+  font-size: 16px;
+  line-height: 1.75;
+  color: #3E4239;
+  max-width: 60ch;
+  margin: 0 0 20px;
+}
+
+.tl-story-copy .tl-lead {
+  font-size: clamp(17px, 1.6vw, 20px);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.tl-story-photo {
+  aspect-ratio: 4 / 3;
+  margin: clamp(28px, 4vh, 44px) 0;
+}
+
+.tl-story-side .tl-story-photo { margin-top: 0; }
+
+.tl-story-side { display: flex; flex-direction: column; gap: 28px; }
+
+.tl-acts {
+  border-top: 3px solid #C42E60;
+  padding-top: 18px;
+}
+
+.tl-acts-label {
+  font-family: var(--font-head);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2.2px;
+  text-transform: uppercase;
+  color: #C42E60;
+  margin: 0 0 12px;
+}
+
+.tl-acts ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.tl-acts li {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
+  padding-left: 16px;
+  position: relative;
+}
+
+.tl-acts li:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: .55em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #C42E60;
+}
+
+/* founder */
+.tl-founder {
+  margin-block: clamp(56px, 9vh, 100px);
+}
+
+.tl-founder-grid {
+  display: grid;
+  grid-template-columns: minmax(0, .42fr) minmax(0, .58fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: center;
+}
+
+.tl-founder-photo {
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  max-width: 460px;
+  width: 100%;
+  justify-self: end;
+  clip-path: none !important;   /* founder photo always visible — no scroll-gated reveal */
+}
+
+.tl-founder-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.tl-founder-copy h2 {
+  font-size: clamp(2rem, 3.4vw, 2.8rem);
+  margin-bottom: 6px;
+}
+
+.tl-founder-role {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #C42E60;
+  margin: 0 0 18px;
+}
+
+.tl-founder-copy p {
+  font-size: 16px;
+  line-height: 1.75;
+  color: #3E4239;
+  max-width: 56ch;
+  margin: 0 0 16px;
+}
+
+.tl-founder-note {
+  color: var(--muted) !important;
+  border-left: 2px solid var(--line);
+  padding-left: 14px;
+}
+
+@media (max-width: 900px) {
+  .tl-story-grid, .tl-founder-grid { grid-template-columns: 1fr; gap: 28px; }
+  .tl-story-side { order: 2; }
+}
+
+/* ---------- Prompt 14 → PROMPT 76/77: FAQ redesign (compact, editorial) ----------
+   Hierarchy: eyebrow → heading → description → WFG panel (left col) /
+   accordion (right col). Tighter rows, thin neutral borders, no heavy shadows. */
+.faq-wrap { margin-block: clamp(48px, 8vh, 88px); }
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+  gap: clamp(28px, 4vw, 64px);
+  align-items: start;
+}
+
+.faq-head h2 {
+  font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+  max-width: 18ch;
+  margin-bottom: 10px;
+  line-height: 1.12;
+}
+
+.faq-head .lede {
+  margin-bottom: 24px;
+  font-size: 14.5px;
+  color: var(--muted);
+  max-width: 42ch;
+  line-height: 1.65;
+}
+
+/* --- Weekly Fun Game panel: compact 2-col facts grid on wide screens --- */
+.wfg-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 20px 16px;
+  position: relative;
+}
+.wfg-card::before {                       /* subtle TOBA green accent line */
+  content: '';
+  position: absolute;
+  left: 20px; right: auto;
+  top: 0;
+  width: 34px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 0 0 2px 2px;
+}
+
+.wfg-card h3 {
+  font-size: .98rem;
+  margin: 2px 0 10px;
+  letter-spacing: -.01em;
+}
+
+.wfg-card .ie-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 18px;
+  margin: 0;
+}
+
+.wfg-card .ie-fact {
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.wfg-card .ie-fact:nth-child(-n+2) { border-top: 0 }
+.wfg-card .ie-fact:nth-child(even) { padding-left: 2px }
+
+.wfg-card .ie-fact dt {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.wfg-card .ie-fact dd {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.45;
+}
+/* price rows stand out with the green accent */
+.wfg-card .ie-fact:nth-child(5) dd,
+.wfg-card .ie-fact:nth-child(6) dd { color: var(--accent) }
+
+.wfg-note {
+  margin: 12px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* --- accordion: compact rows, thin borders, gentle corners --- */
+.faq-list { display: grid; gap: 8px; }
+
+.faq-item {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color .2s;
+}
+
+.faq-item:hover { border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); }
+
+.faq-q {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: 12px 16px;
+  font-family: var(--font-head);
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--ink);
+  min-height: 48px;
+}
+
+.faq-chev {
+  flex: 0 0 auto;
+  width: 9px;
+  height: 9px;
+  border-right: 1.8px solid var(--accent);
+  border-bottom: 1.8px solid var(--accent);
+  transform: rotate(45deg);
+  transition: transform .25s var(--ease-out);
+  margin-right: 2px;
+}
+
+.faq-q[aria-expanded="true"] .faq-chev { transform: rotate(-135deg); }
+
+.faq-a {
+  padding: 2px 16px 14px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #3E4239;
+}
+
+.faq-a p { margin: 0; max-width: 62ch; }
+
+/* answer open/close transition: grid-rows trick + visibility (the global
+   [hidden]{display:none!important} would kill any transition, so the panel
+   animates on the .open class instead; visibility keeps it out of the
+   a11y tree while closed, aria-expanded stays the single source of truth) */
+.faq-a {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition: grid-template-rows .3s var(--ease-out), visibility 0s .3s;
+}
+.faq-a > p { overflow: hidden; min-height: 0 }
+.faq-item.open .faq-a {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition: grid-template-rows .3s var(--ease-out);
+}
+
+@media (max-width: 900px) {
+  .faq-grid { grid-template-columns: 1fr; gap: 24px; }
+  .faq-head .lede { max-width: none }
+  .wfg-card .ie-facts { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 480px) {
+  .wfg-card { padding: 16px 14px 14px }
+  .wfg-card .ie-facts { grid-template-columns: 1fr; gap: 0 }
+  .wfg-card .ie-fact { padding: 7px 0 }
+  .wfg-card .ie-fact:nth-child(even) { padding-left: 0 }
+  .wfg-card .ie-fact:nth-child(-n+2) { border-top: 1px solid var(--line) }
+  .wfg-card .ie-fact:first-child { border-top: 0 }
+  .faq-q { padding: 11px 14px; font-size: 14px; min-height: 44px }
+  .faq-a { padding: 2px 14px 12px }
+}
+
+/* ============================================================
+   PROMPT 60 — parallax transition: storyline → The Founder.
+   Court geometry + a soft vertical connector drift between the two
+   chapters at different speeds (JS data-parallax drives the motion).
+   Founder photo reveals via clip reveal (existing .img-reveal class).
+   ============================================================ */
+.founder-parallax { position: relative }
+
+.founder-transit {
+  position: absolute;
+  top: clamp(-120px, -10vh, -64px);
+  left: 50%;
+  width: min(360px, 70%);
+  height: clamp(120px, 18vh, 220px);
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.founder-transit-court {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  stroke: var(--accent);
+  opacity: .16;
+  stroke-width: 1.4;
+}
+
+.founder-transit-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: -40px;
+  width: 1px;
+  background: linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--accent) 55%, transparent) 50%, transparent 100%);
+  opacity: .5;
+}
+
+@media (max-width: 760px) {
+  .founder-transit { height: 80px; width: 60% }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .founder-transit { display: none }
+}
+
+/* ============================================================
+   PROMPT 62 — TOBA MERCH section spacing (lebih lega, konsisten)
+   ============================================================ */
+.merch-section { padding-top: clamp(72px, 12vh, 132px) }
+
+/* ============================================================
+   PROMPT 63 — CONTACT CARD redesign (compact, tipis, elegan)
+   ============================================================ */
+.contact-section { padding-top: clamp(56px, 9vh, 104px); padding-bottom: clamp(72px, 10vh, 120px) }
+
+.contact-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(20px, 4vw, 48px);
+  max-width: calc(var(--container) - 96px);
+  margin: 0 auto;
+  padding: clamp(24px, 4vh, 40px) clamp(24px, 4vw, 52px);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 4px 18px rgba(36, 39, 34, .05);
+  text-decoration: none;
+  color: var(--ink);
+  transition: transform .3s var(--ease-out), box-shadow .3s var(--ease-out), border-color .3s
+}
+
+.contact-card:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
+  box-shadow: 0 14px 34px rgba(36, 39, 34, .10)
+}
+
+.contact-card h3 {
+  font-size: clamp(20px, 2.4vw, 28px);
+  margin: 6px 0 8px
+}
+
+.contact-card .lede { margin: 0; max-width: 52ch }
+
+.contact-cta { flex: 0 0 auto }
+
+@media (max-width: 760px) {
+  .contact-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+    padding: 24px 22px
+  }
+}
+
+/* ============================================================
+   PROMPT 16-23 — VISUAL REFINEMENT PASS (Nov 2026)
+   ============================================================ */
+
+/* ---------- Prompt 16: hero gradient (foto hitam-putih dihapus,
+   geometry lapangan + maskot dipertahankan) ---------- */
+.hero-home {
+  background:
+    radial-gradient(140% 110% at 12% -10%, rgba(255, 255, 255, .85) 0%, rgba(255, 255, 255, 0) 55%),
+    radial-gradient(120% 90% at 88% 8%, rgba(143, 191, 156, .38) 0%, rgba(143, 191, 156, 0) 62%),
+    radial-gradient(100% 80% at 78% 96%, rgba(49, 90, 59, .28) 0%, rgba(49, 90, 59, 0) 70%),
+    radial-gradient(90% 70% at 8% 88%, rgba(92, 115, 100, .22) 0%, rgba(92, 115, 100, 0) 64%),
+    linear-gradient(168deg, #F2EFE3 0%, #E7EBDD 38%, #CBD8C5 68%, #9FB397 100%);
+}
+
+.hero-home .hero-atmosphere {
+  background: linear-gradient(180deg, rgba(92, 115, 100, 0) 0%, rgba(92, 115, 100, .05) 45%, rgba(49, 90, 59, .07) 100%);
+}
+
+/* ---------- Prompt 18: typography redesign ----------
+   Display: Bricolage Grotesque (karakter kuat)
+   Body:    Manrope (naik dari Instrument Sans — lebih halus)
+   Script:  Caveat (aksen cursive pada headline, jarang dipakai) */
+:root {
+  --font-display: 'Bricolage Grotesque', 'Manrope', sans-serif;
+  --font-script: 'Caveat', cursive;
+  --font-head: 'Bricolage Grotesque', sans-serif;
+  --font-body: 'Manrope', sans-serif;
+}
+
+h1, h2 {
+  font-weight: 800;
+  letter-spacing: -.035em;
+  line-height: 1.02;
+}
+
+h3, .eyebrow, .brand-name, .btn, .pill, .mega-title {
+  font-family: var(--font-display);
+}
+
+/* aksen script di hero: dinonaktifkan — tidak dipakai lagi (PROMPT 78/79:
+   slogan memakai sans-serif utama, bukan cursive/handwriting) */
+.hero-script,
+.obi-welcome, .tl-welcome, .tdl-welcome {
+  font-family: var(--font-body);
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: .01em;
+}
+
+.obi-welcome, .tl-welcome, .tdl-welcome {
+  color: #315A3B;
+  font-size: clamp(16px, 2vw, 21px);
+  line-height: 1.5;
+}
+
+.theme-tobaladies .obi-welcome,
+.tl-welcome { color: #92334F }
+
+.theme-tobadeli .obi-welcome,
+.tdl-welcome { color: #A83D20 }
+
+/* ---------- Prompt 17: mobile drawer — LEFT panel (70-75%), bukan fullscreen ---------- */
+@media (max-width: 1000px) {
+  .main-nav {
+    display: flex;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: auto;
+    height: 100vh;
+    height: 100dvh;
+    width: min(74vw, 340px);
+    max-width: 340px;
+    background: linear-gradient(175deg, var(--surface) 0%, var(--bg) 100%);
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0;
+    z-index: 45;
+    transform: translateX(-105%);
+    transition: transform .34s var(--ease-out);
+    visibility: hidden;
+    box-shadow: 24px 0 60px rgba(20, 28, 22, .18);
+    border-right: 1px solid var(--line);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .main-nav.open {
+    transform: none;
+    visibility: visible;
+  }
+
+  /* drawer-internal scroll: satu-satunya scrolling panel */
+  .main-nav.open .drawer-head,
+  .main-nav.open .drawer-intro,
+  .main-nav.open .drawer-scroll,
+  .main-nav.open .drawer-footer {
+    flex-shrink: 0;
+  }
+
+  .main-nav.open .drawer-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  /* backdrop dengan blur — lembut, tidak pekat */
+  .nav-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 28, 22, .38);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    z-index: 39;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .3s ease;
+  }
+
+  .nav-backdrop.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .menu-toggle { z-index: 46 }
+  body:has(#mainNav.open) .menu-toggle {
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+/* ---------- Prompt 58: checklist redesign — icon aligned with title,
+   NO divider lines, tighter vertical rhythm ---------- */
+.feature-checklist {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px 40px;
+  margin-top: clamp(32px, 5vh, 56px);
+  margin-bottom: clamp(32px, 5vh, 56px);
+}
+
+.feature-check {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 10px 0;
+}
+
+.feature-check:nth-child(odd) { padding-left: 0 }
+.feature-check:nth-child(-n+2) { border-bottom: 0 }
+.feature-check:nth-child(n+3) { padding-bottom: 0 }
+
+.check-ind {
+  flex: 0 0 22px;
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+
+.check-ind svg { position: relative; z-index: 1 }
+
+.check-copy strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -.01em;
+}
+
+.check-copy span {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 3px;
+  line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .feature-checklist {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    margin-top: clamp(32px, 5vh, 48px);
+    margin-bottom: clamp(32px, 5vh, 64px);
+  }
+
+  .feature-check {
+    padding: 8px 0;
+    border: 0;
+  }
+}
+
+/* ---------- Prompt 22: storyline section ---------- */
+.brand-story {
+  border-top: 1px solid var(--line);
+  padding-top: clamp(44px, 7vh, 76px);
+  margin-top: clamp(44px, 7vh, 80px) !important;
+}
+
+.storyline-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: start;
+}
+
+.storyline-copy h2,
+.section-heading h2 {
+  max-width: 18ch;
+}
+
+.storyline-lead {
+  font-size: clamp(17px, 1.7vw, 21px);
+  font-weight: 500;
+  line-height: 1.6;
+  color: var(--ink);
+  margin: 0 0 20px;
+  max-width: 58ch;
+}
+
+.storyline-copy p {
+  font-size: 15.5px;
+  line-height: 1.75;
+  color: #3E4239;
+  max-width: 60ch;
+  margin: 0 0 18px;
+}
+
+.storyline-terms {
+  display: grid;
+  gap: 18px;
+}
+
+.term {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  position: relative;
+}
+
+.term-pink { border-left: 3px solid #C42E60 }
+.term-orange { border-left: 3px solid #B4421C }
+.term:not(.term-pink):not(.term-orange) { border-left: 3px solid var(--accent) }
+
+.term h3 {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: .01em;
+  margin: 0 0 2px;
+}
+
+.term-pink h3 { color: #C42E60 }
+.term-orange h3 { color: #B4421C }
+
+.term .term-full {
+  font-family: var(--font-script);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--muted);
+  margin: 0 0 6px;
+}
+
+.term p:last-child {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #3E4239;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .storyline-grid { grid-template-columns: 1fr; gap: 28px }
+  .storyline-terms { order: 2 }
+}
+
+/* ---------- Prompt 22: founder section (editorial, bukan card) ---------- */
+.founder-story {
+  border-top: 1px solid var(--line);
+  padding-top: clamp(48px, 8vh, 88px);
+  margin-top: clamp(44px, 7vh, 80px);
+}
+
+.founder-grid {
+  display: grid;
+  grid-template-columns: minmax(0, .42fr) minmax(0, .58fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: center;
+}
+
+.founder-photo {
+  aspect-ratio: 4 / 5;
+  max-width: 440px;
+  width: 100%;
+  justify-self: end;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lift);
+}
+
+.founder-photo.img-broken {
+  display: grid;
+  place-items: center;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.founder-copy .eyebrow { color: var(--accent) }
+
+.founder-copy h2 {
+  font-size: clamp(2.1rem, 3.6vw, 3rem);
+  margin-bottom: 4px;
+}
+
+.founder-role {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2.2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 20px;
+}
+
+.founder-copy .story-copy {
+  font-size: clamp(15.5px, 1.5vw, 17px);
+  line-height: 1.78;
+  color: #3E4239;
+  max-width: 56ch;
+  margin: 0 0 18px;
+}
+
+.founder-note {
+  border-left: 2px solid var(--line);
+  padding-left: 14px;
+  margin: 0;
+}
+
+.founder-note small {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+  .founder-grid { grid-template-columns: 1fr; gap: 28px }
+  .founder-photo { justify-self: center; max-width: 340px }
+}
+
+/* ---------- Prompt 23: spacing Storyline vs Agenda ---------- */
+.agenda-section {
+  margin-top: clamp(56px, 9vh, 112px) !important;
+  padding-top: 0;
+}
+
+.agenda-section .section-heading {
+  margin-bottom: clamp(24px, 4vh, 40px);
+}
+
+/* ---------- Prompt 21: Gallery — background photographic blur, tidak hitam ---------- */
+.gallery-hero-blur {
+  position: relative;
+  overflow: hidden;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  padding: clamp(40px, 6vh, 72px) 0 clamp(20px, 3vh, 32px);
+}
+
+.gallery-hero-blur::before {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  background: url('assets/img/court-floor.jpg') center 45% / cover no-repeat;
+  filter: blur(26px) saturate(1.05) brightness(1.15);
+  opacity: .3;
+  z-index: 0;
+}
+
+.gallery-hero-blur::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(90% 70% at 15% 0%, rgba(255, 255, 255, .55) 0%, rgba(255, 255, 255, 0) 60%),
+    linear-gradient(180deg, rgba(247, 246, 240, .45) 0%, rgba(247, 246, 240, .85) 78%, var(--bg) 100%);
+}
+
+.theme-tobaladies .gallery-hero-blur::after {
+  background:
+    radial-gradient(90% 70% at 15% 0%, rgba(243, 233, 233, .55) 0%, rgba(243, 233, 233, 0) 60%),
+    linear-gradient(180deg, rgba(243, 233, 233, .45) 0%, rgba(243, 233, 233, .85) 78%, #F3E9E9 100%);
+}
+
+.theme-tobadeli .gallery-hero-blur::after {
+  background:
+    radial-gradient(90% 70% at 15% 0%, rgba(241, 233, 220, .55) 0%, rgba(241, 233, 220, 0) 60%),
+    linear-gradient(180deg, rgba(241, 233, 220, .45) 0%, rgba(241, 233, 220, .85) 78%, #F1E9DC 100%);
+}
+
+.gallery-hero-blur > .section-wrap {
+  position: relative;
+  z-index: 2;
+}
+
+/* pastikan foto tetap fokus utama */
+.gallery-item { background: var(--accent-soft) }
+
+.gallery-item img {
+  object-position: center;
+}
+
+@media (max-width: 760px) {
+  .gallery-hero-blur {
+    padding: 32px 0 20px;
+  }
+  .gallery-hero-blur::before { filter: blur(18px) saturate(1.05) brightness(1.2); opacity: .24 }
+}
+
+/* konsistensi rasio foto Gallery untuk API dynamic images */
+.api-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ============================================================
+   PROMPT 24-34 — FINAL REFINEMENT PASS (Nov 2026)
+   ============================================================ */
+
+/* ---------- Prompt 34: navbar gradient premium (no more dark/black) ---------- */
+.site-header {
+  background: transparent;
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+.site-header:before {
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  background:
+    linear-gradient(100deg, rgba(247, 246, 240, .92) 0%, rgba(226, 232, 224, .88) 45%, rgba(143, 191, 156, .30) 78%, rgba(49, 90, 59, .16) 100%);
+}
+
+.site-header:has(.mega.open),
+.site-header.menu-context {
+  background: transparent;
+}
+
+.site-header:has(.mega.open):before,
+.site-header.menu-context:before {
+  background: linear-gradient(100deg, #F7F6F0 0%, #E6EBE0 55%, #CFDCC8 100%);
+}
+
+.theme-tobaladies .site-header:before {
+  background: linear-gradient(100deg, rgba(251, 245, 245, .92) 0%, rgba(243, 233, 233, .88) 45%, rgba(242, 216, 222, .45) 100%);
+}
+
+.theme-tobadeli .site-header:before {
+  background: linear-gradient(100deg, rgba(251, 247, 239, .92) 0%, rgba(241, 233, 220, .88) 45%, rgba(244, 223, 210, .45) 100%);
+}
+
+/* ---------- Prompt 25: typography revamp — Plus Jakarta Sans ---------- */
+:root {
+  --font-display: 'Plus Jakarta Sans', 'Manrope', sans-serif;
+  --font-head: 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+}
+
+h1, h2, h3 {
+  font-weight: 800;
+  letter-spacing: -.03em;
+}
+
+h1 { line-height: 1.04 }
+h2 { line-height: 1.08 }
+h3 { letter-spacing: -.015em }
+
+/* eyebrow & label: weight turun, letter-spacing lebih tenang */
+.eyebrow {
+  font-weight: 700;
+  letter-spacing: .18em;
+  font-size: 11.5px;
+}
+
+.mega-label {
+  letter-spacing: .14em;
+}
+
+.announcement {
+  letter-spacing: 1.4px;
+  font-weight: 600;
+}
+
+.shortcut-full,
+.frame-caption,
+.tl-acts-label,
+.founder-role,
+.hero-identity small {
+  letter-spacing: .12em;
+}
+
+/* ---------- Prompt 24: warna lebih hidup & clean ---------- */
+:root {
+  --accent: #2E7D46;          /* forest yang lebih hidup, tetap identitas TOBA */
+  --accent-dark: #1D5A30;
+  --bg: #FAF9F3;
+}
+
+.theme-tobaladies { --accent: #D64D78; --accent-dark: #A82A56 }
+.theme-tobadeli { --accent: #E65C25; --accent-dark: #B8401A }
+
+/* dark section tidak hitam pekat lagi: deep forest hangat */
+.dark-section {
+  background: linear-gradient(180deg, #22402D 0%, #18301F 100%);
+}
+
+/* ---------- Prompt 26/27/28: two photo cards ---------- */
+.comm-cards { margin-top: clamp(40px, 6vh, 72px) }
+
+.section-sub {
+  font-size: 16px;
+  color: var(--muted);
+  max-width: 52ch;
+  margin: 10px 0 0;
+}
+
+.community-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(20px, 3vw, 36px);
+}
+
+.comm-photo-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  transition: transform .25s var(--ease-out), box-shadow .25s var(--ease-out);
+}
+
+.comm-photo-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lift);
+}
+
+.card-pink { border-top: 4px solid #D64D78 }
+.card-orange { border-top: 4px solid #E65C25 }
+
+.comm-photo {
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--accent-soft);
+}
+
+.comm-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform .7s var(--ease-out);
+}
+
+.comm-photo-card:hover .comm-photo img { transform: scale(1.04) }
+
+.comm-copy {
+  padding: 22px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.comm-flag {
+  width: 26px;
+  height: 3px;
+  border-radius: 2px;
+  margin-bottom: 4px;
+}
+
+.card-pink .comm-flag { background: #D64D78 }
+.card-orange .comm-flag { background: #E65C25 }
+
+.comm-copy h3 {
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  margin: 0;
+}
+
+.card-pink h3 { color: #C42E60 }
+.card-orange h3 { color: #B4421C }
+
+.comm-copy p {
+  font-size: 14.5px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0 0 6px;
+}
+
+.comm-link {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.comm-link span {
+  display: inline-block;
+  transition: transform .25s var(--ease-out);
+}
+
+.comm-photo-card:hover .comm-link span { transform: translateX(4px) }
+
+@media (hover: none) {
+  .comm-photo-card:active { transform: scale(.985) }
+}
+
+@media (max-width: 640px) {
+  .community-photo-grid { grid-template-columns: 1fr }
+  .comm-photo { aspect-ratio: 16 / 11 }
+}
+
+/* ---------- Prompt 33: founder transparan ---------- */
+.founder-photo {
+  background: transparent;
+  box-shadow: none;
+  border: 0;
+  aspect-ratio: auto;
+  border-radius: 0;
+  overflow: visible;
+  display: grid;
+  place-items: center;
+  clip-path: none !important;
+}
+
+
+.founder-photo img {
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  object-fit: contain;
+  filter: none;
+}
+
+@media (max-width: 900px) {
+  .founder-photo img { max-width: 300px }
+}
+
+/* ---------- Prompt 31: spacing konsisten ---------- */
+.section-heading {
+  margin-bottom: clamp(28px, 4vh, 44px);
+}
+
+.section-heading .section-sub {
+  margin-top: 12px;
+}
+
+.founder-story {
+  margin-top: clamp(56px, 9vh, 104px);
+  padding-top: clamp(48px, 8vh, 88px);
+  margin-bottom: clamp(56px, 9vh, 104px);
+}
+
+.brand-story {
+  margin-top: clamp(48px, 8vh, 96px) !important;
+  padding-top: clamp(44px, 7vh, 80px);
+}
+
+.comm-cards + .section-wrap,
+.brand-story + .section-wrap {
+  margin-top: clamp(48px, 8vh, 96px);
+}
+
+.agenda-section {
+  margin-top: clamp(56px, 9vh, 112px) !important;
+}
+
+.gallery-shell + .info-editorial,
+.info-editorial {
+  margin-bottom: clamp(48px, 8vh, 88px) !important;
+}
+
+.event-grid { gap: clamp(24px, 3vw, 40px) clamp(18px, 2.5vw, 28px) }
+
+.product-grid { gap: clamp(28px, 4vw, 40px) clamp(18px, 2.5vw, 24px) }
+
+@media (max-width: 760px) {
+  section { margin: clamp(44px, 7vh, 72px) 0 }
+  .section-heading { margin-bottom: 24px }
+}
+
+/* ---------- Prompt 29/30: foto selalu tampil di mobile ---------- */
+@media (max-width: 760px) {
+  .photo-frame,
+  .comm-photo,
+  .founder-photo,
+  .mega-visual,
+  .event-card img,
+  .comm-photo img {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .photo-frame img {
+    min-height: 0;
+    object-fit: cover;
+  }
+
+  /* matikan rotation dekoratif yang membuat foto tampak miring */
+  .photo-frame img[data-parallax],
+  .comm-photo img {
+    transform: none !important;
+  }
+}
+
+/* pastikan tidak ada rotate global pada foto dokumentasi */
+.photo-frame img {
+  image-orientation: from-image;
+}
+
+/* ---------- Prompt 32: tagline footer ---------- */
+.footer-main .footer-brand p strong {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: .06em;
+}
+
+/* ---------- pembersihan: gaya section yang dihapus tidak dipakai lagi ---------- */
+/* .shortcut-grid / .shortcut styles remain harmless if unused elsewhere */
+
+/* ---------- Prompt 31 supplement: section awal/akhir yang jelas ---------- */
+/* Anti-flash reveal untuk section paling awal (di atas fold) — hindari layout
+   tampak kosong sebelum animasi dimulai */
+.hero-home.in + .section-wrap,
+.comm-cards.reveal {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* story section heading tidak duplikat — hanya satu heading per section */
+.brand-story .section-heading { margin-bottom: clamp(20px, 3vh, 32px) }
+
+/* ============================================================
+   PROMPT 40 — EDITORIAL PARALLAX STORYTELLING (homepage)
+   Satu foto utama + satu lapisan geometry lapangan + tipografi
+   bertahap. Ringan: transform-only parallax, reveal bertahap,
+   simplified on mobile, respects prefers-reduced-motion.
+   ============================================================ */
+.story-ed {
+  margin-block: clamp(64px, 10vh, 128px);
+}
+
+.story-ed-inner {
+  width: min(var(--container), calc(100% - 48px));
+  margin-inline: auto;
+}
+
+/* chapter 1 — judul + narasi TOBA */
+.story-ed-chapter {
+  max-width: 62ch;
+}
+
+.story-ed-title {
+  font-size: clamp(2.1rem, 5.2vw, 3.6rem);
+  margin: 12px 0 0;
+}
+
+.story-ed-lede {
+  font-size: clamp(16px, 1.6vw, 19px);
+  line-height: 1.7;
+  color: var(--muted);
+  margin: 18px 0 0;
+}
+
+/* foto utama dengan geometry lapangan mengambang */
+.story-ed-photo {
+  position: relative;
+  margin: clamp(40px, 6vh, 72px) auto;
+  max-width: 880px;
+  border-radius: var(--radius-xl);
+  overflow: visible;
+}
+
+.story-ed-photo > img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: var(--radius-xl);
+  display: block;
+}
+
+/* Prompt 59: geometry pushed BELOW-RIGHT, mostly outside the photo —
+   no lines creeping across the image face */
+.story-ed-geo {
+  position: absolute;
+  inset: auto -6% -9% auto;
+  width: 40%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.story-ed-geo svg {
+  width: 100%;
+  height: auto;
+  stroke: var(--accent);
+  opacity: .4;
+  stroke-width: 1.6;
+}
+
+@media (max-width: 760px) {
+  .story-ed-geo { width: 44%; inset: auto -4% -8% auto; opacity: .55 }
+}
+
+/* chapter 2 — dua circle, layout editorial tanpa card */
+.story-ch2 {
+  margin-block: clamp(56px, 9vh, 112px);
+  display: grid;
+  gap: clamp(36px, 6vh, 64px);
+}
+
+.story-circle {
+  border-left: 2px solid var(--line);
+  padding-left: clamp(16px, 2.4vw, 28px);
+}
+
+/* PROMPT 83: balanced two-column editorial, both groups top-aligned */
+@media (min-width: 900px) {
+  .story-circle {
+    align-self: start;
+  }
+  .story-circle p { max-width: 40ch }
+  .story-circle-lede { align-self: end }
+  .story-circle-deli { margin-top: 0 }  /* no more vertical offset — rows align */
+}
+
+.story-circle-ladies { border-color: #D64D78 }
+.story-circle-deli { border-color: #E65C25 }
+
+.story-circle-name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: .14em;
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0 0 8px;
+}
+
+.story-circle-ladies .story-circle-name { color: #C42E60 }
+.story-circle-deli .story-circle-name { color: #B4421C }
+
+.story-circle h3 {
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  margin: 0 0 10px;
+}
+
+.story-circle p {
+  font-size: 15.5px;
+  line-height: 1.7;
+  color: var(--muted);
+  margin: 0;
+  max-width: 48ch;
+}
+
+.story-circle-lede {
+  font-family: var(--font-display);
+  font-size: clamp(17px, 2vw, 21px);
+  font-weight: 600;
+  color: var(--ink);
+  margin: 8px 0 0;
+}
+
+@media (min-width: 900px) {
+  .story-ch2 {
+    grid-template-columns: 1fr 1fr;
+    column-gap: clamp(48px, 6vw, 88px);
+    align-items: start;             /* both groups start at the same top line */
+    max-width: 1080px;
+    margin-inline: auto;            /* centred inside the container */
+  }
+  .story-circle-deli { margin-top: 0 }  /* no vertical offset — rows align */
+  .story-circle-lede { grid-column: 1 / -1; max-width: 46ch }
+}
+
+/* chapter 3 — transisi ke The Founder */
+.story-ch3 {
+  text-align: left;
+  max-width: 52ch;
+  margin-block: clamp(56px, 9vh, 104px) clamp(48px, 7vh, 88px);
+}
+
+.story-bridge-title {
+  font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+  margin: 0 0 14px;
+}
+
+.story-bridge-p {
+  font-size: 16.5px;
+  line-height: 1.7;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* reveal bertahap: narasi muncul satu per satu saat scroll */
+[data-reveal-step] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity .7s var(--ease-out), transform .7s var(--ease-out);
+}
+
+[data-reveal-step].step-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal-step] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ============================================================
+   PROMPT 64–71 — FINAL REFINEMENT PASS (Nov 2026)
+   Append-only: overrides the retired geometry carriers and
+   adds the welcome-invitation experience. No existing rule
+   above this block is modified.
+   ============================================================ */
+
+/* ---------- PROMPT 64 · geometry no longer bleeds onto photos ----------
+   The two decorative overlays were removed from the DOM in script.js;
+   these hard rules guarantee nothing regenerates them (even stale CSS). */
+.story-ed-geo,
+.founder-transit,
+.founder-transit-court,
+.founder-transit-line {
+  display: none !important;
+}
+
+/* story photo now stands alone — keep the clean frame */
+.story-ed-photo { overflow: hidden }
+
+/* ---------- PROMPT 68 · checklist: zero lines anywhere, real check glyph.
+   Existing layout is kept; this hardens it against the old border rules
+   and enlarges the tick so it reads instantly. */
+.feature-checklist,
+.feature-checklist * {
+  border: 0 !important;
+  outline: 0 !important;
+}
+.feature-check {
+  border: 0 !important;
+  padding: 12px 0 !important;
+  align-items: center;
+}
+.feature-checklist { gap: 6px 48px !important }
+.check-ind {
+  flex: 0 0 26px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: inline-grid;
+  place-items: center;
+}
+.check-ind svg { width: 13px; height: 13px }
+/* the tick must be WHITE and VISIBLE on the green roundel —
+   the inherited body colour was grey-on-green (invisible) */
+.check-ind,
+.check-ind svg { color: #fff }
+.check-ind svg path { stroke: #fff; stroke-width: 2.6 }
+.check-copy strong { font-size: 15.5px }
+.check-copy span { color: #565B52 }
+
+/* ---------- PROMPT 69/70 · simplified hero ----------
+   Old headline/slug/eyebrow are gone from the DOM; neutralise their CSS
+   hooks so nothing shifts or flashes if referenced elsewhere. */
+.hero-eyebrow-slot,
+.hero-script { display: none !important }
+.hero-home h1 { max-width: none }
+.hero-home .hero-head h1 { margin: 0 }
+.hero-home .hero-identity { margin-bottom: clamp(18px, 3vh, 30px) }
+.hero-home .hero-subtitle:empty { display: none }
+/* identity becomes the main statement of the hero */
+.hero-home .hero-identity,
+.hero-identity {
+  font-family: var(--font-head);
+  font-weight: 800;
+  letter-spacing: -.03em;
+  line-height: 1.02;
+  font-size: clamp(2.4rem, 5.6vw, 4.4rem);
+  margin: 0 0 6px;
+  color: var(--ink);
+}
+.hero-identity small {
+  display: block;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: clamp(.95rem, 1.4vw, 1.15rem);
+  letter-spacing: 0;
+  margin-top: 10px;
+  color: #4A5148;
+}
+/* ---------- PROMPT 80/81 · Homepage cleanup hooks ----------
+   Court geometry SVG and the scroll cue are no longer rendered in
+   home()'s markup (removed in script.js). These homepage-scoped rules
+   guarantee nothing lingers; community pages keep their geometry. */
+.hero-home .hero-court { display: none !important }
+.hero-home .scroll-cue { display: none !important }
+
+/* ---------- PROMPT 73/85 · Toba Basketball Community colours ----------
+   "Toba Basketball" = TOBA green #2F804B · "Community" = charcoal #252923.
+   The heading renders as two spans injected by script (identity split),
+   both branches styled here so desktop & mobile read identically. */
+.hero-home .hero-identity {
+  color: #2F804B;
+}
+.hero-home .hero-identity .id-comm,
+.hero-home .hero-identity small {
+  color: #252923;
+}
+@media (max-width: 760px) {
+  .hero-home .hero-identity { color: #2A7443 }        /* slightly deeper on bright mobile wash */
+}
+
+/* ---------- PROMPT 74 · centered, clean info group ----------
+   No decorative rules: whitespace, typography and alignment only.
+   Desktop = three proportional columns, centered; mobile = stacked. */
+.hero-home .hero-info {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: center;
+  gap: 20px clamp(28px, 4vw, 60px);
+  text-align: center;
+  border-top: 0;
+  padding-top: 0;
+  width: 100%;
+}
+.hero-home .hero-info-item strong,
+.hero-home .hero-info-item span { white-space: nowrap }
+.hero-home .hero-info-item {
+  padding-left: 0;
+  border-left: 0;
+}
+@media (max-width: 760px) {
+  .hero-home .hero-info {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    text-align: center;
+  }
+}
+
+/* info block reads as the scannable schedule panel */
+.hero-info {
+  margin-top: clamp(22px, 4vh, 36px);
+  gap: 18px clamp(24px, 4vw, 48px);
+  flex-wrap: wrap;
+}
+.hero-info-item strong {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: -.01em;
+}
+.hero-info-item span { color: #565B52; font-size: 13.5px }
+
+/* ---------- PROMPT 67 · interactive ball hardening ----------
+   Perfect circle guaranteed; transforms never distort the silhouette. */
+
+/* ---------- PROMPT 84 · interactive ball retired ----------
+   .hero-ball / .ball-dismiss CSS removed together with the markup;
+   nothing replaces the ball on the Homepage. */
+
+/* end of stylesheet */

@@ -1,0 +1,49 @@
+[1440] index: {"ovX":false,"ovY":false,"errs":[],"court":{"w":1440,"h":802,"op":"0.65"},"heroH":802,"masc":"439x399","docH":4600} explore=open errs=none
+[1440] tobaladies: {"ovX":false,"ovY":false,"errs":[],"court":{"w":1280,"h":802,"op":"0.65"},"heroH":802,"masc":"559x559","docH":3097} explore=open errs=none
+[1440] tobadeli: {"ovX":false,"ovY":false,"errs":[],"court":{"w":1280,"h":802,"op":"0.65"},"heroH":802,"masc":"559x559","docH":3097} explore=open errs=none
+[1440] events: {"ovX":false,"ovY":false,"errs":[],"heroH":971,"docH":2871} explore=open errs=none
+[1440] merchandise: {"ovX":false,"ovY":false,"errs":[],"heroH":464,"docH":2113} explore=open errs=none
+[1440] gallery: {"ovX":false,"ovY":false,"errs":[],"heroH":630,"docH":1686} explore=open errs=none
+[1440] game: {"ovX":false,"ovY":false,"errs":[],"docH":1578} explore=open errs=none
+[1440] partnership: {"ovX":false,"ovY":false,"errs":[],"heroH":908,"docH":2104} explore=open errs=none
+[1024] index: {"ovX":false,"ovY":false,"errs":[],"court":{"w":1024,"h":691,"op":"0.65"},"heroH":691,"masc":"422x368","docH":4244} explore=open errs=none
+[1024] tobaladies: {"ovX":false,"ovY":false,"errs":[],"court":{"w":976,"h":670,"op":"0.65"},"heroH":670,"masc":"477x477","docH":2729} explore=open errs=none
+[1024] tobadeli: {"ovX":false,"ovY":false,"errs":[],"court":{"w":976,"h":670,"op":"0.65"},"heroH":670,"masc":"477x477","docH":2729} explore=open errs=none
+[1024] events: {"ovX":false,"ovY":false,"errs":[],"heroH":829,"docH":2587} explore=open errs=none
+[1024] merchandise: {"ovX":false,"ovY":false,"errs":[],"heroH":407,"docH":1899} explore=open errs=none
+[1024] gallery: {"ovX":false,"ovY":false,"errs":[],"heroH":535,"docH":1534} explore=open errs=none
+[1024] game: {"ovX":false,"ovY":false,"errs":[],"docH":1501} explore=open errs=none
+[1024] partnership: {"ovX":false,"ovY":false,"errs":[],"heroH":778,"docH":1932} explore=open errs=none
+[768] index: {"ovX":false,"ovY":false,"errs":[],"court":{"w":768,"h":980,"op":"0.65"},"heroH":980,"masc":"438x398","docH":8448} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[768] tobaladies: {"ovX":false,"ovY":false,"errs":[],"court":{"w":720,"h":926,"op":"0.65"},"heroH":926,"masc":"476x476","docH":4843} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[768] tobadeli: {"ovX":false,"ovY":false,"errs":[],"court":{"w":720,"h":926,"op":"0.65"},"heroH":926,"masc":"476x476","docH":4894} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[768] events: {"ovX":false,"ovY":false,"errs":[],"heroH":896,"docH":5914} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[768] merchandise: {"ovX":false,"ovY":false,"errs":[],"heroH":422,"docH":5809} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[768] gallery: {"ovX":false,"ovY":false,"errs":[],"heroH":512,"docH":1700} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[768] game: {"ovX":false,"ovY":false,"errs":[],"docH":2232} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[768] partnership: {"ovX":true,"ovY":false,"errs":[],"src":["NAV.main-nav@1856","FORM.form-card@928","P.eyebrow@896","H3.@896"],"heroH":864,"docH":2229} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[430] index: {"ovX":false,"ovY":false,"errs":[],"court":{"w":430,"h":702,"op":"0.65"},"heroH":702,"masc":"137x137","docH":6555} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[430] tobaladies: {"ovX":false,"ovY":false,"errs":[],"court":{"w":398,"h":708,"op":"0.65"},"heroH":708,"masc":"121x121","docH":4321} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[430] tobadeli: {"ovX":false,"ovY":false,"errs":[],"court":{"w":398,"h":708,"op":"0.65"},"heroH":708,"masc":"121x121","docH":4370} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[430] events: {"ovX":false,"ovY":false,"errs":[],"heroH":847,"docH":4819} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[430] merchandise: {"ovX":false,"ovY":false,"errs":[],"heroH":375,"docH":2491} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[430] gallery: {"ovX":false,"ovY":false,"errs":[],"heroH":484,"docH":1727} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[430] game: {"ovX":false,"ovY":false,"errs":[],"docH":2492} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[430] partnership: {"ovX":false,"ovY":false,"errs":[],"heroH":817,"docH":2829} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[390] index: {"ovX":false,"ovY":false,"errs":[],"court":{"w":390,"h":713,"op":"0.65"},"heroH":713,"masc":"124x124","docH":6491} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[390] tobaladies: {"ovX":false,"ovY":false,"errs":[],"court":{"w":358,"h":640,"op":"0.65"},"heroH":640,"masc":"110x110","docH":4186} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[390] tobadeli: {"ovX":false,"ovY":false,"errs":[],"court":{"w":358,"h":632,"op":"0.65"},"heroH":632,"masc":"110x110","docH":4226} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[390] events: {"ovX":false,"ovY":false,"errs":[],"heroH":797,"docH":4610} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[390] merchandise: {"ovX":false,"ovY":false,"errs":[],"heroH":365,"docH":2456} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[390] gallery: {"ovX":false,"ovY":false,"errs":[],"heroH":464,"docH":1715} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[390] game: {"ovX":false,"ovY":false,"errs":[],"docH":2453} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[390] partnership: {"ovX":false,"ovY":false,"errs":[],"heroH":772,"docH":2805} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[360] index: {"ovX":false,"ovY":false,"errs":[],"court":{"w":360,"h":791,"op":"0.65"},"heroH":791,"masc":"120x120","docH":6601} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[360] tobaladies: {"ovX":false,"ovY":false,"errs":[],"court":{"w":328,"h":624,"op":"0.65"},"heroH":624,"masc":"101x101","docH":4171} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[360] tobadeli: {"ovX":false,"ovY":false,"errs":[],"court":{"w":328,"h":607,"op":"0.65"},"heroH":607,"masc":"101x101","docH":4202} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[360] events: {"ovX":false,"ovY":false,"errs":[],"heroH":755,"docH":4493} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[360] merchandise: {"ovX":false,"ovY":false,"errs":[],"heroH":381,"docH":2480} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[360] gallery: {"ovX":false,"ovY":false,"errs":[],"heroH":449,"docH":1683} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[360] game: {"ovX":false,"ovY":false,"errs":[],"docH":2399} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+[360] partnership: {"ovX":true,"ovY":false,"errs":[],"src":["NAV.main-nav@756","DIV.@378","P.eyebrow@378","H2.@378"],"heroH":758,"docH":2774} explore=drawer=open links=true cta=true lock=true restore=true errs=none
+AUDIT DONE

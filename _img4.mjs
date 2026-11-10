@@ -1,0 +1,14 @@
+import puppeteer from 'puppeteer';
+const b = await puppeteer.launch({ headless: 'new' });
+const p = await b.newPage();
+const fails = [];
+p.on('requestfailed', r => fails.push(r.url() + ' :: ' + r.failure()?.errorText));
+p.on('response', r => { if (r.status() >= 400) fails.push(r.url() + ' :: HTTP ' + r.status()) });
+await p.goto('http://127.0.0.1:8321/index.html', { waitUntil: 'domcontentloaded', timeout: 30000 });
+await new Promise(r => setTimeout(r, 3500));
+await p.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+await new Promise(r => setTimeout(r, 3000));
+console.log('FAILS:', JSON.stringify(fails, null, 1));
+const st = await p.evaluate(() => [...document.images].filter(i => i.complete && (i.currentSrc || '').includes('img/')).map(i => ({ src: (i.currentSrc || '').split('/').pop(), nw: i.naturalWidth, w: i.clientWidth })));
+console.log('LOADED:', JSON.stringify(st));
+await b.close();
