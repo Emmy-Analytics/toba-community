@@ -1,0 +1,130 @@
+{
+ "consoleErrors": [],
+ "pages": {
+  "index.html@id": {
+   "title": "TONGKRONGAN BASKET � Komunitas Basket di Jakarta Timur",
+   "appChars": 3229,
+   "hScroll": 0,
+   "badge": {
+    "num": "rgb(29, 90, 48)",
+    "sub": "rgb(74, 78, 69)"
+   },
+   "brandBg": "rgba(0, 0, 0, 0)"
+  },
+  "tobaladies.html@id": {
+   "title": "Tobaladies — Komunitas Basket Perempuan Jakarta Timur | TOBA Community",
+   "appChars": 2412,
+   "hScroll": 0,
+   "badge": {
+    "num": "rgb(168, 42, 86)",
+    "sub": "rgb(74, 78, 69)"
+   },
+   "brandBg": "rgba(0, 0, 0, 0)"
+  },
+  "tobadeli.html@id": {
+   "title": "Tobadeli — Komunitas Basket Pria Jakarta Timur | TOBA Community",
+   "appChars": 1385,
+   "hScroll": 0,
+   "badge": {
+    "num": "rgb(184, 64, 26)",
+    "sub": "rgb(74, 78, 69)"
+   },
+   "brandBg": "rgba(0, 0, 0, 0)"
+  },
+  "events.html@id": {
+   "title": "Event Basket Jakarta Timur — Weekly Fun Game | TOBA Community",
+   "appChars": 3328,
+   "hScroll": 0,
+   "badge": {
+    "num": "rgb(29, 90, 48)",
+    "sub": "rgb(74, 78, 69)"
+   },
+   "brandBg": "rgba(0, 0, 0, 0)"
+  },
+  "merchandise.html@id": {
+   "title": "Merchandise TOBA — Jersey & Apparel Komunitas Basket | TOBA Community",
+   "appChars": 529,
+   "hScroll": 0,
+   "badge": null,
+   "brandBg": "rgba(0, 0, 0, 0)"
+  },
+  "gallery.html@id": {
+   "title": "Galeri Kegiatan Basket TOBA — Dokumentasi Komunitas | TOBA Community",
+   "appChars": 1022,
+   "hScroll": 0,
+   "badge": null,
+   "brandBg": "rgba(0, 0, 0, 0)"
+  },
+  "partnership.html@id": {
+   "title": "Kolaborasi & Kemitraan Komunitas Basket Jakarta | TOBA Community",
+   "appChars": 724,
+   "hScroll": 0,
+   "badge": null,
+   "brandBg": "rgba(0, 0, 0, 0)"
+  },
+  "index.html@en": {
+   "title": "TONGKRONGAN BASKET � Komunitas Basket di Jakarta Timur",
+   "appChars": 3141,
+   "hScroll": 0,
+   "badge": {
+    "num": "rgb(29, 90, 48)",
+    "sub": "rgb(74, 78, 69)"
+   },
+   "brandBg": "rgba(0, 0, 0, 0)"
+  },
+  "tobaladies.html@en": {
+   "title": "Tobaladies — Komunitas Basket Perempuan Jakarta Timur | TOBA Community",
+   "appChars": 2386,
+   "hScroll": 0,
+   "badge": {
+    "num": "rgb(168, 42, 86)",
+    "sub": "rgb(74, 78, 69)"
+   },
+   "brandBg": "rgba(0, 0, 0, 0)"
+  },
+  "tobadeli.html@en": {
+   "title": "Tobadeli — Komunitas Basket Pria Jakarta Timur | TOBA Community",
+   "appChars": 1361,
+   "hScroll": 0,
+   "badge": {
+    "num": "rgb(184, 64, 26)",
+    "sub": "rgb(74, 78, 69)"
+   },
+   "brandBg": "rgba(0, 0, 0, 0)"
+  },
+  "events.html@en": {
+   "title": "Event Basket Jakarta Timur — Weekly Fun Game | TOBA Community",
+   "appChars": 3356,
+   "hScroll": 0,
+   "badge": {
+    "num": "rgb(29, 90, 48)",
+    "sub": "rgb(74, 78, 69)"
+   },
+   "brandBg": "rgba(0, 0, 0, 0)"
+  },
+  "merchandise.html@en": {
+   "title": "Merchandise TOBA — Jersey & Apparel Komunitas Basket | TOBA Community",
+   "appChars": 551,
+   "hScroll": 0,
+   "badge": null,
+   "brandBg": "rgba(0, 0, 0, 0)"
+  },
+  "gallery.html@en": {
+   "title": "Galeri Kegiatan Basket TOBA — Dokumentasi Komunitas | TOBA Community",
+   "appChars": 978,
+   "hScroll": 0,
+   "badge": null,
+   "brandBg": "rgba(0, 0, 0, 0)"
+  },
+  "partnership.html@en": {
+   "title": "Kolaborasi & Kemitraan Komunitas Basket Jakarta | TOBA Community",
+   "appChars": 741,
+   "hScroll": 0,
+   "badge": null,
+   "brandBg": "rgba(0, 0, 0, 0)"
+  }
+ },
+ "langSwitchChanged": true,
+ "appStillFilled": true
+}
+

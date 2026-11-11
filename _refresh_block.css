@@ -1,0 +1,79 @@
+﻿/* ============================================================
+   TOBA REFRESH 2026-11 (MASTER PROMPT 1-17)
+   Bagian 6-9: design system, aksen section, spacing card & footer.
+   ============================================================ */
+
+/* ---------- Bagian 6: heading dua warna gaya TOBA MERCH ---------- */
+.section-heading h2,
+.hero-copy h1 {
+  text-wrap: balance;
+}
+.accent-word { color: var(--accent); }
+
+/* label section selalu pakai aksen halaman */
+.section-heading .eyebrow {
+  color: var(--accent);
+  letter-spacing: 2.2px;
+}
+
+/* ---------- Bagian 7: color enhancement per section ---------- */
+/* Cerita di Balik Nama TOBA: label aksen di atas background terang */
+.story-ed-chapter .eyebrow { color: var(--accent); }
+
+/* Momen yang Bikin Kami Terus Main (dark section): heading terang, label aksen */
+.dark-section .section-heading .eyebrow { color: var(--accent); }
+.dark-section .section-heading h2 { color: #EDE9DE; }
+.theme-tobadeli .dark-section .section-heading .eyebrow { color: #FF8A5C; }
+.theme-tobaladies .dark-section .section-heading .eyebrow { color: #F08BA8; }
+
+/* Agenda Pekan Ini & TOBA Merch: link aksen sesuai identitas */
+.text-link { color: var(--ink); }
+.text-link:hover { color: var(--accent); }
+.merch-section .text-link,
+.agenda-section .text-link { color: var(--accent); }
+
+/* ---------- Bagian 8: jarak antar-card ---------- */
+.event-grid,
+.product-grid,
+.community-photo-grid,
+.feature-strip {
+  gap: 14px;                                  /* antar-card satu kelompok: 12-16px */
+}
+.event-card .pad,
+.product-card .pad { gap: 10px; }             /* dalam card: 8-16px */
+.section-heading { margin-bottom: clamp(18px, 3vh, 28px); }
+.two-col { gap: clamp(24px, 4vw, 40px); }     /* antar-kelompok: 24-32px+ */
+
+/* ---------- Bagian 9: jarak section terakhir ke footer ---------- */
+main.page-content > :last-child,
+main.page-content section:last-of-type {
+  margin-bottom: 0;
+  padding-bottom: clamp(40px, 6vh, 56px);     /* desktop 40-56px */
+}
+.site-footer {
+  margin-top: 0;                              /* transisi natural, tanpa double-gap */
+}
+@media (max-width: 760px) {
+  main.page-content > :last-child,
+  main.page-content section:last-of-type {
+    padding-bottom: clamp(24px, 5vh, 32px);   /* mobile 24-32px */
+  }
+}
+
+/* ---------- Bagian 17: spacing teks Tobadeli & Tobaladies ---------- */
+.eyebrow { margin-bottom: 12px; }
+.section-heading h2 { margin-bottom: 10px; }  /* heading ke deskripsi 8-12px */
+.section-sub, .lede {
+  line-height: 1.65;
+  margin-bottom: 16px;                        /* antarparagraf 16-20px */
+}
+.hero-subtitle { line-height: 1.65; margin: 16px 0 20px; }
+.hero-actions { margin-bottom: clamp(20px, 4vh, 36px); } /* deskripsi ke CTA 12-16px+ */
+.hero-copy .eyebrow { margin-bottom: 14px; }
+.tl-story-grid p { margin-bottom: 18px; line-height: 1.68; }
+.tl-story-grid h2 { margin-bottom: 12px; }
+.story-copy { line-height: 1.68; margin-bottom: 18px; }
+@media (max-width: 760px) {
+  .section-wrap { margin-bottom: clamp(40px, 7vh, 56px); } /* antar-section mobile 40-56px */
+}
+/* ---------- end TOBA REFRESH 2026-11 ---------- */

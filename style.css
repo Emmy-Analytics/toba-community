@@ -206,15 +206,16 @@ p {
   margin-top: 0
 }
 
+/* Bagian 10: logo buaya transparan — tanpa lingkaran/background, menyatu
+   dengan header, footer, dan background terang apa pun */
 .brand-mark {
   width: 38px;
   height: 38px;
   display: grid;
   place-items: center;
-  border-radius: 50%;
-  background: var(--obsidian);
-  overflow: hidden;
-  border: 1px solid var(--line)
+  background: transparent;
+  border: none;
+  overflow: visible;
 }
 
 .brand-mark img {
@@ -229,6 +230,33 @@ p {
   font-weight: 800;
   line-height: .9;
   letter-spacing: .02em
+}
+
+/* ---------- PROMPT 23 · TOBACOMMUNITY wordmark (Header & Footer) ----------
+   One-line brand, two-tone: TOBA green + COMMUNITY charcoal. Same family,
+   weight & tight tracking as the homepage headline. Header keeps the
+   croc mark; the footer renders typography only. */
+.brand-oneline {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 17px;
+  line-height: 1;
+  letter-spacing: -.02em;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: baseline;
+}
+.brand-oneline .bn-toba { color: #2F804B }
+.brand-oneline .bn-comm { color: #252923 }
+.footer-brand .brand-oneline {
+  font-size: 22px;
+  letter-spacing: -.015em;
+}
+.site-footer .brand-oneline .bn-toba { color: #2F804B }
+.site-footer .brand-oneline .bn-comm { color: #252923 }
+@media (max-width: 760px) {
+  .brand-oneline { font-size: 15px; letter-spacing: -.01em }
+  .footer-brand .brand-oneline { font-size: 20px }
 }
 
 .brand-name small {
@@ -1494,16 +1522,18 @@ section:first-child {
   font-size: 19px;
   line-height: 1;
   text-align: center;
+  color: var(--accent-dark); /* Bagian 16: angka tanggal dominan, kontras kuat */
   box-shadow: var(--shadow)
 }
 
 .date-badge small {
   display: block;
-  font-size: 9px;
+  font-size: 9.5px;
   letter-spacing: 1px;
-  color: var(--muted);
+  color: #4A4E45; /* Bagian 16: bulan/tahun abu-abu gelap, tetap terbaca */
   margin-top: 3px;
-  font-weight: 700
+  font-weight: 700;
+  text-transform: uppercase
 }
 
 .event-card .pill {
@@ -6047,7 +6077,16 @@ h3 { letter-spacing: -.015em }
 .hero-home .hero-court { display: none !important }
 .hero-home .scroll-cue { display: none !important }
 
-/* ---------- PROMPT 73/85 · Toba Basketball Community colours ----------
+/* ---------- PROMPT 23/73/85 · TOBACOMMUNITY headline colours ----------
+   Single brand wordmark, two-tone: TOBA green + COMMUNITY charcoal.
+   No space between the spans (translate="no" keeps it un-translated). */
+.hero-home .hero-identity.brand-wordmark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
    "Toba Basketball" = TOBA green #2F804B · "Community" = charcoal #252923.
    The heading renders as two spans injected by script (identity split),
    both branches styled here so desktop & mobile read identically. */
@@ -6060,6 +6099,19 @@ h3 { letter-spacing: -.015em }
 }
 @media (max-width: 760px) {
   .hero-home .hero-identity { color: #2A7443 }        /* slightly deeper on bright mobile wash */
+}
+.hero-home .hero-identity .id-toba { color: #2F804B }
+.hero-home .hero-identity .id-comm { color: #252923 }
+.hero-home .hero-sub-identity {
+  display: block;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: clamp(.95rem, 1.4vw, 1.15rem);
+  margin-top: 10px;
+  color: #4A5148;
+}
+@media (max-width: 760px) {
+  .hero-home .hero-identity.brand-wordmark { white-space: normal; font-size: clamp(2rem, 9vw, 2.6rem) }
 }
 
 /* ---------- PROMPT 74 · centered, clean info group ----------
@@ -6111,3 +6163,165 @@ h3 { letter-spacing: -.015em }
    nothing replaces the ball on the Homepage. */
 
 /* end of stylesheet */
+
+/* ============================================================
+   TOBA REFRESH 2026-11 (MASTER PROMPT 1-17)
+   Bagian 6-9: design system, aksen section, spacing card & footer.
+   ============================================================ */
+
+/* ---------- Bagian 6: heading dua warna gaya TOBA MERCH ---------- */
+.section-heading h2,
+.hero-copy h1 {
+  text-wrap: balance;
+}
+.accent-word { color: var(--accent); }
+
+/* label section selalu pakai aksen halaman */
+.section-heading .eyebrow {
+  color: var(--accent);
+  letter-spacing: 2.2px;
+}
+
+/* ---------- Bagian 7: color enhancement per section ---------- */
+/* Cerita di Balik Nama TOBA: label aksen di atas background terang */
+.story-ed-chapter .eyebrow { color: var(--accent); }
+
+/* Momen yang Bikin Kami Terus Main (dark section): heading terang, label aksen */
+.dark-section .section-heading .eyebrow { color: var(--accent); }
+.dark-section .section-heading h2 { color: #EDE9DE; }
+.theme-tobadeli .dark-section .section-heading .eyebrow { color: #FF8A5C; }
+.theme-tobaladies .dark-section .section-heading .eyebrow { color: #F08BA8; }
+
+/* Agenda Pekan Ini & TOBA Merch: link aksen sesuai identitas */
+.text-link { color: var(--ink); }
+.text-link:hover { color: var(--accent); }
+.merch-section .text-link,
+.agenda-section .text-link { color: var(--accent); }
+
+/* ---------- Bagian 8: jarak antar-card ---------- */
+.event-grid,
+.product-grid,
+.community-photo-grid,
+.feature-strip {
+  gap: 14px;                                  /* antar-card satu kelompok: 12-16px */
+}
+.event-card .pad,
+.product-card .pad { gap: 10px; }             /* dalam card: 8-16px */
+.section-heading { margin-bottom: clamp(18px, 3vh, 28px); }
+.two-col { gap: clamp(24px, 4vw, 40px); }     /* antar-kelompok: 24-32px+ */
+
+/* ---------- Bagian 9: jarak section terakhir ke footer ---------- */
+main.page-content > :last-child,
+main.page-content section:last-of-type {
+  margin-bottom: 0;
+  padding-bottom: clamp(40px, 6vh, 56px);     /* desktop 40-56px */
+}
+.site-footer {
+  margin-top: 0;                              /* transisi natural, tanpa double-gap */
+}
+@media (max-width: 760px) {
+  main.page-content > :last-child,
+  main.page-content section:last-of-type {
+    padding-bottom: clamp(24px, 5vh, 32px);   /* mobile 24-32px */
+  }
+}
+
+/* ---------- Bagian 17: spacing teks Tobadeli & Tobaladies ---------- */
+.eyebrow { margin-bottom: 12px; }
+.section-heading h2 { margin-bottom: 10px; }  /* heading ke deskripsi 8-12px */
+.section-sub, .lede {
+  line-height: 1.65;
+  margin-bottom: 16px;                        /* antarparagraf 16-20px */
+}
+.hero-subtitle { line-height: 1.65; margin: 16px 0 20px; }
+.hero-actions { margin-bottom: clamp(20px, 4vh, 36px); } /* deskripsi ke CTA 12-16px+ */
+.hero-copy .eyebrow { margin-bottom: 14px; }
+.tl-story-grid p { margin-bottom: 18px; line-height: 1.68; }
+.tl-story-grid h2 { margin-bottom: 12px; }
+.story-copy { line-height: 1.68; margin-bottom: 18px; }
+@media (max-width: 760px) {
+  .section-wrap { margin-bottom: clamp(40px, 7vh, 56px); } /* antar-section mobile 40-56px */
+}
+/* ---------- end TOBA REFRESH 2026-11 ---------- */
+/* ============================================================
+   PROMPT 1 & 22 — INTRO: foto KOCAK asli + komposisi layer
+   Layer: 1 cream bg → 2 foto kocak → 3 geometry → 4 atmosfera
+          → 5 maskot → 6 wordmark/tagline → 7 skip button
+   ============================================================ */
+.obi-kocak {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-image: url("assets/img/web/KOCAKKKK%20%281000%20x%20500%20mm%29.svg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 1.6s ease .2s;
+  pointer-events: none;
+  filter: saturate(.35) contrast(.92);
+}
+
+.obi-stage.run .obi-kocak {
+  opacity: .16;
+}
+
+/* maskot: tetap focal point, tidak menutupi wajah pemain (PROMPT 18/22) */
+.obi-figure {
+  z-index: 5;
+  margin-bottom: clamp(40px, 9vh, 110px);
+}
+
+/* tulisan TOBA COMMUNITY: di bawah maskot, tanpa tabrakan (PROMPT 22) */
+.obi-copy {
+  z-index: 6;
+  bottom: max(6%, 56px);
+}
+
+.obi-wordmark {
+  line-height: 1.05;
+  letter-spacing: .28em;
+  text-indent: .28em;
+}
+
+.obi-wordmark small {
+  letter-spacing: .52em;
+  text-indent: .52em;
+}
+
+.obi-welcome {
+  margin: 22px 0 8px;
+}
+
+.obi-skip {
+  z-index: 8;
+}
+
+@media (max-width: 760px) {
+  .obi-kocak {
+    background-size: 190%;
+    background-position: center 22%;
+    opacity: 0 !important;
+  }
+
+  .obi-stage.run .obi-kocak {
+    opacity: .12 !important;
+  }
+
+  .obi-figure {
+    margin-bottom: clamp(40px, 9vh, 72px);
+  }
+
+  .obi-copy {
+    /* di atas tombol Lewati intro agar tidak saling menimpa */
+    bottom: max(11%, 104px);
+  }
+
+  .obi-skip {
+    bottom: 20px;
+    right: 14px;
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+}
+/* ---------- end PROMPT 1 & 22 ---------- */

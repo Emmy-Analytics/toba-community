@@ -22,24 +22,10 @@
   intro.setAttribute('aria-label', 'Selamat datang di TOBA Community');
   intro.innerHTML = `
     <div class="obi-stage">
-      <svg class="obi-court" viewBox="0 0 1200 700" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
-        <!-- FIBA top-view proportions: 28m x 15m court -> viewBox scale ~35.7px/m -->
-        <rect class="ocl" x="80" y="70" width="1040" height="560"/>
-        <line class="ocl" x1="600" y1="70" x2="600" y2="630"/>
-        <circle class="ocl" cx="600" cy="350" r="64"/>
-        <path class="ocl" d="M80 246 h207 v208 h-207"/>
-        <circle class="ocl" cx="287" cy="350" r="64"/>
-        <path class="ocl ocl-dash" d="M287 286 a64 64 0 0 0 0 128"/>
-        <path class="ocl" d="M80 575 L 190 575 A 241 241 0 0 0 190 125 L 80 125"/>
-        <path class="ocl" d="M1120 246 h-207 v208 h207"/>
-        <circle class="ocl" cx="913" cy="350" r="64"/>
-        <path class="ocl ocl-dash" d="M913 286 a64 64 0 0 1 0 128"/>
-        <path class="ocl" d="M1120 575 L 1010 575 A 241 241 0 0 1 1010 125 L 1120 125"/>
-        <path class="ocl" d="M125 350 a45 45 0 0 1 90 0"/>
-        <path class="ocl" d="M1075 350 a45 45 0 0 0 -90 0"/>
-        <line class="ocl" x1="80" y1="290" x2="80" y2="410" stroke-width="4"/>
-        <line class="ocl" x1="1120" y1="290" x2="1120" y2="410" stroke-width="4"/>
-      </svg>
+      <!-- Bagian 1: background aset kocak asli (assets/img/web), monokrom, tidak mengganggu keterbacaan -->
+      <div class="obi-kocak" aria-hidden="true"></div>
+      <!-- Bagian 3: geometry master yang sama dengan Home/Tobaladies/Tobadeli -->
+      <svg class="obi-court" viewBox="${-HW} ${-HH} ${HW * 2} ${HH * 2}" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMid slice"><g class="obi-markings">${COURT_MARKINGS.replace(/<(rect|line|circle|path) /g, '<$1 class="ocl" ')}</g></svg>
       <div class="obi-atmosphere" aria-hidden="true"></div>
       <div class="obi-figure">
         <div class="obi-ring"></div>
@@ -48,7 +34,7 @@
       <div class="obi-copy">
         <p class="obi-wordmark">TOBA <small>COMMUNITY</small></p>
         <p class="obi-welcome">Cari teman main? Ketemu di TOBA.</p>
-        <p class="obi-sub">Komunitas basket · Jakarta Timur</p>
+        <p class="obi-sub">Komunitas basket, Jakarta Timur</p>
       </div>
       <button class="obi-skip" type="button">Lewati intro</button>
     </div>`;

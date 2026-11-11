@@ -57,56 +57,15 @@ const infoEditorial = () => `<aside class="info-editorial"><div class="ie-lead">
 const productCard = (p, i) => `<article class="product-card" data-category="${p.cat}"><div class="product-art ${p.tone}"><span class="product-word">${p.name.split(' ').slice(-1)[0].toUpperCase()}</span></div><div class="pad"><div class="product-name">${p.name}</div><div class="price-row"><span class="price">${money(p.price)}</span><button class="add-cart" data-product="${i}" aria-label="${t('merch.aria')} ${p.name}">+</button></div></div></article>`;
 
 /* ---------- HOME — cinematic scroll journey ---------- */
-/* FIBA full-court master geometry — ONE coordinate system for every page.
-   Scale 35.7 px/m. Origin (0,0) = centre of the half-court line.
-   All values derived from official FIBA dimensions, not eyeballed:
-     boundary 28×15m · centre circle r=1.8m · key 5.8×5.8m
-     free-throw circle r=1.8m (dashed away from basket, solid toward it)
-     three-point: 0.9m corner straights + 6.75m arc from ring centre
-     restricted area r=1.25m · backboard 1.2m inside the baseline */
-const PX = 35.7;               // px per metre
-const HH = PX * 7.5;           // half height (15m / 2)
-const HW = PX * 14;            // half length (28m / 2)
-const RING = PX * 12.575;      // ring centre distance from half-court line
-const BACKBOARD = PX * 13.2;   // backboard line (1.2m from baseline)
-const KEYD = PX * 5.8;         // key depth from baseline
-const KEYW = PX * 2.9;         // key half width
-const CORNER = PX * 6.6;       // three-point corner straight y (0.9m from sideline)
-const TP_R = PX * 6.75;        // three-point arc radius
-const R_FT = PX * 1.8;         // free-throw / centre circle radius
-const R_RES = PX * 1.25;       // restricted area radius
-const courtHalf = S => {
-  const bx = S * HW, kx = S * (HW - KEYD), cx = S * BACKBOARD, rx = S * RING;
-  /* three-point corner straight meets the 6.75m arc exactly (Pythagoras):
-     tangent x measured from the ring centre */
-  const tx = rx - S * Math.sqrt(TP_R * TP_R - CORNER * CORNER);
-  /* arc sweeps toward half-court: sweep flag depends on side */
-  const tpSweep = S > 0 ? 0 : 1;
-  const ftSweep = S > 0 ? 0 : 1;   /* dashed half of FT circle faces half-court */
-  const resSweep = S > 0 ? 0 : 1;  /* restricted arc bulges toward half-court */
-  return `
-  <path d="M ${bx.toFixed(1)} ${-CORNER.toFixed(1)} L ${tx.toFixed(1)} ${-CORNER.toFixed(1)} A ${TP_R.toFixed(1)} ${TP_R.toFixed(1)} 0 0 ${tpSweep} ${tx.toFixed(1)} ${CORNER.toFixed(1)} L ${bx.toFixed(1)} ${CORNER.toFixed(1)}"/>
-  <path d="M ${bx.toFixed(1)} ${-KEYW.toFixed(1)} L ${kx.toFixed(1)} ${-KEYW.toFixed(1)} L ${kx.toFixed(1)} ${KEYW.toFixed(1)} L ${bx.toFixed(1)} ${KEYW.toFixed(1)}"/>
-  <circle cx="${kx.toFixed(1)}" cy="0" r="${R_FT.toFixed(1)}"/>
-  <path d="M ${kx.toFixed(1)} ${-R_FT.toFixed(1)} A ${R_FT.toFixed(1)} ${R_FT.toFixed(1)} 0 0 ${ftSweep} ${kx.toFixed(1)} ${R_FT.toFixed(1)}"/>
-  <path d="M ${rx.toFixed(1)} ${-R_RES.toFixed(1)} A ${R_RES.toFixed(1)} ${R_RES.toFixed(1)} 0 0 ${resSweep} ${rx.toFixed(1)} ${R_RES.toFixed(1)}"/>
-  <line x1="${cx.toFixed(1)}" y1="${-PX * 0.9}" x2="${cx.toFixed(1)}" y2="${PX * 0.9}" stroke-width="3"/>
-  <circle cx="${rx.toFixed(1)}" cy="0" r="2.6"/>`;
-};
-const COURT_MARKINGS = `
-  <rect x="${-HW}" y="${-HH}" width="${HW * 2}" height="${HH * 2}"/>
-  <line x1="0" y1="${-HH}" x2="0" y2="${HH}"/>
-  <circle cx="0" cy="0" r="${R_FT}"/>
-  ${courtHalf(-1)}
-  ${courtHalf(1)}`;
-
-const courtSVG = cls => `<svg class="hero-court ${cls || ''}" viewBox="${-HW} ${-HH} ${HW * 2} ${HH * 2}" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMid slice" data-parallax="0.045" data-pointer-depth="14">${COURT_MARKINGS}</svg>`;
+/* Bagian 3: master geometry lapangan dipindah ke court-geometry.js
+   (satu sumber untuk Intro, Home, Tobaladies, Tobadeli).
+   PX, HH, HW, COURT_MARKINGS, courtSVG tetap tersedia sebagai const global. */
 
 function home() {
     return `
 <section class="hero hero-home kinetic">
   <div class="hero-atmosphere" aria-hidden="true" data-pointer-depth="7"></div>
-  <div class="hero-head"><p class="hero-identity">${t('hero.identity').replace(/Community$/i, '<span class="id-comm">Community</span>')}<small>${t('hero.identity.sub')}</small></p></div>
+  <div class="hero-head"><p class="hero-identity brand-wordmark" translate="no"><span class="id-toba">TOBA</span><span class="id-comm">COMMUNITY</span></p><small class="hero-sub-identity">${t('hero.identity.sub')}</small></div>
   <div class="hero-body">
     <div class="hero-actions"><a class="pill" href="partnership.html">${t('hero.cta1')}</a><a class="pill secondary" href="events.html">${t('hero.cta2')}</a></div>
     <div class="hero-info"><div class="hero-info-item"><strong>${t('hero.info.game')}</strong><span>${t('hero.info.time')}</span></div><div class="hero-info-item"><strong>${t('hero.info.place')}</strong><span>${t('hero.info.place.v')}</span></div><div class="hero-info-item"><strong>${t('hero.info.comm')}</strong><span>${t('hero.info.comm.v')}</span></div></div>
@@ -117,11 +76,11 @@ function home() {
 <div class="community-photo-grid">
     <a class="comm-photo-card card-pink" href="tobaladies.html">
     <div class="comm-photo"><img src="${photos.women}" alt="${t('ui.illust.women')}" loading="lazy"></div>
-    <div class="comm-copy"><span class="comm-flag" aria-hidden="true"></span><h3>TOBALADIES</h3><p>${t('hero.sc.ladies.d')}</p><span class="comm-link">${t('comm.cards.link')} <span aria-hidden="true">→</span></span></div>
+    <div class="comm-copy"><span class="comm-flag" aria-hidden="true"></span><h3>TOBALADIES</h3><p>${t('hero.sc.ladies.d')}</p><span class="comm-link">${t('comm.cards.link')}</span></div>
     </a>
     <a class="comm-photo-card card-orange" href="tobadeli.html">
     <div class="comm-photo"><img src="${photos.men}" alt="${t('ui.illust.men')}" loading="lazy"></div>
-    <div class="comm-copy"><span class="comm-flag" aria-hidden="true"></span><h3>TOBADELI</h3><p>${t('hero.sc.deli.d')}</p><span class="comm-link">${t('comm.cards.link')} <span aria-hidden="true">→</span></span></div>
+    <div class="comm-copy"><span class="comm-flag" aria-hidden="true"></span><h3>TOBADELI</h3><p>${t('hero.sc.deli.d')}</p><span class="comm-link">${t('deli.meet')}</span></div>
     </a>
   </div>
   <div class="feature-strip feature-checklist" role="list"><div class="feature feature-check" role="listitem"><span class="check-ind" aria-hidden="true"><svg viewBox="0 0 16 16" width="10" height="10" fill="none"><path d="M2.5 8.5l3.5 3.5 7-8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="check-copy"><strong>${t('home.f1')}</strong><span>${t('home.f1s')}</span></div></div><div class="feature feature-check" role="listitem"><span class="check-ind" aria-hidden="true"><svg viewBox="0 0 16 16" width="10" height="10" fill="none"><path d="M2.5 8.5l3.5 3.5 7-8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="check-copy"><strong>${t('home.f2')}</strong><span>${t('home.f2s')}</span></div></div><div class="feature feature-check" role="listitem"><span class="check-ind" aria-hidden="true"><svg viewBox="0 0 16 16" width="10" height="10" fill="none"><path d="M2.5 8.5l3.5 3.5 7-8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="check-copy"><strong>${t('home.f3')}</strong><span>${t('home.f3s')}</span></div></div><div class="feature feature-check" role="listitem"><span class="check-ind" aria-hidden="true"><svg viewBox="0 0 16 16" width="10" height="10" fill="none"><path d="M2.5 8.5l3.5 3.5 7-8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="check-copy"><strong>${t('home.f4')}</strong><span>${t('home.f4s')}</span></div></div></div></section>
@@ -157,7 +116,7 @@ function home() {
 </section>
 
 <section class="section-wrap founder-story founder-block founder-parallax"><div class="founder-grid">
-  <div class="photo-frame founder-photo"><img src="${photos.founder}" alt="${t('founder.name')} — ${t('founder.role')}" onerror="this.parentElement.classList.add('img-broken')"></div>
+  <div class="photo-frame founder-photo"><img src="${photos.founder}" alt="${t('founder.name')}, ${t('founder.role')}" onerror="this.parentElement.classList.add('img-broken')"></div>
   <div class="founder-copy">
     <p class="eyebrow accent-green">${t('founder.eyebrow')}</p>
     <h2>${t('founder.name')}</h2>
@@ -183,6 +142,10 @@ function home() {
 function communityPage(which) {
     const women = which === 'tobaladies';
     const name = women ? 'TOBALADIES' : 'TOBADELI', tone = women ? 'pink' : 'orange';
+    /* Bagian 14: CTA Tobadeli memakai gaya maskulin, Tobaladies tetap hangat */
+    const cta1 = women ? t('comm.cta1') : t('deli.cta1');
+    const cta2 = women ? t('comm.cta2') : t('deli.cta2');
+    const ctaJoin = women ? t('comm.cta1') : t('deli.cta1');
     const sub = women ? t('comm.hero.lede1') : t('comm.hero.lede2'), desc = women ? t('comm.desc1') : t('comm.desc2');
     const img = women ? photos.women : photos.men;
     return `
@@ -190,24 +153,24 @@ function communityPage(which) {
   <svg class="hero-court ${women ? 'court-pink' : 'court-orange'}" viewBox="${-HW} ${-HH} ${HW * 2} ${HH * 2}" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMid slice" data-parallax="0.05" data-pointer-depth="12">
     ${COURT_MARKINGS}
   </svg>
-  <div class="hero-croc" data-parallax="-0.1" data-parallax-rotate="1.2" data-parallax-x="0.02"><img src="assets/crocodile-head.png" alt="${t('ui.alt.mascot')}"></div>
+  <div class="hero-croc" data-parallax="-0.1" data-parallax-rotate="1.2" data-parallax-x="0.02"><img src="assets/crocodile-head-trans.png" alt="${t('ui.alt.mascot')}"></div>
   <div class="hero-copy"><p class="eyebrow">${women ? 'TOBALADIES BASKET PEREMPUAN JAKARTA TIMUR' : 'TOBADELI BASKET PRIA JAKARTA TIMUR'}</p>
     <h1>${women ? '<span class="accent-pink">TOBA</span>LADIES' : '<span class="accent-orange">TOBA</span>DELI'}</h1>
     <p class="brand-fullname">${women ? t('brand.name.ladies') : t('brand.name.deli')}</p>
     <p class="hero-subtitle">${sub}. ${desc}</p>
-    <div class="hero-actions"><a class="pill pill-${tone}" href="partnership.html">${t('comm.cta1')}</a><a class="pill secondary" href="events.html">${t('comm.cta2')}</a></div>
+    <div class="hero-actions"><a class="pill pill-${tone}" href="partnership.html">${cta1}</a><a class="pill secondary" href="events.html">${cta2}</a></div>
     <p class="eyebrow" style="color:var(--muted)">${t('comm.eyebrow2')}</p></div></section>
 
 <section class="section-wrap"><div class="two-col"><div class="photo-frame img-reveal" data-parallax="${women ? '0.07' : '-0.06'}"><img src="${img}" alt="${t('comm.illust')} ${name}" loading="lazy">${women ? '<img class="mascot mascot-wordmark" src="assets/logopinkpng.png" alt="Logo Tobaladies">' : ''}<span class="frame-caption accent-${tone}">${name}</span></div>
   <div style="align-self:end;padding-bottom:8px"><p class="eyebrow">${t('comm.about')}</p><h2>${t('comm.h')}</h2><p class="lede">${t('comm.lede')}</p>${women ? '' : `<p class="brand-note">${t('brand.deli.note')}</p>`}<a class="text-link" href="events.html">${t('comm.link')}</a></div></div></section>
 
 <section class="dark-section"><div class="dark-section-inner">
-  <div class="section-heading"><div><p class="eyebrow">NEXT UP</p><h2>COMMUNITY <span class="accent-${tone}">SCHEDULE.</span></h2></div><a class="text-link" href="events.html">${t('home.events.link')}</a></div>
+  <div class="section-heading"><div><p class="eyebrow">${tPair('NEXT UP','SELANJUTNYA')}</p><h2>${tPair('COMMUNITY <span class="accent-' + tone + '">SCHEDULE.</span>','JADWAL <span class="accent-' + tone + '">KOMUNITAS.</span>')}</h2></div><a class="text-link" href="events.html">${t('home.events.link')}</a></div>
   ${eventScroller(events.filter(e => e.community === (women ? 'Tobaladies' : 'Tobadeli') || e.community === 'All Community').slice(0, 4).map(eventCard).join(''))}
   <div class="feature-strip" style="border-color:rgba(237,233,222,.18);margin-top:clamp(40px,6vh,64px)"><div class="feature" style="border-color:rgba(237,233,222,.18)"><strong>${t('comm.f1')}</strong><span>${t('comm.f1s')}</span></div><div class="feature" style="border-color:rgba(237,233,222,.18)"><strong>${t('comm.f2')}</strong><span>${t('comm.f2s')}</span></div><div class="feature" style="border-color:rgba(237,233,222,.18)"><strong>${t('comm.f3')}</strong><span>${t('comm.f3s')}</span></div><div class="feature" style="border-color:rgba(237,233,222,.18)"><strong>${t('comm.f4')}</strong><span>${t('comm.f4s')}</span></div></div>
 </div></section>
 
-<section class="section-wrap"><div class="callout"><div><p class="eyebrow">${t('comm.join.eyebrow')}</p><h3>${t('comm.join.h')}</h3><p class="lede">${t('comm.pill.d')}</p></div><a class="pill" href="partnership.html">${t('comm.cta1')}</a></div></section>${women ? ladiesStory() : ''}`
+<section class="section-wrap"><div class="callout"><div><p class="eyebrow">${t('comm.join.eyebrow')}</p><h3>${t('comm.join.h')}</h3><p class="lede">${t('comm.pill.d')}</p></div><a class="pill" href="partnership.html">${ctaJoin}</a></div></section>${women ? ladiesStory() : ''}`
 }
 
 /* ---------- FAQ accordion + Weekly Fun Game facts ---------- */
