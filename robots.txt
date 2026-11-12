@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /assets/img/_try.jpg
 
-Sitemap: https://toba-community.example/sitemap.xml
+Sitemap: https://emmy-analytics.github.io/toba-community/sitemap.xml
