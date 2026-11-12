@@ -29,8 +29,9 @@ const courtHalf = S => {
   <circle cx="${kx.toFixed(1)}" cy="0" r="${R_FT.toFixed(1)}"/>
   <path d="M ${kx.toFixed(1)} ${-R_FT.toFixed(1)} A ${R_FT.toFixed(1)} ${R_FT.toFixed(1)} 0 0 ${ftSweep} ${kx.toFixed(1)} ${R_FT.toFixed(1)}"/>
   <path d="M ${rx.toFixed(1)} ${-R_RES.toFixed(1)} A ${R_RES.toFixed(1)} ${R_RES.toFixed(1)} 0 0 ${resSweep} ${rx.toFixed(1)} ${R_RES.toFixed(1)}"/>
-  <line x1="${cx.toFixed(1)}" y1="${-PX * 0.9}" x2="${cx.toFixed(1)}" y2="${PX * 0.9}" stroke-width="3"/>
-  <circle cx="${rx.toFixed(1)}" cy="0" r="2.6"/>`;
+  <line x1="${cx.toFixed(1)}" y1="${-PX * 0.9}" x2="${cx.toFixed(1)}" y2="${PX * 0.9}" stroke-width="3"/>`;
+  /* Prompt 32: titik dekoratif kecil (circle r=2.6) dihapus —
+ bukan geometri resmi lapangan, hanya noise visual. */
 };
 const COURT_MARKINGS = `
   <rect x="${-HW}" y="${-HH}" width="${HW * 2}" height="${HH * 2}"/>

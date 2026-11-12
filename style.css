@@ -2322,7 +2322,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 .obi-figure {
   position: relative;
   z-index: 4;
-  width: clamp(280px, 38vmin, 460px);
+  width: clamp(220px, 30vmin, 360px);
   aspect-ratio: 1;
   display: grid;
   place-items: center;
@@ -2384,36 +2384,24 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 .obi-wordmark {
   font-family: var(--font-head);
   font-weight: 800;
-  font-size: clamp(30px, 4.6vw, 54px);
-  letter-spacing: .3em;
-  color: #242522;
+  font-size: clamp(40px, 8.5vw, 96px);
+  line-height: 1.02;
+  letter-spacing: .04em;
+  color: #171A16;
   margin: 0
 }
 
-.obi-wordmark small {
-  display: block;
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 11px;
-  letter-spacing: .5em;
-  margin-top: 8px;
-  color: var(--muted)
-}
-
-.obi-welcome {
-  font-size: clamp(15px, 2vw, 20px);
-  color: #315A3B;
-  font-weight: 600;
-  margin: 18px 0 6px
-}
+/* Prompt 58: TOBA hijau + COMMUNITY hitam, satu baris menyatu (identitas utama) */
+.obi-wordmark .ow-toba { color: var(--accent) }
+.obi-wordmark .ow-comm { color: #171A16; margin-left: .12em }
 
 .obi-sub {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 2.4px;
+  letter-spacing: 3.2px;
   text-transform: uppercase;
   color: var(--muted);
-  margin: 0
+  margin: 14px 0 0
 }
 
 .obi-skip {
@@ -2443,9 +2431,10 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 
 /* mobile */
 @media(max-width:760px) {
-  .obi-figure { width: min(72vw, 300px) }
-  .obi-copy { bottom: 7% }
-  .obi-wordmark { font-size: clamp(24px, 7vw, 34px) }
+  .obi-figure { width: min(56vw, 240px) }
+  .obi-copy { bottom: 6%; padding: 0 12px }
+  .obi-wordmark { font-size: clamp(30px, 9vw, 46px); letter-spacing: .02em }
+  .obi-sub { letter-spacing: 2.2px }
   .obi-skip { bottom: 18px; right: 16px }
 }
 
@@ -4084,7 +4073,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   place-content: center;
   justify-items: center;
   text-align: center;
-  gap: 10px;
+  gap: 16px;
   pointer-events: none;
   opacity: 0;
   transform: translateY(14px);
@@ -4099,8 +4088,8 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 
 .tdl-copy.in .tdl-eyebrow { animation: tdlUp .7s var(--ease-out) .05s backwards }
 .tdl-copy.in .tdl-wordmark { animation: tdlUp .8s var(--ease-cine) .16s backwards }
-.tdl-copy.in .tdl-welcome { animation: tdlUp .7s var(--ease-out) .4s backwards }
-.tdl-copy.in .tdl-cta { animation: tdlUp .7s var(--ease-out) .58s backwards }
+.tdl-copy.in .tdl-cta { animation: tdlUp .7s var(--ease-out) .42s backwards }
+/* Prompt 62: kalimat welcome dihapus — animasi welcome tidak dipakai lagi */
 
 @keyframes tdlUp {
   from { opacity: 0; transform: translateY(16px) }
@@ -4261,10 +4250,12 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
     margin: -34px 6px -30px auto;
   }
 
+  /* Prompt 41: maskot buaya pakai aset TRANSPARAN yang sama dengan desktop —
+     watermark dekoratif (opacity rendah), tidak menutupi teks/tombol */
   .hero .hero-croc img {
     width: clamp(96px, 28vw, 132px);
-    opacity: 1;
-    filter: none;
+    opacity: .16;
+    filter: grayscale(1) contrast(1.05);
   }
 
   /* FIX: mascot must never swallow the headline on ≥360px phones.
@@ -4334,18 +4325,20 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 
 @media (max-width: 1000px) {
   .hero-community-flow .hero-copy { position: relative; z-index: 2; max-width: 92%; }
+  /* Prompt 41: buaya transparan yang SAMA dengan desktop — watermark dekoratif,
+     tidak menutupi teks/tombol; tetap pakai aset crocodile-head-trans.png */
   .hero-community-flow .hero-croc {
     position: relative;
     inset: auto;
     display: flex;
     justify-content: flex-end;
     margin: 16px 4px 0 auto;
-    z-index: 1;
+    z-index: 0;
   }
   .hero-community-flow .hero-croc img {
-    width: clamp(110px, 30vw, 170px);
-    opacity: 1;
-    filter: none;
+    width: clamp(130px, 34vw, 190px);
+    opacity: .16;
+    filter: grayscale(1) contrast(1.05);
   }
 }
 
@@ -5008,13 +5001,22 @@ img { max-width: 100%; height: auto; }
 /* ============================================================
    PROMPT 62 — TOBA MERCH section spacing (lebih lega, konsisten)
    ============================================================ */
-.merch-section { padding-top: clamp(72px, 12vh, 132px) }
+.merch-section { padding-top: clamp(40px, 6vh, 72px) }   /* Prompt 25: apparel → merch */
 
 /* ============================================================
    PROMPT 63 — CONTACT CARD redesign (compact, tipis, elegan)
    ============================================================ */
-.contact-section { padding-top: clamp(56px, 9vh, 104px); padding-bottom: clamp(72px, 10vh, 120px) }
+.contact-section { padding-top: clamp(40px, 6vh, 72px); padding-bottom: clamp(56px, 9vh, 96px) }   /* Prompt 26: merch → join CTA */
 
+button.contact-card {          /* Prompt 27: join card kini tombol pembuka form */
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
 .contact-card {
   display: flex;
   align-items: center;
@@ -5415,7 +5417,7 @@ h3, .eyebrow, .brand-name, .btn, .pill, .mega-title {
 
 /* ---------- Prompt 23: spacing Storyline vs Agenda ---------- */
 .agenda-section {
-  margin-top: clamp(56px, 9vh, 112px) !important;
+  margin-top: clamp(40px, 6vh, 72px) !important;   /* Prompt 24: jadwal → galeri rapat */
   padding-top: 0;
 }
 
@@ -5738,7 +5740,7 @@ h3 { letter-spacing: -.015em }
 }
 
 .agenda-section {
-  margin-top: clamp(56px, 9vh, 112px) !important;
+  margin-top: clamp(40px, 6vh, 72px) !important;   /* Prompt 24: jadwal → galeri rapat */
 }
 
 .gallery-shell + .info-editorial,
@@ -6272,25 +6274,14 @@ main.page-content section:last-of-type {
   margin-bottom: clamp(40px, 9vh, 110px);
 }
 
-/* tulisan TOBA COMMUNITY: di bawah maskot, tanpa tabrakan (PROMPT 22) */
+/* tulisan TOBA COMMUNITY: di bawah maskot, tanpa tabrakan (PROMPT 22, dinilai ulang 58) */
 .obi-copy {
   z-index: 6;
-  bottom: max(6%, 56px);
+  bottom: max(5%, 48px);
 }
 
 .obi-wordmark {
   line-height: 1.05;
-  letter-spacing: .28em;
-  text-indent: .28em;
-}
-
-.obi-wordmark small {
-  letter-spacing: .52em;
-  text-indent: .52em;
-}
-
-.obi-welcome {
-  margin: 22px 0 8px;
 }
 
 .obi-skip {
@@ -6325,3 +6316,621 @@ main.page-content section:last-of-type {
   }
 }
 /* ---------- end PROMPT 1 & 22 ---------- */
+
+/* ====================================================================
+   PROMPT 1-9 · CINEMATIC MODULE — namespace .cine- (homepage only)
+   Transform/opacity only. IntersectionObserver lifecycle. GPU-friendly.
+   ==================================================================== */
+.cine-reviews, .cine-gallery, .cine-marquee {
+  overflow: hidden;
+  position: relative;
+}
+
+/* ---------- PROMPT 7: cinematic fade background + floating reviews ---------- */
+.cine-reviews {
+  min-height: clamp(520px, 92vh, 860px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  isolation: isolate;
+}
+.cine-rbg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: #14251A;
+}
+.cine-rbg-img {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transform: scale(1.02);
+  transition: opacity 1.2s ease, transform 7s linear;   /* subtle Ken-Burns ≤1.05× */
+  will-change: opacity, transform;
+}
+.cine-rbg-img.active { opacity: 1; transform: scale(1.05); }
+.cine-rbg-img.cine-bg-dead { display: none; }
+.cine-rbg-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(8,13,9,.55), rgba(8,13,9,.35) 45%, rgba(8,13,9,.72));
+}
+.cine-rcenter {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: clamp(48px, 10vw, 96px) 20px;
+}
+.cine-rheadline {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: clamp(34px, 6.5vw, 88px);
+  letter-spacing: -.02em;
+  color: #fff;
+  margin: 0 0 14px;
+  text-wrap: balance;
+}
+.cine-rsub {
+  font-size: clamp(14px, 1.8vw, 19px);
+  color: rgba(255,255,255,.82);
+  margin: 0;
+}
+.cine-rcards {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.cine-rcard {
+  position: absolute;
+  max-width: 320px;
+  background: rgba(8,13,9,.55);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  color: #fff;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity .7s var(--ease-out), transform .7s var(--ease-out);
+  pointer-events: auto;
+}
+.cine-rcard.show { opacity: 1; transform: translateY(0); }
+.cine-rcard blockquote { margin: 0 0 10px; font-size: 14.5px; line-height: 1.55; }
+.cine-rcard figcaption { font-size: 12.5px; font-weight: 600; color: rgba(255,255,255,.7); letter-spacing: .04em; text-transform: uppercase; }
+.cine-rcard.pos-bl  { left: 4%;  bottom: 8%; }
+.cine-rcard.pos-br  { right: 4%; bottom: 8%; }
+.cine-rcard.pos-c   { left: 50%; transform: translate(-50%, 16px); bottom: 6%; }
+.cine-rcard.pos-c.show { transform: translate(-50%, 0); }
+.cine-rcard.pos-bl2 { left: 8%;  bottom: 10%; }
+.cine-rcard.pos-br2 { right: 8%; bottom: 10%; }
+
+
+/* ---------- PROMPT 3: three-row moving gallery ---------- */
+.cine-gallery { padding: clamp(40px, 6vw, 72px) 0; }   /* Prompt 24 */
+.cine-g-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 12px 28px;
+  padding: 0 clamp(20px, 5vw, 64px) 28px;
+}
+.cine-g-title {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: clamp(26px, 4.2vw, 52px);
+  letter-spacing: -.02em;
+  color: var(--ink);
+  margin: 0;
+}
+.cine-g-head .text-link { margin-left: auto; }
+.cine-g-row { width: 100%; overflow: hidden; }   /* overflow di row, bukan body */
+.cine-g-row + .cine-g-row { margin-top: clamp(12px, 2vw, 24px); }
+.cine-g-track {
+  display: flex;
+  /* Prompt 30: TANPA gap antar-seq — pitch antar-barang dijaga oleh
+ padding kanan tiap seq, jadi wrap modulo tidak menghasilkan celah kosong
+ (bug baris kedua: celah sebesar 1 gap muncul di titik wrap). */
+  width: max-content;
+  will-change: transform;
+}
+.cine-g-seq { display: flex; gap: clamp(10px, 1.5vw, 20px); padding-right: clamp(10px, 1.5vw, 20px); }
+.cine-m-track { gap: 0; }
+.cine-g-card {
+  margin: 0;
+  flex: 0 0 auto;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--accent-soft);
+}
+.cine-g-r1 .cine-g-card { width: clamp(240px, 30vw, 420px); aspect-ratio: 16/10; }
+.cine-g-r2 .cine-g-card { width: clamp(200px, 24vw, 340px); aspect-ratio: 3/2; }
+.cine-g-r3 .cine-g-card { width: clamp(180px, 21vw, 300px); aspect-ratio: 16/10; }
+.cine-g-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .6s var(--ease-out);
+}
+.cine-g-card:hover img { transform: scale(1.04); }
+.cine-g-card.cine-g-dead { display: none; }
+.cine-g-empty { padding: 0 clamp(20px, 5vw, 64px); color: var(--muted); }
+
+/* ---------- PROMPT 2: TOBA APPAREL marquee ---------- */
+.cine-marquee {
+  padding: clamp(28px, 4vw, 48px) 0;   /* Prompt 25 */
+  text-align: center;
+}
+.cine-m-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+.cine-m-inner { display: flex; }
+.cine-m-item {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: clamp(48px, 9vw, 140px);
+  letter-spacing: -.02em;
+  color: var(--ink);
+  text-transform: uppercase;
+}
+.cine-m-star {
+  width: clamp(18px, 2.4vw, 36px);
+  height: clamp(18px, 2.4vw, 36px);
+  fill: var(--accent);
+  margin: 0 clamp(14px, 2vw, 32px);
+  flex: 0 0 auto;
+}
+.cine-m-sub {
+  margin: 18px 0 0;
+  font-size: clamp(14px, 1.6vw, 17px);
+  color: var(--muted);
+  padding: 0 20px;
+}
+
+/* ---------- PROMPT 1/4: blur-to-focus reveal + cinematic transitions ---------- */
+.cine-focus {
+  opacity: 0;
+  filter: blur(10px);
+  transform: translateY(18px);
+  transition: opacity .9s var(--ease-out), filter .9s var(--ease-out), transform .9s var(--ease-out);
+}
+.cine-focus.cine-in { opacity: 1; filter: blur(0); transform: none; }
+.section-wrap.cine-section, .dark-section, .cine-reviews { scroll-margin-top: 72px; }
+.dark-section, .cine-reviews { opacity: 1; transition: none; }   /* jangan fade section besar penuh — biar scroll tetap lega */
+
+/* ---------- PROMPT 8/9: footer social + credit ---------- */
+.footer-connect { min-width: 240px; }
+.footer-social { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+.footer-slink {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: inherit;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 10px 8px;
+  min-height: 44px;
+  border-radius: 8px;
+  transition: opacity .25s var(--ease-out), transform .25s var(--ease-out);
+}
+.footer-slink:hover { opacity: .75; transform: translateX(3px); }
+.fs-icon { width: 18px; height: 18px; flex: 0 0 auto; }
+.footer-credit {
+  display: flex;
+  justify-content: center;
+  padding: 18px 16px 26px;
+  margin-top: 10px;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.pw-credit {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 12.5px;
+  font-weight: 400;
+  white-space: nowrap;
+  transition: color .25s;
+}
+.pw-crafted { color: rgba(255,255,255,.55); font-size: 11.5px; letter-spacing:.02em }
+.pw-credit b { font-weight: 600; color: #25D366; transition: color .25s }   /* PortoWeb brand green */
+.pw-wa:hover b { color: #fff }
+.pw-ig-link { display:inline-flex; align-items:center; width:24px; height:24px; justify-content:center; border-radius:6px; transition: transform .25s var(--ease-out), opacity .25s }
+.pw-ig-link:hover { transform: scale(1.12); opacity:.92 }
+.pw-ig { width: 15px; height: 15px; display:block }
+
+/* ---------- Prompt 28: brand-coloured social icons, subtle interaction ---------- */
+.footer-social .footer-slink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  transition: opacity .25s var(--ease-out), transform .25s var(--ease-out);
+}
+.footer-social .footer-slink:hover { opacity: .82; transform: translateX(3px) scale(1.03); }
+.footer-social .footer-slink:active { transform: scale(.97); }
+.footer-ig { color: #E1306C }              /* Instagram brand pink for the label */
+.ig-brand, .wa-brand { flex: 0 0 auto }
+.wa-brand { width: 19px; height: 19px }
+.ig-brand { width: 18px; height: 18px; border-radius: 5px; box-shadow: 0 1px 4px rgba(0,0,0,.25); transition: transform .25s var(--ease-out) }
+.footer-slink:hover .ig-brand, .footer-slink:hover .wa-brand { transform: scale(1.12); filter: brightness(1.08) }
+.footer-slink:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px }
+
+/* ---------- Responsive (Prompt 5/6) ---------- */
+@media (max-width: 768px) {
+  .cine-rcard { max-width: min(78vw, 300px); }
+  .cine-rcard.pos-bl  { left: 16px;  bottom: 96px; }
+  .cine-rcard.pos-br  { right: 16px; bottom: 96px; }
+  .cine-rcard.pos-c   { left: 50%; bottom: 40px; }
+  .cine-rcard.pos-bl2 { left: 16px;  bottom: 40px; }
+  .cine-rcard.pos-br2 { right: 16px; bottom: 40px; }
+  .cine-rheadline { font-size: clamp(30px, 9vw, 44px); }
+}
+@media (max-width: 560px) {
+  /* mobile: variasi posisi dikurangi — semua kartu di area bawah yang aman */
+  .cine-rcard { left: 16px !important; right: 16px !important; transform: translateY(14px); max-width: none; }
+  .cine-rcard.pos-c.show { transform: translateY(0); }
+  .cine-rcard.show { transform: translateY(0); }
+  .cine-g-r1 .cine-g-card { width: min(72vw, 300px); }
+  .cine-g-r2 .cine-g-card { width: min(60vw, 250px); }
+  .cine-g-r3 .cine-g-card { width: min(52vw, 220px); }
+  .cine-m-item { font-size: clamp(40px, 13vw, 72px); }
+  .footer-social { align-items: stretch; }
+}
+
+/* ---------- prefers-reduced-motion: semuanya statis tapi tetap terbaca ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .cine-g-track, .cine-m-track { transform: none !important; }
+  .cine-g-row { overflow-x: auto; }                     /* konten tetap bisa dilihat */
+  .cine-rbg-img { transition: none; }
+  .cine-rbg-img:not(.active) { opacity: 0; }
+  .cine-rbg-img.active { opacity: 1; transform: none; }
+  .cine-focus { opacity: 1; filter: none; transform: none; transition: none; }
+  .cine-rcard { transition: none; }
+}
+
+/* ===== Prompt 19: Join modal ===== */
+.join-modal { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.join-modal[hidden] { display: none; }
+.join-backdrop { position: absolute; inset: 0; background: rgba(10, 12, 10, .72); backdrop-filter: blur(4px); }
+.join-panel { position: relative; z-index: 1; width: min(440px, 100%); max-height: calc(100vh - 40px); overflow-y: auto; background: #fff; color: #14210f; border-radius: 18px; padding: 28px 26px 22px; box-shadow: 0 30px 80px rgba(0,0,0,.45); font-family: inherit; }
+.join-panel .eyebrow { margin: 0 0 6px; font-size: 11px; letter-spacing: .18em; color: #1f8a3b; font-weight: 700; }
+.join-panel h3 { margin: 0 0 14px; font-size: 22px; line-height: 1.25; }
+.join-panel form label { display: block; margin: 0 0 12px; font-size: 12px; font-weight: 600; color: #3c4a35; }
+.join-panel form label span { display: block; margin-bottom: 5px; }
+.join-panel input[type="text"], .join-panel input[type="tel"] { display: block; width: 100%; box-sizing: border-box; padding: 10px 12px; font: inherit; font-size: 14px; color: #14210f; background: #f5f7f3; border: 1px solid #d7dfd2; border-radius: 10px; outline: none; transition: border-color .2s; }
+.join-panel input:focus { border-color: #1f8a3b; }
+.join-team { border: 0; margin: 0 0 12px; padding: 0; display: flex; gap: 10px; }
+.join-team legend { float: left; width: 100%; margin-bottom: 6px; font-size: 12px; font-weight: 600; color: #3c4a35; padding: 0; }
+.join-radio { display: flex !important; align-items: center; gap: 8px; flex: 1; margin: 0 !important; padding: 10px 12px; border: 1px solid #d7dfd2; border-radius: 10px; background: #f5f7f3; cursor: pointer; font-size: 13px; font-weight: 600 !important; color: #14210f !important; }
+.join-radio:has(input:checked) { border-color: #1f8a3b; background: #eaf6ee; }
+.join-radio input { accent-color: #1f8a3b; margin: 0; }
+.join-err { margin: 0 0 10px; font-size: 12.5px; color: #c0392b; font-weight: 600; }
+.join-submit { width: 100%; margin-top: 2px; }
+.join-note { margin: 12px 0 0; font-size: 11.5px; line-height: 1.5; color: #6b7a66; }
+.join-x { position: absolute; top: 10px; right: 12px; width: 34px; height: 34px; border: 0; border-radius: 50%; background: transparent; color: #556; font-size: 20px; line-height: 1; cursor: pointer; }
+.join-x:hover { background: #eef1ec; }
+@media (max-width: 480px) {
+  .join-modal { padding: 12px; }
+  .join-panel { padding: 22px 18px 18px; border-radius: 14px; }
+  .join-team { flex-direction: column; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .join-modal, .join-panel { animation: none; transition: none; }
+}
+
+/* ====================================================================
+   MASTER PROMPT 37-57 — FINAL PASS (Nov 2026)
+   37-38 footer credit & copyright · 39 story rhythm · 40 checklist gap
+   41 croc watermark consistency · 43/48 desktop & section spacing
+   44 join card margin · 46 no duplicate CTA · 50 premium join card
+   54-55 cinematic hero motion · 56 gallery drag/lightbox · 57 starfield
+   ==================================================================== */
+
+/* ---------- 37-38: PortoWeb credit — netral, satu kesatuan, rapi ---------- */
+.pw-credit b { color: inherit; font-weight: 600; }          /* hapus hijau mencolok */
+.pw-credit b:hover { color: var(--accent); }                 /* aksen halus hanya saat hover */
+.pw-crafted { color: rgba(255,255,255,.62); }                /* Crafted by sejajar dengan PortoWeb ID */
+.pw-credit { gap: 6px; align-items: center; }
+.footer-credit { padding: 16px 16px 22px; }
+.footer-credit .pw-ig-link { width: 18px; height: 18px; margin-left: 2px; align-self: center; }
+.footer-credit .pw-ig { width: 14px; height: 14px; }
+@media (max-width: 560px) {
+  .footer-credit { justify-content: center; padding: 14px 12px 20px; }
+  .footer-credit .pw-credit { justify-content: center; width: 100%; text-align: center; }
+}
+
+/* footer-bottom: konsisten di semua halaman, rapat & terbaca */
+.footer-bottom { align-items: center; }
+.footer-bottom span, .footer-bottom a { white-space: nowrap; }
+@media (max-width: 640px) {
+  .footer-bottom { flex-direction: column; align-items: center; gap: 6px; text-align: center; padding: 16px 12px; }
+}
+
+/* ---------- 40: checklist — jarak centang & informasi rapat ---------- */
+.feature-checklist { gap: 8px 40px !important; }
+.feature-check { gap: 10px; align-items: flex-start; }
+.check-ind { flex: 0 0 22px; width: 22px; height: 22px; }
+.check-copy strong { margin-bottom: 2px; }
+.check-copy span { margin-top: 0; line-height: 1.45; }
+@media (max-width: 640px) {
+  .feature-checklist { gap: 4px 0 !important; margin-block: 18px 24px !important; }
+  .feature-check { padding: 6px 0 !important; gap: 9px; }
+  .check-ind { flex: 0 0 20px; width: 20px; height: 20px; }
+}
+
+/* ---------- 43: desktop breathing room — proporsional, tidak renggang ---------- */
+@media (min-width: 1001px) {
+  section { margin: clamp(72px, 10vh, 128px) 0; }
+  .section-heading { margin-bottom: clamp(24px, 3.4vh, 36px); }
+  .section-heading h2 + .section-sub, .section-heading .lede { margin-top: 10px; }
+  .section-wrap { margin-block: clamp(56px, 8vh, 104px); }
+  .dark-section { padding: clamp(72px, 11vh, 128px) 0; }
+  .two-col { gap: clamp(40px, 5vw, 72px); }
+  .founder-grid { gap: clamp(40px, 6vw, 88px); }
+  .tl-story-grid { gap: clamp(40px, 6vw, 88px); }
+  .hero-actions { margin-bottom: clamp(40px, 6vh, 60px); }
+}
+
+/* ---------- 44 + 50: card Gabung/Kolaborasi — jelas, premium, proporsional ---------- */
+.contact-card {
+  position: relative;
+  margin-top: clamp(28px, 6vh, 64px);          /* tidak menempel section atas */
+  padding: clamp(26px, 4vw, 44px);
+  gap: clamp(18px, 3vw, 40px);
+  background: linear-gradient(135deg, var(--accent-soft) 0%, var(--surface) 55%);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  text-align: left;
+  cursor: pointer;
+  transition: transform .3s var(--ease-out), box-shadow .3s var(--ease-out), border-color .3s;
+}
+.contact-card:before {                          /* garis lapangan samar sebagai lapisan identitas */
+  content: '';
+  position: absolute;
+  right: -80px;
+  top: -60px;
+  width: 340px;
+  height: 340px;
+  background: radial-gradient(circle at center, transparent 58%, var(--accent) 58.5%, var(--accent) 59.5%, transparent 60%);
+  opacity: .10;
+  transform: rotate(-12deg);
+  pointer-events: none;
+}
+.contact-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lift);
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
+}
+.contact-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.contact-copy { position: relative; z-index: 1; }
+.contact-card h3 { margin-bottom: 10px; }
+.contact-card .lede { margin-bottom: 0; }
+.contact-cta {
+  position: relative;
+  z-index: 1;
+  align-self: center;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+@media (max-width: 760px) {
+  .contact-card { flex-direction: column; align-items: stretch; gap: 18px; text-align: left; margin-top: clamp(24px, 5vh, 40px); padding: 24px 20px; }
+  .contact-cta { align-self: flex-start; }
+}
+
+/* ---------- 46: TOBA Merch — judul & produk satu kelompok, satu CTA ---------- */
+.merch-section .section-heading { margin-bottom: clamp(14px, 2vh, 20px); }
+.merch-section .product-grid { margin-top: 0; }
+/* CTA duplikat di marquee TOBA APPAREL disembunyikan — link tetap ada di heading Merch */
+
+/* ---------- 48: Update dari Lapangan lebih dekat ke section sebelumnya ---------- */
+.cine-gallery { padding-top: clamp(24px, 3.5vw, 44px) !important; margin-top: clamp(-8px, -1vh, 0px); }
+.cine-gallery.cine-after-agenda { margin-top: clamp(-24px, -3vh, -8px); }
+section.cine-gallery { margin-top: clamp(16px, 3vh, 40px); }
+
+/* ---------- 49: label Founder redundan tidak tampil dua kali dalam satu section ---------- */
+.founder-copy .eyebrow + .eyebrow { display: none; }
+
+/* ---------- 55: cinematic color-transition bridge antar section ---------- */
+.section-wrap, .dark-section { scroll-margin-top: 72px; }
+.dark-section { position: relative; }
+.dark-section:before {                         /* fade masuk dari bg terang — tanpa garis keras */
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 90px;
+  background: linear-gradient(180deg, var(--bg) 0%, rgba(16,25,15,0) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+.dark-section > * { position: relative; z-index: 1; }
+
+/* ---------- 56: gallery — drag/swipe + lightbox premium untuk cinematic rows ---------- */
+.cine-g-track { cursor: grab; touch-action: pan-y; }
+.cine-g-track.dragging { cursor: grabbing; scroll-behavior: auto; }
+.cine-g-card { cursor: zoom-in; }
+.cine-g-card img { pointer-events: none; }     /* drag lebih mulus; klik tetap tertangkap figure */
+.cine-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 4vw, 48px);
+  background: rgba(8, 13, 9, .88);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s ease;
+}
+.cine-lightbox.open { opacity: 1; pointer-events: auto; }
+.cine-lightbox figure {
+  margin: 0;
+  max-width: min(1100px, 94vw);
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transform: scale(.96);
+  transition: transform .35s var(--ease-out);
+}
+.cine-lightbox.open figure { transform: scale(1); }
+.cine-lightbox img {
+  max-width: 100%;
+  max-height: calc(88vh - 64px);
+  object-fit: contain;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 40px 120px rgba(0,0,0,.6);
+}
+.cine-lightbox figcaption {
+  color: rgba(255,255,255,.85);
+  font-size: 13px;
+  text-align: center;
+  letter-spacing: .02em;
+}
+.cine-lb-x, .cine-lb-prev, .cine-lb-next {
+  position: absolute;
+  border: 0;
+  background: rgba(255,255,255,.10);
+  color: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background .2s, transform .2s;
+  font-size: 18px;
+}
+.cine-lb-x { top: 18px; right: 18px; width: 42px; height: 42px; font-size: 20px; }
+.cine-lb-prev { left: 14px; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; }
+.cine-lb-next { right: 14px; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; }
+.cine-lb-x:hover, .cine-lb-prev:hover, .cine-lb-next:hover { background: rgba(255,255,255,.22); }
+.cine-lb-prev:hover { transform: translateY(-50%) scale(1.08); }
+.cine-lb-next:hover { transform: translateY(-50%) scale(1.08); }
+@media (max-width: 640px) {
+  .cine-lb-prev { left: 6px; width: 38px; height: 38px; }
+  .cine-lb-next { right: 6px; width: 38px; height: 38px; }
+  .cine-lb-x { top: 10px; right: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cine-lightbox, .cine-lightbox figure { transition: none; }
+}
+
+/* ---------- 57: starfield canvas — lapisan kedalaman di cine-reviews ---------- */
+.starfield-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.starfield-layer canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+/* gradasi bergerak halus di atas bg foto */
+.cine-rbg-overlay:after {
+  content: '';
+  position: absolute;
+  inset: -30%;
+  background:
+    radial-gradient(38% 32% at 22% 30%, rgba(49,90,59,.16) 0%, transparent 70%),
+    radial-gradient(30% 26% at 78% 68%, rgba(214,77,120,.07) 0%, transparent 70%),
+    radial-gradient(26% 24% at 62% 22%, rgba(230,92,37,.06) 0%, transparent 70%);
+  animation: tobaAurora 26s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+@keyframes tobaAurora {
+  0%   { transform: translate(0,0) scale(1); opacity: .8; }
+  50%  { transform: translate(2.5%, -1.8%) scale(1.06); opacity: 1; }
+  100% { transform: translate(-2%, 1.6%) scale(1.02); opacity: .85; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cine-rbg-overlay:after { animation: none; }
+}
+
+/* ---------- 42: intro geometry — sama seperti master (stagger animasi tetap) ---------- */
+.tld-stage .tcl, .tdl-stage .tob {
+  stroke-width: 1.6;
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+.tld-stage.run .tcl, .tdl-stage.run .tob {
+  stroke-dasharray: 1600;
+  stroke-dashoffset: 1600;
+}
+/* dashed half of FT circle dari master: beri dasharray khusus (path kedua circle) */
+.tld-stage .tcl[line], .tdl-stage .tob[line] { stroke-width: 3; }
+.tld-stage.run .tcl:nth-of-type(n) { animation-delay: calc(var(--i, 0) * 0.18s); }
+
+/* ====================================================================
+   PROMPT 54 — CINEMATIC HERO COLLAGE (foto asli TOBA, layered editorial)
+   Desktop: foto bertumpuk asimetris di kanan hero, typography kiri.
+   Mobile: collage jadi strip vertikal yang lebih ringkas di atas copy.
+   ==================================================================== */
+.hero-collage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  contain: strict;
+}
+.hc-photo {
+  position: absolute;
+  margin: 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(20, 37, 26, .18);
+  will-change: transform;
+}
+.hc-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.hc-a { right: 6%;  top: 10%;  width: clamp(220px, 26vw, 420px); aspect-ratio: 4/3; z-index: 1; }
+.hc-b { right: 26%; top: 30%;  width: clamp(180px, 21vw, 340px); aspect-ratio: 3/4; z-index: 2; }
+.hc-c { right: 3%;  top: 44%;  width: clamp(200px, 24vw, 380px); aspect-ratio: 16/11; z-index: 3; }
+.hc-d { right: 30%; top: 62%;  width: clamp(160px, 18vw, 300px); aspect-ratio: 1/1; z-index: 1; opacity: .92; }
+/* gradient overlay menyatu dengan foto supaya teks terbaca */
+.hero-collage:after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, var(--bg) 0%, color-mix(in srgb, var(--bg) 82%, transparent) 34%, transparent 62%);
+}
+@media (max-width: 1000px) {
+  .hc-a { right: -6%;  top: 4%;  width: clamp(160px, 44vw, 260px); }
+  .hc-b { right: 34%;  top: 18%; width: clamp(120px, 30vw, 190px); }
+  .hc-c { right: -2%;  top: 42%; width: clamp(140px, 38vw, 230px); }
+  .hc-d { right: 44%;  top: 64%; width: clamp(100px, 26vw, 160px); opacity: .9; }
+}
+@media (max-width: 560px) {
+  .hc-a { right: -14%; top: 3%;  width: 46vw; }
+  .hc-b { right: 44%;  top: 14%; width: 30vw; }
+  .hc-c { right: -8%;  top: 38%; width: 40vw; }
+  .hc-d { display: none; }                    /* mobile ringan: 3 foto cukup */
+  .hero-collage:after {
+    background: linear-gradient(180deg, transparent 30%, var(--bg) 86%);
+  }
+}
+
+/* ---------- 54.2: horizontal camera-drift mengikuti scroll progress ----------
+   Tidak ada scroll-hijacking: hanya transform berbasis scrollY.
+   Layer dengan data-cine-h lebih tinggi bergerak lebih cepat ke kanan. */
+html { scroll-behavior: auto; }               /* hindari lag rAF pada smooth global */
+@media (min-width: 1001px) {
+  html { scroll-behavior: smooth; }
+}

@@ -65,6 +65,13 @@ function home() {
     return `
 <section class="hero hero-home kinetic">
   <div class="hero-atmosphere" aria-hidden="true" data-pointer-depth="7"></div>
+  <!-- Prompt 54: cinematic photo collage — dokumentasi asli TOBA, layered editorial -->
+  <div class="hero-collage" aria-hidden="true">
+    <figure class="hc-photo hc-a" data-cine-h="0.22"><img src="${photos.training}" alt="" loading="eager"></figure>
+    <figure class="hc-photo hc-b" data-cine-h="0.38"><img src="${photos.women}" alt="" loading="lazy"></figure>
+    <figure class="hc-photo hc-c" data-cine-h="0.55"><img src="${photos.men}" alt="" loading="lazy"></figure>
+    <figure class="hc-photo hc-d" data-cine-h="0.7"><img src="${photos.arena}" alt="" loading="lazy"></figure>
+  </div>
   <div class="hero-head"><p class="hero-identity brand-wordmark" translate="no"><span class="id-toba">TOBA</span><span class="id-comm">COMMUNITY</span></p><small class="hero-sub-identity">${t('hero.identity.sub')}</small></div>
   <div class="hero-body">
     <div class="hero-actions"><a class="pill" href="partnership.html">${t('hero.cta1')}</a><a class="pill secondary" href="events.html">${t('hero.cta2')}</a></div>
@@ -126,6 +133,20 @@ function home() {
   </div>
 </div></section>
 
+<section class="cine-reviews" id="cineReviews" aria-label="${t('cine.reviews.aria')}">
+  <div class="cine-rbg" aria-hidden="true">
+    ${cinePhotos.map((p,i)=>`<div class="cine-rbg-img${i===0?' active':''}" style="background-image:url('${p}')"></div>`).join('')}
+    <!-- Prompt 57: starfield canvas — partikel berlapis depth, twinkle halus -->
+    <div class="starfield-layer"><canvas id="tobaStars"></canvas></div>
+  </div>
+  <div class="cine-rbg-overlay" aria-hidden="true"></div>
+  <div class="cine-rcenter">
+    <h2 class="cine-rheadline">${t('cine.reviews.h')}</h2>
+    <p class="cine-rsub">${t('cine.reviews.sub')}</p>
+  </div>
+  <div class="cine-rcards" aria-live="polite"></div>
+</section>
+
 <section class="dark-section"><div class="dark-section-inner"><div class="section-heading"><div><p class="eyebrow">${t('home.story.eyebrow')}</p><h2>${t('home.story.h')}</h2></div><p class="lede">${t('home.story.lede')}</p></div>
   <div class="two-col"><div class="photo-frame img-reveal" data-parallax="0.06"><img src="${photos.women}" alt="${t('ui.illust.women')}" loading="lazy"><span class="frame-caption accent-pink">TOBALADIES</span></div>
   <div class="photo-frame img-reveal" data-parallax="-0.05" style="margin-top:clamp(24px,4vw,56px)"><img src="${photos.men}" alt="${t('ui.illust.men')}" loading="lazy"><span class="frame-caption accent-orange">TOBADELI</span></div></div>
@@ -133,9 +154,39 @@ function home() {
 
 <section class="section-wrap agenda-section"><div class="section-heading"><div><p class="eyebrow">${t('home.events.eyebrow')}</p><h2>${t('home.events.h')}</h2></div><a class="text-link" href="events.html">${t('home.events.link')}</a></div>${eventScroller(events.slice(0, 4).map(eventCard).join(''))}</section>
 
+<section class="cine-gallery" aria-label="${t('cine.gallery.aria')}">
+  <div class="cine-g-head"><p class="eyebrow">${t('cine.gallery.eyebrow')}</p><h2 class="cine-g-title">${t('cine.gallery.h')}</h2><a class="text-link" href="gallery.html">${t('cine.gallery.cta')}</a></div>
+  <div class="cine-g-row cine-g-r1"><div class="cine-g-track" data-dir="rtl" data-speed="28">${cineRow(cineRow1)}</div></div>
+  <div class="cine-g-row cine-g-r2"><div class="cine-g-track" data-dir="ltr" data-speed="38">${cineRow(cineRow2)}</div></div>
+  <div class="cine-g-row cine-g-r3"><div class="cine-g-track" data-dir="rtl" data-speed="48">${cineRow(cineRow3)}</div></div>
+  <p class="cine-g-empty" hidden>${t('cine.gallery.empty')}</p>
+</section>
+
+<section class="cine-marquee" id="cineApparel" aria-label="TOBA APPAREL">
+  <div class="cine-m-track" data-dir="ltr" data-speed="22"><div class="cine-m-inner">
+    <span class="cine-m-item">TOBA APPAREL <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> WEAR THE CULTURE <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> TOBA APPAREL <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> </span><span class="cine-m-item" aria-hidden="true">TOBA APPAREL <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> WEAR THE CULTURE <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> TOBA APPAREL <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> </span>
+  </div></div>
+</section>
+
 <section class="section-wrap merch-section"><div class="section-heading"><div><p class="eyebrow">${t('home.merch.eyebrow')}</p><h2>${t('home.merch.h')}</h2></div><a class="text-link" href="merchandise.html">${t('home.merch.link')}</a></div><div class="product-grid">${products.slice(0, 4).map(productCard).join('')}</div></section>
 
-<section class="section-wrap contact-section"><a class="contact-card" href="partnership.html"><div class="contact-copy"><p class="eyebrow">${t('home.call.eyebrow')}</p><h3>${t('home.call.h')}</h3><p class="lede">${t('home.call.lede')}</p></div><span class="pill contact-cta">${t('home.call.cta')}</span></a></section>`
+<section class="section-wrap contact-section"><button class="contact-card" id="joinCtaBtn" type="button" aria-haspopup="dialog" aria-controls="joinModal"><div class="contact-copy"><p class="eyebrow">${t('home.call.eyebrow')}</p><h3>${t('home.call.h')}</h3><p class="lede">${t('home.call.lede')}</p></div><span class="pill contact-cta">${t('home.call.cta')}</span></button></section>
+
+`
+}
+
+/* ---------- PROMPT 1-10 · CINEMATIC MODULE (namespace .cine-) ---------- */
+const cinePhotos = [photos.women, photos.men, photos.training, photos.women2, photos.arena, photos.game2];
+const cineRow1 = [photos.game2, photos.men, photos.women, photos.men2, photos.women3, photos.arena, photos.training, photos.women2];
+const cineRow2 = [photos.team, photos.women3, photos.hoop, photos.training, photos.ladies3, photos.men2, photos.ball, photos.floor];
+const cineRow3 = [photos.hoop, photos.ladies3, photos.ball, photos.floor, photos.men2, photos.team, photos.women, photos.game2];
+const cineReviews = []; /* isi dengan review asli berizin: {name:'…', text:'…'} — kosong = kartu disembunyikan, tidak ada data fiktif */
+function cineRow(arr){
+  const card = (src,i)=>`<figure class="cine-g-card"><img src="${src}" alt="${t('cine.gallery.alt')}" loading="lazy" onerror="this.parentElement.classList.add('cine-g-dead')"></figure>`;
+  const seq = arr.map(card).join('');
+  /* Prompt 30: spacer penutup di DALAM tiap seq — jarak antar-seq identik dengan
+     jarak antar-card, sehingga wrap modulo tidak menyisakan celah kosong. */
+  return `<div class="cine-g-seq">${seq}</div><div class="cine-g-seq" aria-hidden="true">${seq}</div>`; /* duplikat teknis untuk seamless loop — jumlah node tetap */
 }
 
 /* ---------- COMMUNITY PAGES — distinct editorial rhythm ---------- */
@@ -154,7 +205,7 @@ function communityPage(which) {
     ${COURT_MARKINGS}
   </svg>
   <div class="hero-croc" data-parallax="-0.1" data-parallax-rotate="1.2" data-parallax-x="0.02"><img src="assets/crocodile-head-trans.png" alt="${t('ui.alt.mascot')}"></div>
-  <div class="hero-copy"><p class="eyebrow">${women ? 'TOBALADIES BASKET PEREMPUAN JAKARTA TIMUR' : 'TOBADELI BASKET PRIA JAKARTA TIMUR'}</p>
+  <div class="hero-copy"><p class="eyebrow">${women ? t('intro.ladies.eyebrow') : t('intro.deli.eyebrow')}</p>
     <h1>${women ? '<span class="accent-pink">TOBA</span>LADIES' : '<span class="accent-orange">TOBA</span>DELI'}</h1>
     <p class="brand-fullname">${women ? t('brand.name.ladies') : t('brand.name.deli')}</p>
     <p class="hero-subtitle">${sub}. ${desc}</p>
@@ -167,7 +218,7 @@ function communityPage(which) {
 <section class="dark-section"><div class="dark-section-inner">
   <div class="section-heading"><div><p class="eyebrow">${tPair('NEXT UP','SELANJUTNYA')}</p><h2>${tPair('COMMUNITY <span class="accent-' + tone + '">SCHEDULE.</span>','JADWAL <span class="accent-' + tone + '">KOMUNITAS.</span>')}</h2></div><a class="text-link" href="events.html">${t('home.events.link')}</a></div>
   ${eventScroller(events.filter(e => e.community === (women ? 'Tobaladies' : 'Tobadeli') || e.community === 'All Community').slice(0, 4).map(eventCard).join(''))}
-  <div class="feature-strip" style="border-color:rgba(237,233,222,.18);margin-top:clamp(40px,6vh,64px)"><div class="feature" style="border-color:rgba(237,233,222,.18)"><strong>${t('comm.f1')}</strong><span>${t('comm.f1s')}</span></div><div class="feature" style="border-color:rgba(237,233,222,.18)"><strong>${t('comm.f2')}</strong><span>${t('comm.f2s')}</span></div><div class="feature" style="border-color:rgba(237,233,222,.18)"><strong>${t('comm.f3')}</strong><span>${t('comm.f3s')}</span></div><div class="feature" style="border-color:rgba(237,233,222,.18)"><strong>${t('comm.f4')}</strong><span>${t('comm.f4s')}</span></div></div>
+  <div class="feature-strip feature-checklist" role="list" style="margin-top:clamp(40px,6vh,64px)">${[1,2,3,4].map(n=>`<div class="feature feature-check" role="listitem"><span class="check-ind" aria-hidden="true"><svg viewBox="0 0 16 16" width="13" height="13" fill="none"><path d="M2.5 8.5l3.5 3.5 7-8" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="check-copy"><strong>${t('comm.f'+n)}</strong><span>${t('comm.f'+n+'s')}</span></div></div>`).join('')}</div>
 </div></section>
 
 <section class="section-wrap"><div class="callout"><div><p class="eyebrow">${t('comm.join.eyebrow')}</p><h3>${t('comm.join.h')}</h3><p class="lede">${t('comm.pill.d')}</p></div><a class="pill" href="partnership.html">${ctaJoin}</a></div></section>${women ? ladiesStory() : ''}`
@@ -375,7 +426,7 @@ function initFaq() {
 }
 
 /* ---------- language re-render (preserved) ---------- */
-document.addEventListener('toba:langchange', () => { if (page === 'game') return; appEl.innerHTML = (renderers[page] || home)(); document.querySelector(`[data-nav="${page}"]`)?.classList.add('active'); if (page === 'gallery') { galleryState === 'ok' ? renderGalleryUI() : loadGallery(); } initReveal(); initStorySteps(); initParallax(); initKinetic(); initPointerScene(); initMerchTilt(); initFaq(); });
+document.addEventListener('toba:langchange', () => { if (page === 'game') return; appEl.innerHTML = (renderers[page] || home)(); document.querySelector(`[data-nav="${page}"]`)?.classList.add('active'); if (page === 'gallery') { galleryState === 'ok' ? renderGalleryUI() : loadGallery(); } initReveal(); initStorySteps(); initParallax(); initKinetic(); initPointerScene(); initMerchTilt(); initFaq(); window.__cineReset && window.__cineReset(); window.__starsReset && window.__starsReset(); });
 
 /* ---------- reveal system (preserved + clip reveal for images) ---------- */
 const revealObserver = ('IntersectionObserver' in window) ? new IntersectionObserver(es => { es.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); revealObserver.unobserve(en.target) } }) }, { threshold: .12 }) : null;
@@ -509,6 +560,35 @@ initKinetic();
 initPointerScene();
 initFaq();
 
+/* =====================================================================
+   PROMPT 54-55 · CINEMATIC SCROLL ENGINE — hero collage drifts RIGHT
+   as the user scrolls (no hijack: pure rAF + scrollY). Layer speeds come
+   from data-cine-h (0=still, 1=fast). Reduced-motion skips everything.
+   ===================================================================== */
+(function cineHeroScroll(){
+  if (document.body.dataset.page !== 'home') return;
+  if (reduceMotion) return;
+  const layers = [...document.querySelectorAll('.hc-photo[data-cine-h]')].map(el => ({
+    el, h: parseFloat(el.dataset.cineH) || 0
+  }));
+  if (!layers.length) return;
+  let ticking = false;
+  function update(){
+    ticking = false;
+    const y = window.scrollY;
+    layers.forEach(l => {
+      /* drift to the right proportional to scroll; cap so layers stay inside hero */
+      const x = Math.min(y * l.h * 0.42, 260);
+      const rise = Math.min(y * l.h * 0.06, 36);          /* slight upward lift */
+      l.el.style.transform = `translate3d(${x.toFixed(1)}px, ${(-rise).toFixed(1)}px, 0)`;
+    });
+  }
+  window.addEventListener('scroll', () => {
+    if (!ticking) { ticking = true; requestAnimationFrame(update); }
+  }, { passive: true });
+  update();
+})();
+
 
 /* ---------- merch tilt + event stagger (re-runnable) ---------- */
 function initMerchTilt() {
@@ -532,6 +612,77 @@ function initMerchTilt() {
 initMerchTilt();
 
 
+/* =====================================================================
+   PROMPT 57 · STARFIELD ENGINE — cinematic depth particles (canvas)
+   ===================================================================== */
+(function starfield(){
+  if (document.body.dataset.page !== 'home') return;
+  if (reduceMotion) return;
+  let canvas = null, ctx = null, raf = 0, running = false, stars = [], W = 0, H = 0;
+  const mobile = window.matchMedia('(max-width: 760px)').matches;
+  const COUNT = mobile ? 55 : 130;
+  const COLORS = ['255,255,255', '214,234,222', '190,220,200'];
+
+  function init(){
+    canvas = document.getElementById('tobaStars');
+    if (!canvas) return;
+    if (canvas.dataset.bound) return;
+    canvas.dataset.bound = '1';
+    ctx = canvas.getContext('2d');
+    resize(); seed();
+    window.addEventListener('resize', onResize, { passive: true });
+    const sec = document.getElementById('cineReviews');
+    if ('IntersectionObserver' in window && sec) {
+      new IntersectionObserver(es => es.forEach(en => {
+        en.isIntersecting ? wake() : sleep();
+      }), { rootMargin: '60px' }).observe(sec);
+    } else wake();
+    document.addEventListener('visibilitychange', () => document.hidden ? sleep() : wake());
+  }
+  function resize(){
+    const r = canvas.parentElement.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = r.width; H = r.height;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  function onResize(){ clearTimeout(starfield._rz); starfield._rz = setTimeout(() => { resize(); seed(); if (!running) draw(0); }, 160); }
+  function seed(){
+    stars = Array.from({ length: COUNT }, (_, i) => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      z: 0.25 + Math.random() * 0.75,
+      r: (0.6 + Math.random() * 1.7) * (mobile ? 0.85 : 1),
+      baseA: 0.18 + Math.random() * 0.5,
+      tw: 0.4 + Math.random() * 1.6,
+      ph: Math.random() * Math.PI * 2,
+      vy: 2 + Math.random() * 7,
+      c: COLORS[i % COLORS.length]
+    }));
+  }
+  let lastT = 0;
+  function draw(t){
+    raf = 0;
+    const dt = lastT ? Math.min((t - lastT) / 1000, .05) : .016;
+    lastT = t;
+    ctx.clearRect(0, 0, W, H);
+    for (const s of stars) {
+      s.y -= s.vy * s.z * dt;
+      if (s.y < -4) { s.y = H + 4; s.x = Math.random() * W; }
+      const a = s.baseA * (0.72 + 0.28 * Math.sin(s.ph + t / 1000 * s.tw));
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r * (0.5 + s.z * 0.5), 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${s.c},${a.toFixed(3)})`;
+      ctx.fill();
+    }
+    if (running) raf = requestAnimationFrame(draw);
+  }
+  function wake(){ if (running || reduceMotion) return; running = true; lastT = 0; raf = requestAnimationFrame(draw); }
+  function sleep(){ running = false; if (raf) cancelAnimationFrame(raf); raf = 0; }
+  window.__starsReset = () => { sleep(); if (canvas) delete canvas.dataset.bound; init(); };
+  init();
+})();
+
 /* ---------- home hero entrance: staged reveal after the welcome intro ----------
    The river + copy fade in as one choreographed moment; if the intro is skipped
    or reduced-motion is on, the hero settles immediately. */
@@ -548,4 +699,308 @@ initMerchTilt();
     const poll = setInterval(() => { if (!document.getElementById('tobaIntro')) { clearInterval(poll); settle(); } }, 300);
     setTimeout(() => { clearInterval(poll); settle(); }, 3000);
   }
+})();
+
+/* =====================================================================
+   PROMPT 1-10 · CINEMATIC ENGINE — namespace .cine-, lifecycle-controlled
+   All loops are IntersectionObserver-gated, rAF-driven, and cleaned up.
+   Marquee/gallery never mutate DOM; position accumulates continuously so
+   a pause/resume never causes a jump. Reduced-motion disables everything.
+   ===================================================================== */
+(function cineEngine(){
+  if (document.body.dataset.page !== 'home') return;
+  if (reduceMotion) return;                                  /* reduced motion: konten tetap tampil statis */
+
+  const sec = sel => document.querySelector(sel);
+  const cineGal = sec('.cine-gallery');
+  const cineApp = sec('.cine-apparel') || sec('.cine-marquee');
+  const cineRev = sec('.cine-reviews');
+
+  /* ---------- SHARED STATE ---------- */
+  const tracks = [];       /* {el, dir, speed, pos, half} — marquee + gallery rows */
+  const vis   = new Map(); /* section element -> visible flag */
+  let lastT = 0, rafId = 0;
+  const clamp = (v,a,b)=>Math.min(b,Math.max(a,v));
+  const dpr = () => clamp(window.devicePixelRatio || 1, 1, 2);
+
+  function measureTrack(tr){
+    const seq = tr.el.querySelector('.cine-g-seq, .cine-m-item');
+    if (seq) tr.half = seq.scrollWidth || 0;                 /* lebar satu sequence */
+  }
+  function makeTracks(){
+    tracks.length = 0;
+    document.querySelectorAll('.cine-g-track, .cine-m-track').forEach(el => {
+      const tr = { el, dir: el.dataset.dir === 'rtl' ? -1 : 1, speed: Number(el.dataset.speed)||30, pos: 0, half: 0, paused:false };
+      measureTrack(tr); tracks.push(tr);
+    });
+  }
+
+  /* scroll velocity influences marquee subtly (clamped, never reverses) */
+  let scrollBoost = 0;
+  window.addEventListener('scroll', () => {
+    scrollBoost = clamp(((window.scrollY - (cineEngine._lastY||window.scrollY))), -120, 120) * .06;
+    cineEngine._lastY = window.scrollY;
+  }, { passive: true });
+
+  function tick(t){
+    rafId = 0;
+    const dt = lastT ? clamp((t - lastT)/1000, 0, .05) : .016;  /* clamp tab-jumps */
+    lastT = t;
+    let any = false;
+    tracks.forEach(tr => {
+      if (!tr.half) measureTrack(tr);
+      if (!tr.half || tr.paused) return;
+      if (!(vis.get(tr.section))) return;                    /* hanya saat section terlihat */
+      any = true;
+      /* pos selalu naik (akumulator unsigned) — tanda arah hanya di transform,
+         sehingga wrap modulo tetap seamless untuk kedua arah */
+      tr.pos += (tr.speed * dt) * (tr.speedMul || 1) * (1 + Math.abs(scrollBoost) * (tr.isMarquee ? .5 : .15));
+      /* wrap around half-width → seamless, tanpa lompatan */
+      tr.pos = ((tr.pos % tr.half) + tr.half) % tr.half;
+      /* dir=1 (ltr) → bergerak ke kanan (+x); dir=-1 (rtl) → bergerak ke kiri (-x) */
+      tr.el.style.transform = 'translate3d(' + (tr.pos * tr.dir).toFixed(2) + 'px,0,0)';
+    });
+    scrollBoost *= .9;
+    if (any) rafId = requestAnimationFrame(tick);
+  }
+  function wake(){
+    if (rafId || reduceMotion) return;
+    lastT = 0;
+    rafId = requestAnimationFrame(tick);
+  }
+
+  function trackSections(){
+    tracks.forEach(tr => {
+      tr.section = tr.el.closest('.cine-gallery, .cine-marquee, .cine-apparel');
+      tr.isMarquee = !!tr.el.closest('.cine-marquee, .cine-apparel');
+      tr.el.parentElement.style.overflow = 'hidden';         /* cegah horizontal overflow */
+    });
+  }
+
+  /* ---------- IntersectionObserver: jalankan hanya saat terlihat ---------- */
+  const io = ('IntersectionObserver' in window) ? new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      vis.set(en.target, en.isIntersecting);
+      if (en.isIntersecting) {
+        tracks.forEach(tr => tr.paused = false);
+        wake();
+      } else if ([...vis.values()].every(v => !v)) {
+        if (rafId) cancelAnimationFrame(rafId);              /* cleanup rAF saat tak ada yg terlihat */
+        rafId = 0;
+      }
+    });
+  }, { rootMargin: '80px' }) : null;
+
+  function bindIO(){
+    if (!io) return;
+    [cineGal, cineApp, cineRev].forEach(el => { if (el) io.observe(el); });
+  }
+
+  /* ================================================================
+     PROMPT 7 · CINEMATIC FADE BG + FLOATING REVIEWS
+     Crossfade timer gagal-aman: foto gagal diload dilewati, rotasi tak
+     pernah berhenti permanen, tanpa rekur antar pergantian.
+     ================================================================ */
+  let revIdx = 0, revTimer = 0, revPaused = false;
+  const POSITIONS = ['pos-bl','pos-br','pos-c','pos-bl2','pos-br2'];
+
+  function startRevolving(){
+    if (!cineRev || cineRev.dataset.cineBound) return;
+    cineRev.dataset.cineBound = '1';
+    const slides = [...cineRev.querySelectorAll('.cine-rbg-img')];
+    const cardsBox = cineRev.querySelector('.cine-rcards');
+    const valid = (cineReviews||[]).filter(r => r && r.name && r.text);
+
+    /* review cards: hanya dirender jika ada data asli — tanpa placeholder palsu */
+    let cards = [];
+    if (valid.length && cardsBox) {
+      cardsBox.innerHTML = valid.map((r,i) =>
+        `<figure class="cine-rcard ${POSITIONS[i % POSITIONS.length]}"><blockquote>${r.text}</blockquote><figcaption>${r.name}</figcaption></figure>`
+      ).join('');
+      cards = [...cardsBox.children];
+      cards[0]?.classList.add('show');
+    } else if (cardsBox) {
+      cardsBox.remove();                                       /* tanpa review asli: sembunyikan, headline+bg tetap */
+    }
+
+    /* preload berikutnya secara terkontrol (maks 1 slot) */
+    const pre = new Set();
+    slides.forEach((s,i) => {
+      const url = s.style.backgroundImage.slice(5,-2);
+      const img = new Image();
+      img.onerror = () => { s.classList.add('cine-bg-dead'); }; /* gagal: lewati, rotasi jalan terus */
+      img.src = url; pre.add(url);
+    });
+
+    function advance(){
+      const alive = slides.filter(s => !s.classList.contains('cine-bg-dead'));
+      if (!alive.length) return;                               /* semua foto gagal: diamkan, tak crash */
+      const cur = alive.findIndex(s => s.classList.contains('active'));
+      const nxt = alive[(cur+1) % alive.length];
+      cur >= 0 && alive[cur].classList.remove('active');
+      nxt.classList.add('active');
+      revIdx++;
+      if (cards.length) {
+        const ci = revIdx % cards.length;
+        cards.forEach(c => c.classList.remove('show'));
+        cards[ci].classList.add('show');
+      }
+      schedule();
+    }
+    function schedule(){
+      clearTimeout(revTimer);
+      revTimer = setTimeout(advance, revPaused ? 0 : 6000);    /* 6s per foto, crossfade 1.2s di CSS */
+    }
+
+
+
+    schedule();
+  }
+
+  /* ================================================================
+     REVEAL: blur-to-focus typography + image clip reveal (IO satu kali)
+     ================================================================ */
+  const rio = ('IntersectionObserver' in window) ? new IntersectionObserver(es => {
+    es.forEach(en => { if (en.isIntersecting) { en.target.classList.add('cine-in'); rio.unobserve(en.target); } });
+  }, { threshold: .18 }) : null;
+  function bindReveal(){
+    document.querySelectorAll('.cine-g-head,.cine-rheadline,.cine-rsub,.cine-m-sub,.comm-cards .section-heading,.story-ed .eyebrow').forEach(el => {
+      el.classList.add('cine-focus');
+      rio ? rio.observe(el) : el.classList.add('cine-in');
+    });
+  }
+
+  /* ---------- resize: re-measure tracks (debounced, no re-init) ---------- */
+  let rzT = 0;
+  window.addEventListener('resize', () => {
+    clearTimeout(rzT);
+    rzT = setTimeout(measureTracksAll, 180);
+  });
+  function measureTracksAll(){ tracks.forEach(measureTrack); wake(); }
+
+  /* ================================================================
+     PROMPT 56 · GALLERY INTERAKSI — drag/swipe + image preview lightbox
+     Drag menggeser track (pointer events), auto-motion lanjut setelah
+     lepas. Klik foto membuka lightbox premium (close: X, backdrop, Esc,
+     navigasi prev/next + arrow keys). Touch swipe tidak mengganggu
+     scroll vertikal (touch-action: pan-y).
+     ================================================================ */
+  function bindDragAndPreview(){
+    document.querySelectorAll('.cine-g-track').forEach(track => {
+      if (track.dataset.dragBound) return;
+      track.dataset.dragBound = '1';
+      let startX = 0, startPos = 0, dragging = false, moved = false;
+      const down = e => {
+        if (e.button !== undefined && e.button !== 0) return;
+        dragging = true; moved = false;
+        startX = (e.touches ? e.touches[0].clientX : e.clientX);
+        const tr = tracks.find(t => t.el === track);
+        startPos = tr ? tr.pos : 0;
+        track.classList.add('dragging');
+      };
+      const move = e => {
+        if (!dragging) return;
+        const x = (e.touches ? e.touches[0].clientX : e.clientX);
+        const dx = x - startX;
+        if (Math.abs(dx) > 6) moved = true;
+        const tr = tracks.find(t => t.el === track);
+        if (tr && tr.half) {
+          tr.pos = ((startPos - dx * tr.dir) % tr.half + tr.half) % tr.half;
+          tr.el.style.transform = 'translate3d(' + (tr.pos * tr.dir).toFixed(2) + 'px,0,0)';
+        }
+        if (e.cancelable && e.type === 'touchmove' && moved) e.preventDefault();
+      };
+      const up = () => {
+        if (!dragging) return;
+        dragging = false;
+        track.classList.remove('dragging');
+        /* auto-motion continues naturally on next rAF — pos already synced */
+      };
+      track.addEventListener('mousedown', down);
+      window.addEventListener('mousemove', move, { passive: true });
+      window.addEventListener('mouseup', up, { passive: true });
+      track.addEventListener('touchstart', down, { passive: true });
+      track.addEventListener('touchmove', move, { passive: false });
+      track.addEventListener('touchend', up, { passive: true });
+      /* klik foto — buka preview (kecuali itu adalah drag) */
+      track.addEventListener('click', e => {
+        if (moved) { moved = false; return; }
+        const card = e.target.closest('.cine-g-card');
+        if (card) openCineLightbox(card);
+      }, true);
+    });
+  }
+
+  /* ------- cine lightbox (modal preview premium) ------- */
+  let lbEl = null;
+  function openCineLightbox(card){
+    const img = card.querySelector('img');
+    if (!img || !img.src) return;
+    if (!lbEl) {
+      lbEl = document.createElement('div');
+      lbEl.className = 'cine-lightbox';
+      lbEl.setAttribute('role', 'dialog');
+      lbEl.setAttribute('aria-modal', 'true');
+      lbEl.innerHTML = '<button class="cine-lb-x" aria-label="Close">\u2715</button>' +
+        '<button class="cine-lb-prev" aria-label="Previous">\u2190</button>' +
+        '<figure><img src="" alt=""><figcaption></figcaption></figure>' +
+        '<button class="cine-lb-next" aria-label="Next">\u2192</button>';
+      document.body.appendChild(lbEl);
+      lbEl.addEventListener('click', e => {
+        if (e.target === lbEl || e.target.closest('.cine-lb-x')) closeCineLightbox();
+        else if (e.target.closest('.cine-lb-prev')) stepCineLightbox(-1);
+        else if (e.target.closest('.cine-lb-next')) stepCineLightbox(1);
+      });
+      document.addEventListener('keydown', e => {
+        if (!lbEl || !lbEl.classList.contains('open')) return;
+        if (e.key === 'Escape') closeCineLightbox();
+        if (e.key === 'ArrowLeft') stepCineLightbox(-1);
+        if (e.key === 'ArrowRight') stepCineLightbox(1);
+      });
+    }
+    const imgs = [...document.querySelectorAll('.cine-g-card img')].filter(i => i.src && !i.closest('.cine-g-dead'));
+    lbEl.dataset.current = String(imgs.indexOf(img));
+    showCineImage(imgs, Number(lbEl.dataset.current));
+    lbEl.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function cineImgs(){
+    return [...document.querySelectorAll('.cine-g-card img')].filter(i => i.src && !i.closest('.cine-g-dead'));
+  }
+  function showCineImage(list, idx){
+    if (!lbEl || !list.length) return;
+    lbEl.dataset.current = String((idx + list.length) % list.length);
+    const im = lbEl.querySelector('img');
+    const src = list[Number(lbEl.dataset.current)].src;
+    im.style.opacity = '0';
+    im.onload = () => { im.style.opacity = '1'; };
+    im.src = src;
+    im.alt = list[Number(lbEl.dataset.current)].alt || 'TOBA community basketball photo';
+  }
+  function stepCineLightbox(d){ if (lbEl) showCineImage(cineImgs(), Number(lbEl.dataset.current) + d); }
+  function closeCineLightbox(){
+    if (lbEl) lbEl.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  /* ---------- INIT (idempotent, dipanggil juga saat re-render bahasa) ---------- */
+  function init(){
+    makeTracks(); trackSections(); bindIO(); bindReveal(); startRevolving(); bindDragAndPreview();
+    /* hover memperlambat marquee di desktop */
+    if (window.matchMedia('(pointer: fine)').matches) {
+      const mq = sec('.cine-marquee');
+      mq?.addEventListener('mouseenter', () => tracks.forEach(tr => { if (tr.isMarquee) tr.speedMul = .25; }), { passive: true });
+      mq?.addEventListener('mouseleave', () => tracks.forEach(tr => { if (tr.isMarquee) tr.speedMul = 1; }), { passive: true });
+    }
+    wake();
+  }
+  /* saat re-render bahasa, DOM baru: reset bound-state lalu init ulang */
+  window.__cineReset = () => {
+    if (rafId) cancelAnimationFrame(rafId); rafId = 0;
+    clearTimeout(revTimer); vis.clear();
+    document.querySelectorAll('[data-cine-bound],[data-drag-bound]').forEach(el => { delete el.dataset.cineBound; delete el.dataset.dragBound; });
+    if (lbEl) { lbEl.remove(); lbEl = null; }               /* re-render bahasa: lightbox ikut di-render ulang */
+    init();
+  };
+  init();
 })();

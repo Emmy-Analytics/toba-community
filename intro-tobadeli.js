@@ -12,26 +12,16 @@
   sessionStorage.setItem(KEY, '1');
 
   const intro = document.createElement('div');
+  let stagger = 0;
   intro.id = 'tdlIntro';
   intro.setAttribute('role', 'dialog');
   intro.setAttribute('aria-label', 'Selamat datang di Tobadeli');
   intro.innerHTML = `
     <div class="tdl-stage">
-      <svg class="tdl-court" viewBox="0 0 1200 700" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
-        <!-- FIBA top-view, same anatomy; burnt orange, bold right-weighted framing -->
-        <rect class="tob" x="80" y="70" width="1040" height="560"/>
-        <line class="tob" x1="600" y1="70" x2="600" y2="630"/>
-        <circle class="tob" cx="600" cy="350" r="64"/>
-        <path class="tob" d="M80 246 h207 v208 h-207"/>
-        <circle class="tob" cx="287" cy="350" r="64"/>
-        <path class="tob tob-dash" d="M287 286 a64 64 0 0 0 0 128"/>
-        <path class="tob" d="M80 231.2 L 163.6 231.2 A 241 241 0 0 0 163.6 468.8 L 80 468.8"/>
-        <path class="tob" d="M1120 246 h-207 v208 h207"/>
-        <circle class="tob" cx="913" cy="350" r="64"/>
-        <path class="tob tob-dash" d="M913 286 a64 64 0 0 1 0 128"/>
-        <path class="tob" d="M1120 468.8 L 1036.4 468.8 A 241 241 0 0 1 1036.4 231.2 L 1120 231.2"/>
-        <path class="tob" d="M125 305 a45 45 0 0 1 0 90"/>
-        <path class="tob" d="M1075 305 a45 45 0 0 0 0 90"/>
+      <!-- FIBA top-view, master geometry dari court-geometry.js (Prompt 42):
+           satu sumber untuk Intro/Home/Tobaladies/Tobadeli; warna orange -->
+      <svg class="tdl-court" viewBox="${-HW} ${-HH} ${HW * 2} ${HH * 2}" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+        <g>${COURT_MARKINGS.replace(/<(rect|line|circle|path) /g, (m, tag) => `<${tag} class="tob" style="--i:${stagger++}" `)}</g>
       </svg>
       <div class="tdl-atmosphere" aria-hidden="true"></div>
       <div class="tdl-ball-wrap">
@@ -42,10 +32,9 @@
         <div class="tdl-shadow"></div>
       </div>
       <div class="tdl-copy">
-        <p class="tdl-eyebrow">KOMUNITAS BASKET PRIA · JAKARTA TIMUR</p>
+        <p class="tdl-eyebrow">${t('intro.deli.eyebrow')}</p>
         <h2 class="tdl-wordmark">TOBA<span>DELI</span></h2>
-        <p class="tdl-welcome">Satu lapangan. Satu tim. Satu tujuan.</p>
-        <a class="tdl-cta" href="#top">Kenalan dengan Tobadeli</a>
+        <a class="tdl-cta" href="#top">${t('intro.deli.cta')}</a>
       </div>
       <button class="tdl-skip" type="button">Lewati intro</button>
     </div>`;

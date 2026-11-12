@@ -32,9 +32,8 @@
         <img src="assets/crocodile-head.png" alt="Maskot TOBA">
       </div>
       <div class="obi-copy">
-        <p class="obi-wordmark">TOBA <small>COMMUNITY</small></p>
-        <p class="obi-welcome">Cari teman main? Ketemu di TOBA.</p>
-        <p class="obi-sub">Komunitas basket, Jakarta Timur</p>
+        <p class="obi-wordmark" translate="no"><span class="ow-toba">TOBA</span><span class="ow-comm">COMMUNITY</span></p>
+        <p class="obi-sub">${t('intro.brand.tagline')}</p>
       </div>
       <button class="obi-skip" type="button">Lewati intro</button>
     </div>`;

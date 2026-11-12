@@ -1,0 +1,194 @@
+{
+ "start": {
+  "overflowX": 0,
+  "pageH": 9813,
+  "domNodes": 543,
+  "tracks": 3,
+  "mTracks": 1,
+  "rbg": 6,
+  "rbgActiveIdx": 0,
+  "rpause": true,
+  "rpausePressed": "false",
+  "rcards": 0,
+  "galImgs": 48,
+  "galDead": 0,
+  "rbgDead": 0,
+  "revealed": 0,
+  "focusEls": 6,
+  "inViewErrs": [],
+  "eventsSection": false,
+  "galleryLink": true,
+  "merchLink": true,
+  "pwCredit": true,
+  "links": [
+   [
+    "http://localhost:8099/gallery.html",
+    "Gallery"
+   ],
+   [
+    "http://localhost:8099/merchandise.html",
+    "Merchandise"
+   ],
+   [
+    "http://localhost:8099/gallery.html",
+    "Open the gallery"
+   ],
+   [
+    "http://localhost:8099/gallery.html",
+    "Open the full gallery →"
+   ],
+   [
+    "http://localhost:8099/merchandise.html",
+    "View the collection →"
+   ],
+   [
+    "http://localhost:8099/merchandise.html",
+    "View the collection"
+   ],
+   [
+    "http://localhost:8099/merchandise.html",
+    "Merchandise"
+   ],
+   [
+    "http://localhost:8099/gallery.html",
+    "Gallery"
+   ],
+   [
+    "https://www.instagram.com/tobaladies.basketball/",
+    "Instagram — Tobaladies"
+   ],
+   [
+    "https://www.instagram.com/tobadeli.basketball/",
+    "Instagram — Tobadeli"
+   ],
+   [
+    "https://wa.me/6281285704946?text=Halo%20admin%20TOBA%20Community!%20Saya%20tertarik%20untu",
+    "WhatsApp — Join us"
+   ],
+   [
+    "https://wa.me/6281285704946?text=Halo%20admin%20TOBA%20Community!%20Saya%20ingin%20bertany",
+    "WhatsApp — Ask info"
+   ],
+   [
+    "https://www.instagram.com/portoweb.id/",
+    "Crafted by PortoWeb ID"
+   ]
+  ]
+ },
+ "scrollMs": 1157,
+ "reachedBottom": false,
+ "afterScroll": {
+  "overflowX": 0,
+  "pageH": 9813,
+  "domNodes": 543,
+  "tracks": 3,
+  "mTracks": 1,
+  "rbg": 6,
+  "rbgActiveIdx": 0,
+  "rpause": true,
+  "rpausePressed": "false",
+  "rcards": 0,
+  "galImgs": 48,
+  "galDead": 0,
+  "rbgDead": 0,
+  "revealed": 3,
+  "focusEls": 6,
+  "inViewErrs": [],
+  "eventsSection": false,
+  "galleryLink": true,
+  "merchLink": true,
+  "pwCredit": true,
+  "links": [
+   [
+    "http://localhost:8099/gallery.html",
+    "Gallery"
+   ],
+   [
+    "http://localhost:8099/merchandise.html",
+    "Merchandise"
+   ],
+   [
+    "http://localhost:8099/gallery.html",
+    "Open the gallery"
+   ],
+   [
+    "http://localhost:8099/gallery.html",
+    "Open the full gallery →"
+   ],
+   [
+    "http://localhost:8099/merchandise.html",
+    "View the collection →"
+   ],
+   [
+    "http://localhost:8099/merchandise.html",
+    "View the collection"
+   ],
+   [
+    "http://localhost:8099/merchandise.html",
+    "Merchandise"
+   ],
+   [
+    "http://localhost:8099/gallery.html",
+    "Gallery"
+   ],
+   [
+    "https://www.instagram.com/tobaladies.basketball/",
+    "Instagram — Tobaladies"
+   ],
+   [
+    "https://www.instagram.com/tobadeli.basketball/",
+    "Instagram — Tobadeli"
+   ],
+   [
+    "https://wa.me/6281285704946?text=Halo%20admin%20TOBA%20Community!%20Saya%20tertarik%20untu",
+    "WhatsApp — Join us"
+   ],
+   [
+    "https://wa.me/6281285704946?text=Halo%20admin%20TOBA%20Community!%20Saya%20ingin%20bertany",
+    "WhatsApp — Ask info"
+   ],
+   [
+    "https://www.instagram.com/portoweb.id/",
+    "Crafted by PortoWeb ID"
+   ]
+  ]
+ },
+ "marquee": {
+  "moved": true,
+  "dxPxPerSec": 7.8,
+  "domStable": true
+ },
+ "rows": {
+  "r1": {
+   "dx": 0,
+   "dir": "STUCK"
+  },
+  "r2": {
+   "dx": 0,
+   "dir": "STUCK"
+  },
+  "r3": {
+   "dx": 0,
+   "dir": "STUCK"
+  }
+ },
+ "reviewBg": {
+  "before": 1,
+  "after": 2,
+  "advanced": true
+ },
+ "pause": {
+  "pressed": "true",
+  "frozenWhilePaused": true
+ },
+ "errors": [],
+ "reducedMotion": {
+  "overflowX": 0,
+  "hasMarquee": true,
+  "hasGallery": 3,
+  "hasReviews": true,
+  "footerCredit": true,
+  "marqueeFrozen": true,
+  "checkX1": 0
+ }
+}
