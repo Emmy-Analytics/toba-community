@@ -1,0 +1,240 @@
+{
+ "index.html": {
+  "marqueeColors": [
+   "rgb(46, 125, 70)"
+  ],
+  "mItemSample": "TOBA APPAREL  WEAR THE CULTURE",
+  "heading": null,
+  "inkColor": "rgb(36, 37, 34)",
+  "accColor": "rgb(230, 92, 37)",
+  "gallery": {
+   "cls": "cine-g-track",
+   "w": 6979,
+   "sw": 6979,
+   "vw": 390,
+   "kids": 3
+  },
+  "marquee": {
+   "h": 109,
+   "overflowHidden": true,
+   "items": 3
+  },
+  "social": [
+   {
+    "tag": "A",
+    "txt": "Tobaladies",
+    "h": 44,
+    "href": "https://www.instagram.com/tobaladies.baske"
+   },
+   {
+    "tag": "A",
+    "txt": "Tobadeli",
+    "h": 44,
+    "href": "https://www.instagram.com/tobadeli.basketb"
+   },
+   {
+    "tag": "A",
+    "txt": "WhatsApp TOBA Community",
+    "h": 44,
+    "href": "https://wa.me/6281285704946"
+   }
+  ],
+  "pwIG": {
+   "box": "14x14",
+   "svg": "14px color:rgba(255, 255, 255, 0.55)"
+  },
+  "waToba": true
+ },
+ "tobaladies.html": {
+  "marqueeColors": [],
+  "mItemSample": null,
+  "heading": null,
+  "inkColor": null,
+  "accColor": null,
+  "social": [
+   {
+    "tag": "A",
+    "txt": "Tobaladies",
+    "h": 44,
+    "href": "https://www.instagram.com/tobaladies.baske"
+   },
+   {
+    "tag": "A",
+    "txt": "Tobadeli",
+    "h": 44,
+    "href": "https://www.instagram.com/tobadeli.basketb"
+   },
+   {
+    "tag": "A",
+    "txt": "WhatsApp TOBA Community",
+    "h": 44,
+    "href": "https://wa.me/6281285704946"
+   }
+  ],
+  "pwIG": {
+   "box": "14x14",
+   "svg": "14px color:rgba(255, 255, 255, 0.55)"
+  },
+  "waToba": true
+ },
+ "tobadeli.html": {
+  "marqueeColors": [],
+  "mItemSample": null,
+  "heading": null,
+  "inkColor": null,
+  "accColor": "rgb(230, 92, 37)",
+  "social": [
+   {
+    "tag": "A",
+    "txt": "Tobaladies",
+    "h": 44,
+    "href": "https://www.instagram.com/tobaladies.baske"
+   },
+   {
+    "tag": "A",
+    "txt": "Tobadeli",
+    "h": 44,
+    "href": "https://www.instagram.com/tobadeli.basketb"
+   },
+   {
+    "tag": "A",
+    "txt": "WhatsApp TOBA Community",
+    "h": 44,
+    "href": "https://wa.me/6281285704946"
+   }
+  ],
+  "pwIG": {
+   "box": "14x14",
+   "svg": "14px color:rgba(255, 255, 255, 0.55)"
+  },
+  "waToba": true
+ },
+ "events.html": {
+  "marqueeColors": [],
+  "mItemSample": null,
+  "heading": null,
+  "inkColor": null,
+  "accColor": null,
+  "social": [
+   {
+    "tag": "A",
+    "txt": "Tobaladies",
+    "h": 44,
+    "href": "https://www.instagram.com/tobaladies.baske"
+   },
+   {
+    "tag": "A",
+    "txt": "Tobadeli",
+    "h": 44,
+    "href": "https://www.instagram.com/tobadeli.basketb"
+   },
+   {
+    "tag": "A",
+    "txt": "WhatsApp TOBA Community",
+    "h": 44,
+    "href": "https://wa.me/6281285704946"
+   }
+  ],
+  "pwIG": {
+   "box": "14x14",
+   "svg": "14px color:rgba(255, 255, 255, 0.55)"
+  },
+  "waToba": true
+ },
+ "merchandise.html": {
+  "marqueeColors": [],
+  "mItemSample": null,
+  "heading": null,
+  "inkColor": null,
+  "accColor": "rgb(230, 92, 37)",
+  "social": [
+   {
+    "tag": "A",
+    "txt": "Tobaladies",
+    "h": 44,
+    "href": "https://www.instagram.com/tobaladies.baske"
+   },
+   {
+    "tag": "A",
+    "txt": "Tobadeli",
+    "h": 44,
+    "href": "https://www.instagram.com/tobadeli.basketb"
+   },
+   {
+    "tag": "A",
+    "txt": "WhatsApp TOBA Community",
+    "h": 44,
+    "href": "https://wa.me/6281285704946"
+   }
+  ],
+  "pwIG": {
+   "box": "14x14",
+   "svg": "14px color:rgba(255, 255, 255, 0.55)"
+  },
+  "waToba": true
+ },
+ "gallery.html": {
+  "marqueeColors": [],
+  "mItemSample": null,
+  "heading": null,
+  "inkColor": null,
+  "accColor": null,
+  "social": [
+   {
+    "tag": "A",
+    "txt": "Tobaladies",
+    "h": 44,
+    "href": "https://www.instagram.com/tobaladies.baske"
+   },
+   {
+    "tag": "A",
+    "txt": "Tobadeli",
+    "h": 44,
+    "href": "https://www.instagram.com/tobadeli.basketb"
+   },
+   {
+    "tag": "A",
+    "txt": "WhatsApp TOBA Community",
+    "h": 44,
+    "href": "https://wa.me/6281285704946"
+   }
+  ],
+  "pwIG": {
+   "box": "14x14",
+   "svg": "14px color:rgba(255, 255, 255, 0.55)"
+  },
+  "waToba": true
+ },
+ "partnership.html": {
+  "marqueeColors": [],
+  "mItemSample": null,
+  "heading": null,
+  "inkColor": null,
+  "accColor": null,
+  "social": [
+   {
+    "tag": "A",
+    "txt": "Tobaladies",
+    "h": 44,
+    "href": "https://www.instagram.com/tobaladies.baske"
+   },
+   {
+    "tag": "A",
+    "txt": "Tobadeli",
+    "h": 44,
+    "href": "https://www.instagram.com/tobadeli.basketb"
+   },
+   {
+    "tag": "A",
+    "txt": "WhatsApp TOBA Community",
+    "h": 44,
+    "href": "https://wa.me/6281285704946"
+   }
+  ],
+  "pwIG": {
+   "box": "14x14",
+   "svg": "14px color:rgba(255, 255, 255, 0.55)"
+  },
+  "waToba": true
+ }
+}

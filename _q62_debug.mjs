@@ -1,0 +1,12 @@
+import puppeteer from 'puppeteer';
+const b = await puppeteer.launch({ headless: 'new' });
+const p = await b.newPage(); await p.setViewport({ width: 1440, height: 900 });
+await p.goto('http://localhost:8099/tobaladies.html', { waitUntil: 'networkidle2' });
+await p.evaluate(() => { sessionStorage.clear(); localStorage.clear(); });
+await p.reload({ waitUntil: 'networkidle2' });
+await new Promise(r => setTimeout(r, 1500));
+console.log('tld-intro exists:', await p.evaluate(() => !!document.querySelector('.tld-intro')));
+console.log('cta:', await p.evaluate(() => document.querySelector('.tld-cta')?.textContent.trim()));
+console.log('city label:', await p.evaluate(() => { const e = document.querySelector('[data-i18n="join.f.city"]'); return e ? e.textContent : null; }));
+console.log('lang storage:', await p.evaluate(() => localStorage.getItem('toba-lang')));
+await b.close();

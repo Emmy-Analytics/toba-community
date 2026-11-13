@@ -64,6 +64,7 @@ const productCard = (p, i) => `<article class="product-card" data-category="${p.
 function home() {
     return `
 <section class="hero hero-home kinetic">
+  <div class="hero-gradient-shift" aria-hidden="true"></div>  <!-- Prompt 36: pergantian warna perlahan -->
   <div class="hero-atmosphere" aria-hidden="true" data-pointer-depth="7"></div>
   <!-- Prompt 54: cinematic photo collage — dokumentasi asli TOBA, layered editorial -->
   <div class="hero-collage" aria-hidden="true">
@@ -72,6 +73,8 @@ function home() {
     <figure class="hc-photo hc-c" data-cine-h="0.55"><img src="${photos.men}" alt="" loading="lazy"></figure>
     <figure class="hc-photo hc-d" data-cine-h="0.7"><img src="${photos.arena}" alt="" loading="lazy"></figure>
   </div>
+  <!-- Prompt 37-38: multiple SVG cutout composition — di dalam kolom head/body flow -->
+  <div class="hero-cut-slideshow" id="heroCutShow" aria-hidden="true"></div>
   <div class="hero-head"><p class="hero-identity brand-wordmark" translate="no"><span class="id-toba">TOBA</span><span class="id-comm">COMMUNITY</span></p><small class="hero-sub-identity">${t('hero.identity.sub')}</small></div>
   <div class="hero-body">
     <div class="hero-actions"><a class="pill" href="partnership.html">${t('hero.cta1')}</a><a class="pill secondary" href="events.html">${t('hero.cta2')}</a></div>
@@ -147,10 +150,8 @@ function home() {
   <div class="cine-rcards" aria-live="polite"></div>
 </section>
 
-<section class="dark-section"><div class="dark-section-inner"><div class="section-heading"><div><p class="eyebrow">${t('home.story.eyebrow')}</p><h2>${t('home.story.h')}</h2></div><p class="lede">${t('home.story.lede')}</p></div>
-  <div class="two-col"><div class="photo-frame img-reveal" data-parallax="0.06"><img src="${photos.women}" alt="${t('ui.illust.women')}" loading="lazy"><span class="frame-caption accent-pink">TOBALADIES</span></div>
-  <div class="photo-frame img-reveal" data-parallax="-0.05" style="margin-top:clamp(24px,4vw,56px)"><img src="${photos.men}" alt="${t('ui.illust.men')}" loading="lazy"><span class="frame-caption accent-orange">TOBADELI</span></div></div>
-  <p style="margin-top:28px"><a class="text-link on-dark" href="gallery.html">${t('home.story.link')}</a></p></div></section>
+<!-- Prompt 69: section hijau "LANGSUNG DARI LAPANGAN" dihapus —
+     dokumentasinya sudah tampil di galeri bergerak di bawah -->
 
 <section class="section-wrap agenda-section"><div class="section-heading"><div><p class="eyebrow">${t('home.events.eyebrow')}</p><h2>${t('home.events.h')}</h2></div><a class="text-link" href="events.html">${t('home.events.link')}</a></div>${eventScroller(events.slice(0, 4).map(eventCard).join(''))}</section>
 
@@ -164,13 +165,13 @@ function home() {
 
 <section class="cine-marquee" id="cineApparel" aria-label="TOBA APPAREL">
   <div class="cine-m-track" data-dir="ltr" data-speed="22"><div class="cine-m-inner">
-    <span class="cine-m-item">TOBA APPAREL <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> WEAR THE CULTURE <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> TOBA APPAREL <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> </span><span class="cine-m-item" aria-hidden="true">TOBA APPAREL <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> WEAR THE CULTURE <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> TOBA APPAREL <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> </span>
+    <span class="cine-m-item"><span class="cm-toba">TOBA</span> <span class="cm-apparel">APPAREL</span> <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> <span class="cm-other">WEAR THE CULTURE</span> <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> <span class="cm-toba">TOBA</span> <span class="cm-apparel">APPAREL</span> <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> </span><span class="cine-m-item" aria-hidden="true"><span class="cm-toba">TOBA</span> <span class="cm-apparel">APPAREL</span> <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> <span class="cm-other">WEAR THE CULTURE</span> <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> <span class="cm-toba">TOBA</span> <span class="cm-apparel">APPAREL</span> <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> </span><span class="cine-m-item" aria-hidden="true"><span class="cm-toba">TOBA</span> <span class="cm-apparel">APPAREL</span> <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> <span class="cm-other">WEAR THE CULTURE</span> <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> <span class="cm-toba">TOBA</span> <span class="cm-apparel">APPAREL</span> <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> </span>
   </div></div>
 </section>
 
-<section class="section-wrap merch-section"><div class="section-heading"><div><p class="eyebrow">${t('home.merch.eyebrow')}</p><h2>${t('home.merch.h')}</h2></div><a class="text-link" href="merchandise.html">${t('home.merch.link')}</a></div><div class="product-grid">${products.slice(0, 4).map(productCard).join('')}</div></section>
+<section class="section-wrap merch-section"><div class="section-heading"><div><p class="eyebrow">${t('home.merch.eyebrow')}</p><h2><span class="mw-ink">TOBA</span> <span class="accent-orange">MERCH.</span></h2></div><a class="text-link" href="merchandise.html">${t('home.merch.link')}</a></div><div class="product-grid">${products.slice(0, 4).map(productCard).join('')}</div></section>
 
-<section class="section-wrap contact-section"><button class="contact-card" id="joinCtaBtn" type="button" aria-haspopup="dialog" aria-controls="joinModal"><div class="contact-copy"><p class="eyebrow">${t('home.call.eyebrow')}</p><h3>${t('home.call.h')}</h3><p class="lede">${t('home.call.lede')}</p></div><span class="pill contact-cta">${t('home.call.cta')}</span></button></section>
+<section class="section-wrap contact-section"><button class="contact-card part-card-inner" id="joinCtaBtn" type="button" onclick="window.location.href='partnership.html'" aria-label="${t('home.call.btn')}"><div class="contact-copy"><p class="eyebrow">${t('home.call.label')}</p><h3>${t('home.call.h')}</h3><p class="lede">${t('home.call.d')}</p></div><a class="pill contact-cta" href="partnership.html" onclick="event.stopPropagation()">${t('home.call.btn')}</a></button></section>
 
 `
 }
@@ -178,15 +179,23 @@ function home() {
 /* ---------- PROMPT 1-10 · CINEMATIC MODULE (namespace .cine-) ---------- */
 const cinePhotos = [photos.women, photos.men, photos.training, photos.women2, photos.arena, photos.game2];
 const cineRow1 = [photos.game2, photos.men, photos.women, photos.men2, photos.women3, photos.arena, photos.training, photos.women2];
-const cineRow2 = [photos.team, photos.women3, photos.hoop, photos.training, photos.ladies3, photos.men2, photos.ball, photos.floor];
+const cineRow2 = [photos.team, photos.women3, photos.hoop, photos.training, photos.ladies3, photos.men2, photos.ball, photos.floor, photos.women, photos.men, photos.game2];   /* Prompt 57: +3 foto agar kelompok cukup lebar untuk viewport */
 const cineRow3 = [photos.hoop, photos.ladies3, photos.ball, photos.floor, photos.men2, photos.team, photos.women, photos.game2];
 const cineReviews = []; /* isi dengan review asli berizin: {name:'…', text:'…'} — kosong = kartu disembunyikan, tidak ada data fiktif */
 function cineRow(arr){
   const card = (src,i)=>`<figure class="cine-g-card"><img src="${src}" alt="${t('cine.gallery.alt')}" loading="lazy" onerror="this.parentElement.classList.add('cine-g-dead')"></figure>`;
   const seq = arr.map(card).join('');
-  /* Prompt 30: spacer penutup di DALAM tiap seq — jarak antar-seq identik dengan
-     jarak antar-card, sehingga wrap modulo tidak menyisakan celah kosong. */
-  return `<div class="cine-g-seq">${seq}</div><div class="cine-g-seq" aria-hidden="true">${seq}</div>`; /* duplikat teknis untuk seamless loop — jumlah node tetap */
+  /* Prompt 30/42: spacer penutup di DALAM tiap seq — jarak antar-seq identik
+     dengan jarak antar-card, sehingga wrap modulo tidak menyisakan celah kosong.
+     Prompt 42: tiap baris diberi 3 kelompok identik — satu kelompok terlalu
+     pendek utk viewport lebar membuat sisi kanan kosong saat animasi berjalan;
+     engine memakai kelompok pertama sebagai satuan loop (half). */
+  /* Prompt 57: 4 kelompok identik per baris — kelompok foto pendek (row2
+     memakai foto landscape/kecil, lebar total < viewport) membuat sisi kanan
+     kosong; menambah kelompok menjamin track total selalu > 2× viewport.
+     Semua kelompok urutan/lebar/gap identik → wrap modulo tetap seamless. */
+  const grp = `<div class="cine-g-seq">${seq}</div>`;
+  return grp + `<div class="cine-g-seq" aria-hidden="true">${seq}</div><div class="cine-g-seq" aria-hidden="true">${seq}</div><div class="cine-g-seq" aria-hidden="true">${seq}</div>`;
 }
 
 /* ---------- COMMUNITY PAGES — distinct editorial rhythm ---------- */
@@ -215,13 +224,24 @@ function communityPage(which) {
 <section class="section-wrap"><div class="two-col"><div class="photo-frame img-reveal" data-parallax="${women ? '0.07' : '-0.06'}"><img src="${img}" alt="${t('comm.illust')} ${name}" loading="lazy">${women ? '<img class="mascot mascot-wordmark" src="assets/logopinkpng.png" alt="Logo Tobaladies">' : ''}<span class="frame-caption accent-${tone}">${name}</span></div>
   <div style="align-self:end;padding-bottom:8px"><p class="eyebrow">${t('comm.about')}</p><h2>${t('comm.h')}</h2><p class="lede">${t('comm.lede')}</p>${women ? '' : `<p class="brand-note">${t('brand.deli.note')}</p>`}<a class="text-link" href="events.html">${t('comm.link')}</a></div></div></section>
 
+<section class="section-wrap comm-story"><div class="comm-story-grid">
+  <div class="photo-frame img-reveal" data-parallax="${women ? '0.06' : '-0.05'}"><img src="${women ? photos.ladies3 : photos.men2}" alt="${t('comm.illust')} ${name}" loading="lazy"><span class="frame-caption accent-${tone}">${name}</span></div>
+  <div class="comm-story-copy">
+    <p class="eyebrow accent-${tone}">${t(women ? 'tl.story.eyebrow' : 'deli.story.eyebrow')}</p>
+    <h2>${t(women ? 'tl.story.h' : 'deli.story.h')}</h2>
+    <p class="tl-lead">${t(women ? 'tl.story.lead' : 'deli.story.p1')}</p>
+    <p>${t(women ? 'tl.story.p1' : 'deli.story.p2')}</p>
+    ${women ? `<p>${t('tl.story.p2')}</p>` : ''}
+  </div>
+</div></section>
+
 <section class="dark-section"><div class="dark-section-inner">
   <div class="section-heading"><div><p class="eyebrow">${tPair('NEXT UP','SELANJUTNYA')}</p><h2>${tPair('COMMUNITY <span class="accent-' + tone + '">SCHEDULE.</span>','JADWAL <span class="accent-' + tone + '">KOMUNITAS.</span>')}</h2></div><a class="text-link" href="events.html">${t('home.events.link')}</a></div>
   ${eventScroller(events.filter(e => e.community === (women ? 'Tobaladies' : 'Tobadeli') || e.community === 'All Community').slice(0, 4).map(eventCard).join(''))}
   <div class="feature-strip feature-checklist" role="list" style="margin-top:clamp(40px,6vh,64px)">${[1,2,3,4].map(n=>`<div class="feature feature-check" role="listitem"><span class="check-ind" aria-hidden="true"><svg viewBox="0 0 16 16" width="13" height="13" fill="none"><path d="M2.5 8.5l3.5 3.5 7-8" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="check-copy"><strong>${t('comm.f'+n)}</strong><span>${t('comm.f'+n+'s')}</span></div></div>`).join('')}</div>
 </div></section>
 
-<section class="section-wrap"><div class="callout"><div><p class="eyebrow">${t('comm.join.eyebrow')}</p><h3>${t('comm.join.h')}</h3><p class="lede">${t('comm.pill.d')}</p></div><a class="pill" href="partnership.html">${ctaJoin}</a></div></section>${women ? ladiesStory() : ''}`
+<section class="section-wrap"><div class="callout"><div><p class="eyebrow">${t('comm.join.eyebrow')}</p><h3>${t('comm.join.h')}</h3><p class="lede">${t('comm.pill.d')}</p></div><a class="pill" href="partnership.html">${ctaJoin}</a></div></section>`
 }
 
 /* ---------- FAQ accordion + Weekly Fun Game facts ---------- */
@@ -239,7 +259,9 @@ function faqSection() {
 </div></section>`;
 }
 
-/* ---------- TOBALADIES storyline + founder (editorial) ---------- */
+/* ---------- TOBALADIES storyline + founder (editorial) ----------
+   Prompt 24/25: cerita komunitas kini dirender di communityPage (comm-story)
+   untuk Tobaladies DAN Tobadeli; ladiesStory() lama tidak dipakai lagi. */
 function ladiesStory() {
     return `
 <section class="tl-story section-wrap"><div class="tl-story-grid">
@@ -249,15 +271,6 @@ function ladiesStory() {
     <p class="tl-lead">${t('tl.story.lead')}</p>
     <p>${t('tl.story.p1')}</p>
     <p>${t('tl.story.p2')}</p>
-    <div class="photo-frame tl-story-photo img-reveal" data-parallax="0.05"><img src="${photos.women2}" alt="${t('ui.illust.women')}" loading="lazy"><span class="frame-caption accent-pink">TOBALADIES</span></div>
-    <p>${t('tl.story.p3')}</p>
-    <p>${t('tl.story.p4')}</p>
-  </div>
-  <div class="tl-story-side">
-    <div class="photo-frame tl-story-photo img-reveal" data-parallax="-0.04"><img src="${photos.ladies3}" alt="${t('ui.illust.women')}" loading="lazy"></div>
-    <div class="tl-acts"><p class="tl-acts-label">${t('tl.story.acts')}</p>
-      <ul><li>${t('tl.story.acts.1')}</li><li>${t('tl.story.acts.2')}</li><li>${t('tl.story.acts.3')}</li><li>${t('tl.story.acts.4')}</li></ul>
-    </div>
   </div>
 </div></section>`
 }
@@ -298,7 +311,7 @@ function partnershipPage() {
     return `
 <section class="hero section-wrap" style="min-height:auto"><div class="hero-copy"><p class="eyebrow">${t('part.hero.eyebrow')}</p><h1>${t('part.hero.h')}</h1><p class="hero-subtitle">${t('part.hero.lede')}</p></div>
   <div class="page-hero" style="padding:0;grid-template-columns:1fr"><div class="photo-frame img-reveal" data-parallax="0.04"><img src="${photos.court}" alt="${t('ui.illust.court')}"></div></div></section>
-<section class="section-wrap two-col"><div><p class="eyebrow">${t('part.ways')}</p><h2>${t('part.h')}</h2><div class="card-grid" style="grid-template-columns:1fr 1fr"><div class="info-card"><div class="pad"><h3>${t('part.c1')}</h3><p>${t('part.c1p')}</p></div></div><div class="info-card"><div class="pad"><h3>${t('part.c2')}</h3><p>${t('part.c2p')}</p></div></div><div class="info-card"><div class="pad"><h3>${t('part.c3')}</h3><p>${t('part.c3p')}</p></div></div><div class="info-card"><div class="pad"><h3>${t('part.c4')}</h3><p>${t('part.c4p')}</p></div></div></div></div>
+<section class="section-wrap two-col"><div><p class="eyebrow">${t('part.ways')}</p><h2>${t('part.h')}</h2><div class="card-grid part-grid">${[1,2,3,4,5,6,7,8].map(n=>`<div class="info-card"><div class="pad"><h3>${t('part.c'+n)}</h3><p>${t('part.c'+n+'p')}</p></div></div>`).join('')}</div></div>
 <form class="form-card" id="partnerForm"><p class="eyebrow">${t('part.form.eyebrow')}</p><h3>${t('part.form.h')}</h3><div class="form-grid"><div class="field"><label for="name">${t('part.name')}</label><input id="name" name="name" required placeholder="${t('part.name.ph')}"></div><div class="field"><label for="org">${t('part.org')}</label><input id="org" name="org" placeholder="${t('part.org.ph')}"></div><div class="field"><label for="email">${t('part.contact')}</label><input id="email" name="email" required placeholder="${t('part.contact.ph')}"></div><div class="field"><label for="interest">${t('part.interest')}</label><select id="interest" name="interest"><option>${t('part.opt1')}</option><option>${t('part.opt2')}</option><option>${t('part.opt3')}</option><option>${t('part.opt4')}</option><option>${t('part.opt5')}</option></select></div><div class="field full"><label for="message">${t('part.message')}</label><textarea id="message" name="message" placeholder="${t('part.message.ph')}"></textarea></div><div class="field full"><button class="btn" type="submit">${t('part.send')}</button><small style="display:block;margin-top:10px;color:var(--muted)">${t('part.sent')}</small></div></div></form></section>`
 }
 
@@ -400,7 +413,8 @@ document.getElementById('productFilters')?.addEventListener('click', e => { cons
 let cart = []; document.addEventListener('click', e => { const add = e.target.closest('[data-product]'); if (add) { const p = products[Number(add.dataset.product)]; cart.push(p); document.getElementById('cartCount').textContent = cart.length; toast(`${p.name} ${t('merch.added')}`) } const interest = e.target.closest('.event-interest'); if (interest) toast(`${t('ui.demo')} ${interest.dataset.event}. ${t('ui.demo2')}`) });
 document.getElementById('checkoutDemo')?.addEventListener('click', () => { if (!cart.length) { toast(t('merch.empty')); return } const total = cart.reduce((s, p) => s + p.price, 0); toast(`${t('merch.summary')} ${cart.length} ${t('merch.items')} ${money(total)}. ${t('merch.nocheckout')}`) });
 document.getElementById('partnerForm')?.addEventListener('submit', e => { e.preventDefault(); toast(t('part.sent')); e.target.reset() });
-document.getElementById('backTop').addEventListener('click', e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }) });
+/* Prompt 9/21: "Kembali ke atas" dihapus dari semua halaman — guard agar error tidak muncul jika markup sisa */
+document.getElementById('backTop')?.addEventListener('click', e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }) });
 
 /* ---------- live gallery: fetch after render (preserved) ---------- */
 if (page === 'gallery') { loadGallery(); }
@@ -683,6 +697,94 @@ initMerchTilt();
   init();
 })();
 
+/* =====================================================================
+   PROMPT 27 · HERO SVG CUTOUT SLIDESHOW
+   Aset lokal: assets/img/cutout/*.svg (cutout orang, transparan).
+   Fade 800ms, durasi tiap slide 3s. Timer + class toggle saja.
+   Slide di-preload; gambar aktif dipertahankan sampai berikutnya siap.
+   prefers-reduced-motion → tampilan statis (slide pertama, tanpa autoplay).
+   ===================================================================== */
+/* =====================================================
+   PROMPT 37-38 · HERO SVG CUTOUT — MULTIPLE PHOTOS COMPOSITION
+   Semua aset di assets/img/cutout/ diaudit; aset valid dipakai.
+   3 foto tampil BERSAMAAN per komposisi (1 utama + 2 pendukung).
+   4 preset komposisi dikontrol (bukan posisi acak), fade 900ms,
+   durasi komposisi 5s. Foto tetap di bawah judul, di atas CTA
+   (container .hero-cut-slideshow ada di grid-area "visual").
+   prefers-reduced-motion → komposisi statis pertama, tanpa timer.
+   ===================================================================== */
+(function heroCutShow(){
+  if (document.body.dataset.page !== 'home') return;
+  const CUT = 'assets/img/cutout/';
+  /* audit aset: semua SVG lokal cutout; 9 valid (transparan, tanpa mask/clip rusak).
+     "bola basket.svg" dipakai sebagai pendukung kecil (.cut-ball) di beberapa komposisi. */
+  const FILES = ['fuzisal.svg','mandy.svg','dw nai.svg','vina.svg','yuiii.svg','grup dina.svg','yuki.svg','zia.svg','grup lastri.svg','bola basket.svg'];
+  const BALL = 'bola basket.svg';
+  const box = document.getElementById('heroCutShow');
+  if (!box || box.dataset.cutBound) return;
+  box.dataset.cutBound = '1';
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Prompt 50: rotasi satu-per-satu — setiap komposisi punya durasi tampil
+     BERBEDA (2.6s-6.4s), bukan interval identik. Bola basket (Prompt 48)
+     muncul lebih sering: slot kecil .cut-ball di 5 dari 7 komposisi,
+     posisi bergantian (kanan/kiri) tanpa mendominasi frame. */
+  const COMPOS = [
+    { d: 4200, main:'fuzisal.svg',   s1:['mandy.svg','cut-slot-b'],       ball:['cut-slot-a'] },
+    { d: 2600, main:'mandy.svg',     s1:['yuiii.svg','cut-slot-c'],       ball:null },
+    { d: 6400, main:'grup dina.svg', s1:['zia.svg','cut-slot-e'],         ball:['cut-slot-f'] },
+    { d: 3000, main:'vina.svg',      s1:['yuki.svg','cut-slot-g'],        ball:null },
+    { d: 5200, main:'dw nai.svg',    s1:['grup lastri.svg','cut-slot-d'], ball:['cut-slot-e'] },
+    { d: 2400, main:'yuiii.svg',     s1:['zia.svg','cut-slot-h'],         ball:['cut-slot-c'] },
+    { d: 5800, main:'yuki.svg',      s1:['mandy.svg','cut-slot-a'],       ball:['cut-slot-g'] }
+  ];
+  /* preload semua aset sekali — tidak ada reload per pergantian */
+  const cache = {};
+  FILES.forEach(f => { const i = new Image(); i.src = CUT + encodeURIComponent(f); i.decoding = 'async'; cache[f] = i; });
+
+  let idx = 0, timer = 0, started = false;
+  function render(ci){
+    const c = COMPOS[ci % COMPOS.length];
+    box.innerHTML = '';
+    const put = (file, cls, extra) => {
+      const img = cache[file];
+      if (!img || !img.complete || !img.naturalWidth) return false;
+      const node = img.cloneNode(false);
+      node.className = 'hero-cut-img ' + cls + (extra ? ' ' + extra : '');
+      node.alt = '';
+      box.appendChild(node);
+      return true;
+    };
+    /* gambar belum siap → pertahankan render sebelumnya (tanpa frame kosong) */
+    const ready = put(c.main, 'cut-main');
+    put(c.s1[0], 'cut-sup', c.s1[1]);
+    if (c.ball) put(BALL, 'cut-ball', c.ball[0]);
+    return ready;
+  }
+  function advance(){
+    const next = (idx + 1) % COMPOS.length;
+    const c = COMPOS[next];
+    const need = [c.main, c.s1[0]].concat(c.ball ? [BALL] : []);
+    const allReady = need.every(f => cache[f] && cache[f].complete && cache[f].naturalWidth);
+    if (!allReady) { schedule(); return; }   /* pertahankan komposisi aktif */
+    idx = next;
+    render(idx);   /* CSS cutIn animation menangani fade ~700ms */
+  }
+  function schedule(){ clearTimeout(timer); timer = setTimeout(advance, COMPOS[idx].d); }
+  const start = () => {
+    if (started) return; started = true;
+    render(0);
+    if (!reduce) schedule();
+  };
+  if (cache[FILES[0]].complete) start();
+  else { cache[FILES[0]].onload = start; cache[FILES[0]].onerror = () => box.remove(); }
+  document.addEventListener('visibilitychange', () => {
+    if (reduce || document.hidden) return;
+    clearTimeout(timer);
+    if (started) schedule();
+  });
+  window.addEventListener('pagehide', () => clearTimeout(timer));
+})();
 /* ---------- home hero entrance: staged reveal after the welcome intro ----------
    The river + copy fade in as one choreographed moment; if the intro is skipped
    or reduced-motion is on, the hero settles immediately. */
@@ -722,10 +824,24 @@ initMerchTilt();
   let lastT = 0, rafId = 0;
   const clamp = (v,a,b)=>Math.min(b,Math.max(a,v));
   const dpr = () => clamp(window.devicePixelRatio || 1, 1, 2);
+  /* Prompt 42/43: ukur ulang saat semua aset siap (font/gambar) */
+  window.addEventListener('load', () => { cineEngine._measured = false; }, { once: true });
 
   function measureTrack(tr){
     const seq = tr.el.querySelector('.cine-g-seq, .cine-m-item');
-    if (seq) tr.half = seq.scrollWidth || 0;                 /* lebar satu sequence */
+    if (!seq) return;
+    /* Prompt 42/43: ukur pitch penuh satu kelompok (lebar + gap antar-seq),
+       bukan hanya scrollWidth — scrollWidth bisa meleset bila font belum
+       siap / gambar belum render, dan itulah penyebab celah kosong di
+       baris kedua & pada titik pergantian kelompok marquee. */
+    let w = seq.getBoundingClientRect().width;
+    const cs = getComputedStyle(seq);
+    const sib = seq.nextElementSibling;
+    if (sib) { /* gap antar-seq (flex gap) atau padding-right seq */
+      const gap = parseFloat(getComputedStyle(tr.el).columnGap) || 0;
+      w += gap + (parseFloat(cs.paddingRight) || 0);
+    }
+    if (w > 40) tr.half = w;                    /* jangan menurunkan half ke nilai sampah */
   }
   function makeTracks(){
     tracks.length = 0;
@@ -750,6 +866,13 @@ initMerchTilt();
     tracks.forEach(tr => {
       if (!tr.half) measureTrack(tr);
       if (!tr.half || tr.paused) return;
+      /* Prompt 42/43: re-measure ketika viewport/font berubah — half yang
+         basi membuat wrap melompat atau menyisakan celah kosong */
+      /* re-measure sekali setelah window 'load' (font & gambar siap) dan
+         saat lebar viewport berubah — half basi membuat wrap menyisakan celah */
+      if (!cineEngine._measured || tr._remW !== window.innerWidth) {
+        tr._remW = window.innerWidth; measureTrack(tr);
+      }
       if (!(vis.get(tr.section))) return;                    /* hanya saat section terlihat */
       any = true;
       /* pos selalu naik (akumulator unsigned) — tanda arah hanya di transform,

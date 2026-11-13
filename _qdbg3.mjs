@@ -1,0 +1,15 @@
+import puppeteer from 'puppeteer';
+const b = await puppeteer.launch({ headless: 'new' });
+const p = await b.newPage(); await p.setViewport({ width: 1440, height: 900 });
+await p.goto('http://localhost:8099/gallery.html', { waitUntil: 'networkidle2' });
+await new Promise(r => setTimeout(r, 800));
+const pre = await p.evaluate(() => document.body.innerText.slice(0, 200));
+const btns = await p.evaluate(() => [...document.querySelectorAll('.lang-btn')].map(x => ({ lang: x.dataset.lang, cls: x.className })));
+await p.evaluate(() => { const b2 = [...document.querySelectorAll('.lang-btn')].find(x => x.dataset.lang === 'id'); if (b2) b2.click(); });
+await new Promise(r => setTimeout(r, 600));
+const post = await p.evaluate(() => document.body.innerText.slice(0, 200));
+console.log('btns:', JSON.stringify(btns));
+console.log('PRE:', JSON.stringify(pre));
+console.log('POST:', JSON.stringify(post));
+console.log('changed:', pre !== post);
+await b.close();

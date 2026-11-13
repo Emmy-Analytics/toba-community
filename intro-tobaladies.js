@@ -38,8 +38,7 @@
       <div class="tld-copy">
         <p class="tld-eyebrow">${t('intro.ladies.eyebrow')}</p>
         <h2 class="tld-wordmark">TOBA<span>LADIES</span></h2>
-        <p class="tld-welcome">Ini lapanganmu.</p>
-        <a class="tld-cta" href="#top">Kenalan dengan Tobaladies</a>
+        <a class="tld-cta" href="#top">${t('intro.ladies.cta')}</a>
       </div>
       <button class="tld-skip" type="button">Lewati intro</button>
     </div>`;

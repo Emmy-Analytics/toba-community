@@ -4,6 +4,10 @@
    strong orange (Tobadeli), strong pink (Tobaladies).
    Type: Manrope (headlines) + Instrument Sans (body).
    ============================================================ */
+
+/* Prompt 67: subtext under burger group labels removed everywhere
+   (desktop mega + mobile drawer share these keys, one rule covers both) */
+.mega-title, .mega-sub { display: none !important; }
 :root {
   --bg: #F7F6F0;
   --bg-warm: #EDE9DE;
@@ -230,6 +234,28 @@ p {
   font-weight: 800;
   line-height: .9;
   letter-spacing: .02em
+}
+
+/* ---------- PROMPT 34 · Drawer wordmark follows the official standard ---------- */
+.drawer-name {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 17px;
+  line-height: .9;
+  letter-spacing: -.02em;
+}
+.drawer-name { color: #2F804B }
+.drawer-name small {
+  display: inline;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  margin: 0;
+  color: #252923;
 }
 
 /* ---------- PROMPT 23 · TOBACOMMUNITY wordmark (Header & Footer) ----------
@@ -2328,17 +2354,22 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   place-items: center;
   opacity: 0;
   transform: translateY(34px) scale(.94);
-  transition: opacity .9s var(--ease-out), transform 1.2s var(--ease-cine)
+  transition: opacity .9s var(--ease-out), transform 1.2s var(--ease-cine);
+  /* Prompt 12: figure adalah grid item dari .obi-stage (place-items:center) —
+     logo & copy berbagi sumbu tengah horizontal yang sama */
+  justify-self: center;
 }
 
 .obi-figure.in {
   opacity: 1;
-  transform: translateY(0) scale(1)
+  transform: translateY(0) scale(1);
+  justify-self: center;
 }
 
 .obi-figure.settle {
   transform: translateY(0) scale(1.02);
-  transition: transform 1.6s var(--ease-cine)
+  transition: transform 1.6s var(--ease-cine);
+  justify-self: center;
 }
 
 .obi-figure img {
@@ -2388,8 +2419,18 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   line-height: 1.02;
   letter-spacing: .04em;
   color: #171A16;
-  margin: 0
+  margin: 0;
+  text-align: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap
 }
+
+/* Prompt 47: wordmark tepat di sumbu tengah intro — pusat geometris
+   TOBA + COMMUNITY harus segaris dengan pusat kepala buaya */
+.obi-wordmark .ow-toba, .obi-wordmark .ow-comm { flex: 0 0 auto }
 
 /* Prompt 58: TOBA hijau + COMMUNITY hitam, satu baris menyatu (identitas utama) */
 .obi-wordmark .ow-toba { color: var(--accent) }
@@ -3140,10 +3181,13 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
     z-index: 46
   }
 
-  /* the drawer has its own close button — hide the burger while open */
+  /* the drawer has its own close button — hide the burger (X morph) while open:
+     hanya SATU X terlihat, tidak menimpa konten drawer (Prompt 14) */
   body:has(#mainNav.open) .menu-toggle {
     visibility: hidden;
-    pointer-events: none
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .2s var(--ease-out);
   }
 
   .hero,
@@ -3333,9 +3377,11 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
     "body";
   column-gap: 0;
   align-content: end;
+  min-height: calc(100svh - var(--header-h) - 34px);
   padding-top: clamp(28px, 5vh, 56px);
   padding-left: clamp(20px, 4vw, 64px);
   padding-right: clamp(20px, 4vw, 64px);
+  padding-bottom: clamp(40px, 6vh, 64px);   /* Prompt 36: +32-48px di bawah info terakhir */
   overflow: hidden;
 }
 
@@ -3458,8 +3504,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
       "body";
     row-gap: 0;
     min-height: auto;
-    padding: 18px 22px 44px; /* horizontal padding so text never touches the edge */
-    overflow: hidden;
+    padding: 20px 22px 64px;   /* Prompt 36: bawah cukup agar gradient menutup sisa konten */
   }
 
   .hero-home .hero-head { align-self: start; padding-bottom: 4px }
@@ -3510,6 +3555,127 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 
 
   .hero-court-photo { height: 30%; opacity: .13 }
+}
+
+/* ============================================================
+   PROMPT 36/37/38 — hero mobile vertikal + MULTI SVG cutout composition
+   Urutan mobile: wordmark → deskripsi → foto → CTA1 → CTA2 →
+   Weekly Fun Game → jadwal → venue → kota → kelompok → grup.
+   Gradasi mengikuti tinggi konten (min-height, bukan fixed height).
+   ============================================================ */
+.hero-cut-slideshow {
+  position: relative;
+  z-index: 2;               /* di atas atmosfer/gradasi, sejajar teks */
+  width: 100%;
+  height: clamp(260px, 38vh, 460px);
+  display: block;
+  pointer-events: none;
+}
+/* Prompt 27: foto collage lama digantikan slideshow SVG cutout —
+   dihapus dari hero home (mobile & desktop) agar tidak menumpuk teks */
+.hero-home .hero-collage { display: none !important }
+
+/* --- Prompt 37/38 + 48: ukuran foto lebih kecil & multi-foto ---
+   Mobile: utama 40vw, pendukung 26-30vw. Desktop: utama 26vw (maks 380px),
+   pendukung 14-16vw. clamp() responsif; container tinggi tetap stabil.
+   Prompt 48: bola basket diperkecil — slot bola pakai ukuran khusus
+   (.cut-ball): mobile 18-24vw, desktop 11-16% dari container. */
+.hero-cut-img {
+  position: absolute;
+  object-fit: contain;
+  object-position: center bottom;
+  opacity: 0;
+  transition: opacity .9s ease;      /* fade 900ms — beberapa foto bersamaan */
+  will-change: opacity;
+  height: auto;
+}
+.hero-cut-img.cut-main {
+  width: clamp(38vw, 40vw, 52vw);
+  left: 50%; bottom: 0;
+  transform: translateX(-50%);
+  max-height: 100%;
+  opacity: 1;
+}
+.hero-cut-img.cut-sup {
+  width: clamp(24vw, 28vw, 36vw);
+  max-height: 58%;
+  opacity: .96;
+}
+/* Prompt 48: bola basket diperkecil — mobile 18-24vw */
+.hero-cut-img.cut-ball {
+  width: clamp(18vw, 21vw, 24vw);
+  max-height: 34%;
+  opacity: .95;
+}
+@media (min-width: 761px) {
+  .hero-cut-desktop .hero-cut-img.cut-ball { width: clamp(11%, 13%, 16%); max-height: 26% }
+}
+/* preset slot komposisi A-F (kontrol penuh, bukan acak) */
+.hero-cut-img.cut-slot-a { right: 2%;  top: 4%;  bottom: auto }
+.hero-cut-img.cut-slot-b { left: 1%;   bottom: 2%; top: auto }
+.hero-cut-img.cut-slot-c { left: 0;    top: 8%;  bottom: auto }
+.hero-cut-img.cut-slot-d { right: 0;   bottom: 0; top: auto }
+.hero-cut-img.cut-slot-e { right: 4%;  top: 2%;  bottom: auto }
+.hero-cut-img.cut-slot-f { left: 6%;   bottom: 6%; top: auto }
+.hero-cut-img.cut-slot-g { left: 2%;   top: 6%;  bottom: auto }
+.hero-cut-img.cut-slot-h { right: 1%;  bottom: 4%; top: auto }
+
+/* fade masuk saat pergantian komposisi — foto lama bertahan sampai
+   foto baru siap, fade ~700ms, tanpa frame kosong */
+.hero-cut-slideshow .hero-cut-img { animation: cutIn .7s ease both }
+@keyframes cutIn { from { opacity: 0 } }
+.hero-cut-img.cut-main { animation: cutInMain .7s ease both }
+@keyframes cutInMain { from { opacity: 0 } to { opacity: 1 } }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-cut-img, .hero-cut-img.cut-main { transition: none; animation: none; opacity: 1 }
+}
+
+/* mobile: komposisi multi-foto di alur dokumen; desktop: slot kanan hero */
+@media (min-width: 761px) {
+  .hero-cut-slideshow:not(.hero-cut-desktop) { display: none }
+  /* desktop: sisi kanan, utama dominan + 2 pendukung lebih kecil,
+     tidak menutupi judul/CTA (z-index 1, teks z-index 2) */
+  .hero-cut-desktop {
+    position: absolute;
+    right: clamp(20px, 6vw, 96px);
+    bottom: 0;
+    width: min(38vw, 520px);
+    height: min(56vh, 560px);
+    z-index: 1;
+  }
+  .hero-cut-desktop .hero-cut-img.cut-main {
+    width: clamp(46%, 52%, 60%);
+    left: 50%; transform: translateX(-50%);
+  }
+  .hero-cut-desktop .hero-cut-img.cut-sup { width: clamp(30%, 34%, 40%); max-height: 46% }
+}
+
+/* mobile: hero satu kolom, urutan vertikal sesuai Prompt 26 */
+@media (max-width: 760px) {
+  .hero-home {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "head"
+      "sub"
+      "visual"
+      "body";
+    min-height: auto;
+    padding: 20px 22px 48px;
+  }
+  /* mobile: komposisi di dalam flow — di antara deskripsi dan CTA */
+  .hero-home .hero-head { grid-area: head; align-self: start }
+  .hero-home .hero-sub-identity { grid-area: sub }
+  .hero-cut-slideshow { display: block !important; grid-area: visual; height: clamp(210px, 30vh, 300px); margin: 12px 0 10px }
+  /* jadwal & lokasi tetap paling bawah, tidak menutupi foto */
+  .hero-home .hero-body { grid-area: body; align-self: end }
+  .hero-home .hero-atmosphere { height: 100%; }   /* gradasi mencakup seluruh hero */
+  /* Prompt 49: gradasi hero wajib menutup seluruh konten sampai bawah.
+     min-height:auto + padding bawah proporsional 40px — tidak ada strip
+     putih kosong; batas ke section berikutnya tetap disengaja. */
+  .hero-home::after { content: none }
+  .hero-home { padding-bottom: clamp(40px, 6vh, 48px) }
+  .hero-home .hero-gradient-shift { height: 100%; bottom: 0 }
 }
 
 /* community shortcuts stack on small screens */
@@ -4664,6 +4830,35 @@ img { max-width: 100%; height: auto; }
 
 .tl-story-side { display: flex; flex-direction: column; gap: 28px; }
 
+/* Prompt 18: partnership services — 9 kartu, responsive */
+.part-grid { grid-template-columns: repeat(3, 1fr) !important; }
+@media (max-width: 900px) { .part-grid { grid-template-columns: repeat(2, 1fr) !important; } }
+@media (max-width: 600px) { .part-grid { grid-template-columns: 1fr !important; } }
+
+/* Prompt 24/25: storytelling komunitas (Tobaladies & Tobadeli) — satu pola,
+   teks singkat, foto tampil, tanpa fixed height / ruang kosong besar */
+.comm-story { padding-top: clamp(36px, 6vh, 64px); }
+.comm-story-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(28px, 5vw, 64px);
+  align-items: center;
+}
+.comm-story-grid .photo-frame {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+.comm-story-grid .photo-frame img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.comm-story-copy h2 { margin-bottom: 12px; }
+.comm-story-copy p { margin-bottom: 16px; line-height: 1.68; }
+@media (max-width: 900px) {
+  .comm-story-grid { grid-template-columns: 1fr; gap: 24px; }
+  /* mobile: foto dulu, lalu teks — alur membaca natural, tidak ada overlap */
+  .comm-story-grid .photo-frame { order: -1; }
+}
+
 .tl-acts {
   border-top: 3px solid #C42E60;
   padding-top: 18px;
@@ -5001,12 +5196,20 @@ img { max-width: 100%; height: auto; }
 /* ============================================================
    PROMPT 62 — TOBA MERCH section spacing (lebih lega, konsisten)
    ============================================================ */
-.merch-section { padding-top: clamp(40px, 6vh, 72px) }   /* Prompt 25: apparel → merch */
+.merch-section { padding-top: clamp(20px, 3vh, 36px) }   /* Prompt 28: sebelumnya clamp(40,6vh,72) — marquee→merch lebih dekat */
 
 /* ============================================================
    PROMPT 63 — CONTACT CARD redesign (compact, tipis, elegan)
    ============================================================ */
-.contact-section { padding-top: clamp(40px, 6vh, 72px); padding-bottom: clamp(56px, 9vh, 96px) }   /* Prompt 26: merch → join CTA */
+.contact-section { padding-top: clamp(20px, 3vh, 36px); padding-bottom: clamp(40px, 7vh, 72px) }   /* Prompt 33: sebelumnya 40-72 / 56-96 — produk → card Partnership lebih dekat */
+@media (max-width: 760px) {
+  .contact-section.contact-section { margin-top: clamp(8px, 2vh, 16px); padding-top: clamp(16px, 3vh, 28px) }
+}
+
+/* ---------- Prompt 31: contact card = pintu masuk Partnership (bukan form member) ----------
+   Aksen hijau tetap; seluruh card klik → partnership.html. */
+.part-card .part-card-inner { cursor: pointer; }
+.part-card .part-card-inner .eyebrow { color: var(--accent); letter-spacing: .14em; }
 
 button.contact-card {          /* Prompt 27: join card kini tombol pembuka form */
   width: 100%;
@@ -5062,15 +5265,55 @@ button.contact-card {          /* Prompt 27: join card kini tombol pembuka form 
    PROMPT 16-23 — VISUAL REFINEMENT PASS (Nov 2026)
    ============================================================ */
 
-/* ---------- Prompt 16: hero gradient (foto hitam-putih dihapus,
-   geometry lapangan + maskot dipertahankan) ---------- */
+/* ---------- Prompt 16/36: hero gradient — full-bleed ke seluruh konten +
+   pergantian warna perlahan HIJAU → ORANYE → PINK → HIJAU.
+   Mekanisme: layer :before/:after dgn opacity animasi (hanya background,
+   teks/foto di atasnya z-index 2, tombol tetap klikable, tanpa layout shift).
+   Satu siklus 36s; reduced-motion → gradient hijau statis. */
 .hero-home {
+  position: relative;
   background:
     radial-gradient(140% 110% at 12% -10%, rgba(255, 255, 255, .85) 0%, rgba(255, 255, 255, 0) 55%),
-    radial-gradient(120% 90% at 88% 8%, rgba(143, 191, 156, .38) 0%, rgba(143, 191, 156, 0) 62%),
-    radial-gradient(100% 80% at 78% 96%, rgba(49, 90, 59, .28) 0%, rgba(49, 90, 59, 0) 70%),
-    radial-gradient(90% 70% at 8% 88%, rgba(92, 115, 100, .22) 0%, rgba(92, 115, 100, 0) 64%),
-    linear-gradient(168deg, #F2EFE3 0%, #E7EBDD 38%, #CBD8C5 68%, #9FB397 100%);
+    linear-gradient(168deg, #EEF2E8 0%, #DCE9D9 38%, #BFD4C1 68%, #9FB397 100%);
+}
+/* layer oranye hangat + pink lembut, dianimasikan opacity perlahan */
+.hero-home .hero-gradient-shift {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.hero-home .hero-gradient-shift:before,
+.hero-home .hero-gradient-shift:after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  will-change: opacity;
+}
+.hero-home .hero-gradient-shift:before {  /* fase ORANYE */
+  background: linear-gradient(168deg, #F8F1E8 0%, #F3DFD1 40%, #E96A35 100%);
+  animation: heroWarmPhase 36s ease-in-out infinite;
+}
+.hero-home .hero-gradient-shift:after {   /* fase PINK */
+  background: linear-gradient(168deg, #F7ECEE 0%, #F0DCE2 40%, #D94D7A 100%);
+  animation: heroPinkPhase 36s ease-in-out infinite;
+}
+@keyframes heroWarmPhase {
+  0%, 18%   { opacity: 0 }
+  30%, 40%  { opacity: .55 }   /* puncak oranye */
+  52%, 100% { opacity: 0 }
+}
+@keyframes heroPinkPhase {
+  0%, 44%   { opacity: 0 }
+  58%, 68%  { opacity: .45 }   /* puncak pink */
+  84%, 100% { opacity: 0 }     /* kembali ke hijau */
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-home .hero-gradient-shift { display: none }
+  .hero-home {
+    background: linear-gradient(168deg, #EEF2E8 0%, #DCE9D9 45%, #C6D8C6 75%, #2E804D 100%);
+  }
 }
 
 .hero-home .hero-atmosphere {
@@ -5188,6 +5431,8 @@ h3, .eyebrow, .brand-name, .btn, .pill, .mega-title {
   body:has(#mainNav.open) .menu-toggle {
     visibility: hidden;
     pointer-events: none;
+    opacity: 0;
+    transition: opacity .2s var(--ease-out);
   }
 }
 
@@ -5755,6 +6000,9 @@ h3 { letter-spacing: -.015em }
 @media (max-width: 760px) {
   section { margin: clamp(44px, 7vh, 72px) 0 }
   .section-heading { margin-bottom: 24px }
+  /* Prompt 33: contact card tidak boleh terlempar jauh oleh margin section global */
+  .contact-section { margin-top: clamp(8px, 2vh, 16px) !important; margin-bottom: clamp(24px, 4vh, 40px) !important; padding-top: clamp(16px, 3vh, 28px) !important }
+  .merch-section { margin-bottom: clamp(8px, 2vh, 16px) !important }
 }
 
 /* ---------- Prompt 29/30: foto selalu tampil di mobile ---------- */
@@ -6089,16 +6337,7 @@ h3 { letter-spacing: -.015em }
   white-space: nowrap;
   text-transform: uppercase;
 }
-   "Toba Basketball" = TOBA green #2F804B · "Community" = charcoal #252923.
-   The heading renders as two spans injected by script (identity split),
-   both branches styled here so desktop & mobile read identically. */
-.hero-home .hero-identity {
-  color: #2F804B;
-}
-.hero-home .hero-identity .id-comm,
-.hero-home .hero-identity small {
-  color: #252923;
-}
+/* Split brand heading: "Toba Basketball" = TOBA green, "Community" = charcoal. */
 @media (max-width: 760px) {
   .hero-home .hero-identity { color: #2A7443 }        /* slightly deeper on bright mobile wash */
 }
@@ -6440,6 +6679,9 @@ main.page-content section:last-of-type {
 }
 .cine-g-seq { display: flex; gap: clamp(10px, 1.5vw, 20px); padding-right: clamp(10px, 1.5vw, 20px); }
 .cine-m-track { gap: 0; }
+/* Prompt 43: nol gap antar item — track = kelompok identik berdampingan rapat,
+   sehingga loop sejauh satu lebar kelompok tidak pernah menyisakan celah */
+.cine-m-inner { display: flex; gap: 0 }
 .cine-g-card {
   margin: 0;
   flex: 0 0 auto;
@@ -6463,7 +6705,7 @@ main.page-content section:last-of-type {
 
 /* ---------- PROMPT 2: TOBA APPAREL marquee ---------- */
 .cine-marquee {
-  padding: clamp(28px, 4vw, 48px) 0;   /* Prompt 25 */
+  padding: clamp(18px, 2.2vw, 28px) 0 clamp(10px, 1.2vw, 16px);   /* Prompt 28: sebelumnya clamp(28,4vw,48) 0 */
   text-align: center;
 }
 .cine-m-track {
@@ -6508,9 +6750,11 @@ main.page-content section:last-of-type {
 .section-wrap.cine-section, .dark-section, .cine-reviews { scroll-margin-top: 72px; }
 .dark-section, .cine-reviews { opacity: 1; transition: none; }   /* jangan fade section besar penuh — biar scroll tetap lega */
 
-/* ---------- PROMPT 8/9: footer social + credit ---------- */
-.footer-connect { min-width: 240px; }
-.footer-social { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+/* ---------- Prompt 32: sosial media footer — rapat, satu warna ink ----------
+   Ikon IG pakai currentColor (sudah di-HTML), teks & ikon satu warna.
+   Prompt 44: kelompok sosial media kompak — gap antar-link 10px. */
+.footer-connect { margin-top: 18px }
+.footer-social { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }   /* Prompt 53: 10px → 8px, kelompok kompak */
 .footer-slink {
   display: inline-flex;
   align-items: center;
@@ -6518,13 +6762,17 @@ main.page-content section:last-of-type {
   color: inherit;
   text-decoration: none;
   font-size: 14px;
-  padding: 10px 8px;
-  min-height: 44px;
+  padding: 4px 8px;
+  min-height: 28px;   /* Prompt 53: 40px → 28px, klik tetap nyaman */
   border-radius: 8px;
   transition: opacity .25s var(--ease-out), transform .25s var(--ease-out);
 }
 .footer-slink:hover { opacity: .75; transform: translateX(3px); }
 .fs-icon { width: 18px; height: 18px; flex: 0 0 auto; }
+
+/* Prompt 52: SVG Instagram harus outline (bukan kotak solid).
+   outer rect ikon IG jangan fill currentColor penuh — ganti ke stroke. */
+.fs-icon rect:first-of-type { fill: none; stroke: currentColor; stroke-width: 1.6 }
 .footer-credit {
   display: flex;
   justify-content: center;
@@ -6550,20 +6798,52 @@ main.page-content section:last-of-type {
 .pw-ig-link:hover { transform: scale(1.12); opacity:.92 }
 .pw-ig { width: 15px; height: 15px; display:block }
 
-/* ---------- Prompt 28: brand-coloured social icons, subtle interaction ---------- */
+/* ---------- Prompt 46: ikon Instagram PortoWeb ID jelas & proporsional ----------
+   Sebelumnya 15px tanpa warna eksplisit (mewarisi --muted, samar).
+   Kini 16px, satu warna dengan teks PortoWeb ID, outline jelas. */
+.pw-credit .pw-ig { width: 16px; height: 16px; color: #25D366; }
+.pw-credit .pw-ig rect[stroke],
+.pw-credit .pw-ig circle { stroke: #25D366; }
+.pw-credit .pw-ig circle[fill] { fill: #25D366; stroke: none; }
+.pw-ig-link { margin-left: 2px }
+
+/* ---------- Prompt 40: heading TOBA MERCH. — TOBA hitam, MERCH. oranye ---------- */
+.merch-section .section-heading h2 .mw-ink { color: var(--ink); }
+.merch-section .section-heading h2 .accent-orange { color: var(--accent); }
+
+/* ---------- Prompt 41 diganti Prompt 55: TOBA hitam gelap, APPAREL hijau TOBA.
+   Setiap salinan teks marquee dibungkus span per kata, warna diterapkan per kata
+   (bukan mewarnai parent). Loop & kecepatan tidak diubah. ---------- */
+.cine-marquee .cine-m-item,
+.cine-m-item { color: #20231F; }
+.cine-m-item .cm-toba,
+.cine-m-item .cm-toba * { color: #20231F; }
+.cine-m-item .cm-apparel,
+.cine-m-item .cm-apparel * { color: #2E804D; }
+.cine-m-item .cm-other,
+.cine-m-item .cm-other * { color: #20231F; }
+
+/* ---------- Prompt 45: WhatsApp TOBA Community — gaya sama dgn link IG,
+   satu warna identitas (ink), tanpa card/border/hijau WhatsApp ---------- */
+.footer-wa { color: var(--ink) }
+
+/* ---------- Prompt 28: brand-coloured social icons, subtle interaction ----------
+   Prompt 52: WhatsApp SVG logo valid (outline bubblem + handset) — ikon
+   dirender via currentColor, ukuran konsisten dengan Instagram. */
 .footer-social .footer-slink {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  min-height: 44px;
+  min-height: 30px;   /* Prompt 53: rapat, klik tetap nyaman */
   transition: opacity .25s var(--ease-out), transform .25s var(--ease-out);
 }
 .footer-social .footer-slink:hover { opacity: .82; transform: translateX(3px) scale(1.03); }
 .footer-social .footer-slink:active { transform: scale(.97); }
-.footer-ig { color: #E1306C }              /* Instagram brand pink for the label */
+/* ---------- Prompt 32: ikon & teks satu warna (ink), tanpa pink ---------- */
+.footer-ig { color: var(--ink) }
 .ig-brand, .wa-brand { flex: 0 0 auto }
 .wa-brand { width: 19px; height: 19px }
-.ig-brand { width: 18px; height: 18px; border-radius: 5px; box-shadow: 0 1px 4px rgba(0,0,0,.25); transition: transform .25s var(--ease-out) }
+.ig-brand { width: 18px; height: 18px; border-radius: 5px; transition: transform .25s var(--ease-out) }
 .footer-slink:hover .ig-brand, .footer-slink:hover .wa-brand { transform: scale(1.12); filter: brightness(1.08) }
 .footer-slink:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px }
 
@@ -6630,6 +6910,23 @@ main.page-content section:last-of-type {
   .join-modal, .join-panel { animation: none; transition: none; }
 }
 
+/* ===== Prompt 16: tema aksen join form halaman komunitas (struktur form sama) ===== */
+.theme-join-pink .join-panel .eyebrow { color: #D64D78; }
+.theme-join-pink .join-panel input:focus { border-color: #D64D78; }
+.theme-join-pink .join-radio:has(input:checked) { border-color: #D64D78; background: #fdeef3; }
+.theme-join-pink .join-radio input { accent-color: #D64D78; }
+.theme-join-pink .join-submit { background: #D64D78; border-color: #D64D78; }
+.theme-join-deli .join-panel .eyebrow { color: #E65C25; }
+.theme-join-deli .join-panel input:focus { border-color: #E65C25; }
+.theme-join-deli .join-radio:has(input:checked) { border-color: #E65C25; background: #fdeee6; }
+.theme-join-deli .join-radio input { accent-color: #E65C25; }
+.theme-join-deli .join-submit { background: #E65C25; border-color: #E65C25; }
+/* Prompt 52: ikon IG PortoWeb juga outline, bukan kotak solid */
+.pw-ig rect:first-of-type { fill: none; stroke: currentColor; stroke-width: 1.6 }
+
+/* Prompt 32: ikon IG PortoWeb mengikuti warna teks pendampingnya */
+.pw-ig { color: rgba(255,255,255,.55) }
+
 /* ====================================================================
    MASTER PROMPT 37-57 — FINAL PASS (Nov 2026)
    37-38 footer credit & copyright · 39 story rhythm · 40 checklist gap
@@ -6638,17 +6935,20 @@ main.page-content section:last-of-type {
    54-55 cinematic hero motion · 56 gallery drag/lightbox · 57 starfield
    ==================================================================== */
 
+/* ---------- Prompt 9/21: sisa "Kembali ke atas" dihapus — spacing footer-bottom tetap proporsional ---------- */
+
 /* ---------- 37-38: PortoWeb credit — netral, satu kesatuan, rapi ---------- */
 .pw-credit b { color: inherit; font-weight: 600; }          /* hapus hijau mencolok */
 .pw-credit b:hover { color: var(--accent); }                 /* aksen halus hanya saat hover */
 .pw-crafted { color: rgba(255,255,255,.62); }                /* Crafted by sejajar dengan PortoWeb ID */
-.pw-credit { gap: 6px; align-items: center; }
+.pw-credit { gap: 7px; align-items: center; }
 .footer-credit { padding: 16px 16px 22px; }
 .footer-credit .pw-ig-link { width: 18px; height: 18px; margin-left: 2px; align-self: center; }
 .footer-credit .pw-ig { width: 14px; height: 14px; }
+/* Prompt 8/22/29: mobile credit di sudut kanan, bukan center */
 @media (max-width: 560px) {
-  .footer-credit { justify-content: center; padding: 14px 12px 20px; }
-  .footer-credit .pw-credit { justify-content: center; width: 100%; text-align: center; }
+  .footer-credit { justify-content: flex-end; padding: 14px 16px 20px; }
+  .footer-credit .pw-credit { justify-content: flex-end; text-align: right; }
 }
 
 /* footer-bottom: konsisten di semua halaman, rapat & terbaca */
@@ -6683,12 +6983,13 @@ main.page-content section:last-of-type {
   .hero-actions { margin-bottom: clamp(40px, 6vh, 60px); }
 }
 
-/* ---------- 44 + 50: card Gabung/Kolaborasi — jelas, premium, proporsional ---------- */
+/* ---------- 44 + 50 + Prompt 56: card Gabung/Kolaborasi — lebih kompak,
+   jarak dari card produk terakhir dippersempit ~35% ---------- */
 .contact-card {
   position: relative;
-  margin-top: clamp(28px, 6vh, 64px);          /* tidak menempel section atas */
-  padding: clamp(26px, 4vw, 44px);
-  gap: clamp(18px, 3vw, 40px);
+  margin-top: clamp(18px, 4vh, 40px);          /* sebelumnya clamp(28px,6vh,64px) */
+  padding: clamp(20px, 2.6vw, 30px);           /* sebelumnya clamp(26px,4vw,44px) */
+  gap: clamp(14px, 2.4vw, 28px);
   background: linear-gradient(135deg, var(--accent-soft) 0%, var(--surface) 55%);
   border: 1px solid var(--line);
   border-radius: var(--radius-xl);
@@ -6698,13 +6999,13 @@ main.page-content section:last-of-type {
   cursor: pointer;
   transition: transform .3s var(--ease-out), box-shadow .3s var(--ease-out), border-color .3s;
 }
-.contact-card:before {                          /* garis lapangan samar sebagai lapisan identitas */
+.contact-card:before {                          /* dekorasi lingkaran hijau lembut, tidak dominan */
   content: '';
   position: absolute;
   right: -80px;
   top: -60px;
-  width: 340px;
-  height: 340px;
+  width: 260px;
+  height: 260px;
   background: radial-gradient(circle at center, transparent 58%, var(--accent) 58.5%, var(--accent) 59.5%, transparent 60%);
   opacity: .10;
   transform: rotate(-12deg);
@@ -6727,19 +7028,20 @@ main.page-content section:last-of-type {
   white-space: nowrap;
 }
 @media (max-width: 760px) {
-  .contact-card { flex-direction: column; align-items: stretch; gap: 18px; text-align: left; margin-top: clamp(24px, 5vh, 40px); padding: 24px 20px; }
+  .contact-card { flex-direction: column; align-items: stretch; gap: 14px; text-align: left; margin-top: clamp(16px, 3vh, 28px); padding: 22px 20px; }
   .contact-cta { align-self: flex-start; }
 }
 
-/* ---------- 46: TOBA Merch — judul & produk satu kelompok, satu CTA ---------- */
-.merch-section .section-heading { margin-bottom: clamp(14px, 2vh, 20px); }
-.merch-section .product-grid { margin-top: 0; }
+/* ---------- PROMPT 28: jarak marquee → TOBA Merch diperkecil (±45%) ----------
+   Sumber spacing: padding vertikal marquee + padding-top merch-section. */
+.cine-marquee { padding: clamp(18px, 2.2vw, 28px) 0 clamp(10px, 1.2vw, 16px); }   /* sebelumnya clamp(28,4vw,48) */
+.merch-section { padding-top: clamp(20px, 3vh, 36px) }   /* Prompt 28: sebelumnya clamp(40px,6vh,72px) */
 /* CTA duplikat di marquee TOBA APPAREL disembunyikan — link tetap ada di heading Merch */
 
 /* ---------- 48: Update dari Lapangan lebih dekat ke section sebelumnya ---------- */
-.cine-gallery { padding-top: clamp(24px, 3.5vw, 44px) !important; margin-top: clamp(-8px, -1vh, 0px); }
+.cine-gallery { padding-top: clamp(3px, 3.5vw, 12px) !important; margin-top: clamp(-8px, -1vh, 0px); }
 .cine-gallery.cine-after-agenda { margin-top: clamp(-24px, -3vh, -8px); }
-section.cine-gallery { margin-top: clamp(16px, 3vh, 40px); }
+section.cine-gallery { margin-top: clamp(6px, 3vh, 40px); }
 
 /* ---------- 49: label Founder redundan tidak tampil dua kali dalam satu section ---------- */
 .founder-copy .eyebrow + .eyebrow { display: none; }
