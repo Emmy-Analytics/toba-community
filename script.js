@@ -78,7 +78,7 @@ function home() {
   <div class="hero-head"><p class="hero-identity brand-wordmark" translate="no"><span class="id-toba">TOBA</span><span class="id-comm">COMMUNITY</span></p><small class="hero-sub-identity">${t('hero.identity.sub')}</small></div>
   <div class="hero-body">
     <div class="hero-actions"><a class="pill" href="partnership.html">${t('hero.cta1')}</a><a class="pill secondary" href="events.html">${t('hero.cta2')}</a></div>
-    <div class="hero-info"><div class="hero-info-item"><strong>${t('hero.info.game')}</strong><span>${t('hero.info.time')}</span></div><div class="hero-info-item"><strong>${t('hero.info.place')}</strong><span>${t('hero.info.place.v')}</span></div><div class="hero-info-item"><strong>${t('hero.info.comm')}</strong><span>${t('hero.info.comm.v')}</span></div></div>
+    <div class="hero-info"><div class="hero-info-item"><strong>${t('hero.info.game')}</strong><span>${t('hero.info.time')}</span><span>${t('hero.info.time2')}</span></div><div class="hero-info-item"><strong>${t('hero.info.place')}</strong><span>${t('hero.info.place.v')}</span></div><div class="hero-info-item"><strong>${t('hero.info.comm')}</strong><span>${t('hero.info.comm.v')}</span></div></div>
   </div>
 </section>
 
@@ -153,7 +153,11 @@ function home() {
 <!-- Prompt 69: section hijau "LANGSUNG DARI LAPANGAN" dihapus —
      dokumentasinya sudah tampil di galeri bergerak di bawah -->
 
-<section class="section-wrap agenda-section"><div class="section-heading"><div><p class="eyebrow">${t('home.events.eyebrow')}</p><h2>${t('home.events.h')}</h2></div><a class="text-link" href="events.html">${t('home.events.link')}</a></div>${eventScroller(events.slice(0, 4).map(eventCard).join(''))}</section>
+<section class="section-wrap agenda-section"><div class="section-heading"><div><p class="eyebrow">${t('home.events.eyebrow')}</p><h2>${t('home.events.h')}</h2></div><a class="text-link" href="events.html">${t('home.events.link')}</a></div>
+  <!-- Prompt 9: filter kategori agenda — sistem & label sama dengan halaman Events -->
+  <div class="filters agenda-filters" id="agendaFilters">${t('events.filters').split('|').map((x, i) => `<button class="filter-btn ${i === 0 ? 'active' : ''}" data-filter="${x}">${x}</button>`).join('')}</div>
+  <div class="event-grid" id="agendaGrid">${events.map(eventCard).join('')}</div>
+</section>
 
 <section class="cine-gallery" aria-label="${t('cine.gallery.aria')}">
   <div class="cine-g-head"><p class="eyebrow">${t('cine.gallery.eyebrow')}</p><h2 class="cine-g-title">${t('cine.gallery.h')}</h2><a class="text-link" href="gallery.html">${t('cine.gallery.cta')}</a></div>
@@ -164,14 +168,12 @@ function home() {
 </section>
 
 <section class="cine-marquee" id="cineApparel" aria-label="TOBA APPAREL">
-  <div class="cine-m-track" data-dir="ltr" data-speed="22"><div class="cine-m-inner">
-    <span class="cine-m-item"><span class="cm-toba">TOBA</span> <span class="cm-apparel">APPAREL</span> <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> <span class="cm-other">WEAR THE CULTURE</span> <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> <span class="cm-toba">TOBA</span> <span class="cm-apparel">APPAREL</span> <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> </span><span class="cine-m-item" aria-hidden="true"><span class="cm-toba">TOBA</span> <span class="cm-apparel">APPAREL</span> <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> <span class="cm-other">WEAR THE CULTURE</span> <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> <span class="cm-toba">TOBA</span> <span class="cm-apparel">APPAREL</span> <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> </span><span class="cine-m-item" aria-hidden="true"><span class="cm-toba">TOBA</span> <span class="cm-apparel">APPAREL</span> <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> <span class="cm-other">WEAR THE CULTURE</span> <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> <span class="cm-toba">TOBA</span> <span class="cm-apparel">APPAREL</span> <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg> </span>
-  </div></div>
+  <div class="cine-marquee-inner"></div>
 </section>
 
 <section class="section-wrap merch-section"><div class="section-heading"><div><p class="eyebrow">${t('home.merch.eyebrow')}</p><h2><span class="mw-ink">TOBA</span> <span class="accent-orange">MERCH.</span></h2></div><a class="text-link" href="merchandise.html">${t('home.merch.link')}</a></div><div class="product-grid">${products.slice(0, 4).map(productCard).join('')}</div></section>
 
-<section class="section-wrap contact-section"><button class="contact-card part-card-inner" id="joinCtaBtn" type="button" onclick="window.location.href='partnership.html'" aria-label="${t('home.call.btn')}"><div class="contact-copy"><p class="eyebrow">${t('home.call.label')}</p><h3>${t('home.call.h')}</h3><p class="lede">${t('home.call.d')}</p></div><a class="pill contact-cta" href="partnership.html" onclick="event.stopPropagation()">${t('home.call.btn')}</a></button></section>
+<section class="section-wrap contact-section"><button class="contact-card part-card-inner" id="joinCtaBtn" type="button" aria-label="${t('home.call.btn')}"><div class="contact-copy"><p class="eyebrow">${t('home.call.label')}</p><h3>${t('home.call.h')}</h3><p class="lede">${t('home.call.d')}</p></div><span class="pill contact-cta">${t('home.call.btn')}</span></button></section>
 
 `
 }
@@ -244,18 +246,25 @@ function communityPage(which) {
 <section class="section-wrap"><div class="callout"><div><p class="eyebrow">${t('comm.join.eyebrow')}</p><h3>${t('comm.join.h')}</h3><p class="lede">${t('comm.pill.d')}</p></div><a class="pill" href="partnership.html">${ctaJoin}</a></div></section>`
 }
 
-/* ---------- FAQ accordion + Weekly Fun Game facts ---------- */
+/* ---------- P25: FAQ gaya percakapan TOBA Assistant (statis, tanpa AI) ---------- */
 function faqSection() {
-    const items = [1,2,3,4,5,6,7].map(i => `
-    <div class="faq-item"><button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-a${i}">${t('faq.q'+i)}<span class="faq-chev" aria-hidden="true"></span></button>
-    <div class="faq-a" id="faq-a${i}" hidden><p>${t('faq.a'+i)}</p></div></div>`).join('');
+    const chat = [
+      { q: 'faq.chat.q1', a: 'faq.chat.a1' }, { q: 'faq.chat.q2', a: 'faq.chat.a2' },
+      { q: 'faq.chat.q3', a: 'faq.chat.a3' }, { q: 'faq.chat.q4', a: 'faq.chat.a4' },
+      { q: 'faq.chat.q5', a: 'faq.chat.a5' }, { q: 'faq.chat.q6', a: 'faq.chat.a6' },
+      { q: 'faq.chat.q7', a: 'faq.chat.a7' }
+    ].map((c, i) => `
+      <div class="faq-turn" style="animation-delay:${(i * .06).toFixed(2)}s">
+        <div class="faq-bubble faq-bubble-user"><p>${t(c.q)}</p></div>
+        <div class="faq-bubble faq-bubble-bot"><span class="faq-bot-label">TOBA ASSISTANT</span><p>${t(c.a)}</p></div>
+      </div>`).join('');
     const wfg = [1,2,3,4,5,6,7].map(i => `<div class="ie-fact"><dt>${t('faq.wfg.item'+i)}</dt><dd>${t('faq.wfg.v'+i)}</dd></div>`).join('');
     return `
 <section class="section-wrap faq-wrap"><div class="faq-grid">
   <div class="faq-head"><p class="eyebrow">${t('faq.eyebrow')}</p><h2>${t('faq.h')}</h2><p class="lede">${t('faq.lede')}</p>
     <div class="wfg-card"><h3>${t('faq.wfg.h')}</h3><dl class="ie-facts">${wfg}</dl><p class="wfg-note"><small>${t('faq.wfg.pricing.note')}</small></p></div>
   </div>
-  <div class="faq-list">${items}</div>
+  <div class="faq-chat" role="log" aria-label="TOBA Assistant">${chat}</div>
 </div></section>`;
 }
 
@@ -291,9 +300,13 @@ function merchPage() {
     const labels = t('merch.filters').split('|');
     return `
 <section class="hero section-wrap" style="min-height:auto"><div class="hero-copy"><p class="eyebrow">${t('home.merch.eyebrow')}</p><h1>TOBA<br><span class="accent-orange">MERCH.</span></h1><p class="hero-subtitle">${t('merch.hero.lede')}</p></div></section>
-<section class="section-wrap"><div class="filters" id="productFilters">${labels.map((x, i) => `<button class="filter-btn ${i === 0 ? 'active' : ''}" data-filter="${x}">${x}</button>`).join('')}<span style="margin-left:auto;font-size:12px;font-weight:700;align-self:center">${t('merch.bag')} <span id="cartCount">0</span></span></div>
+<section class="section-wrap merch-page-wrap"><div class="filters" id="productFilters">${labels.map((x, i) => `<button class="filter-btn ${i === 0 ? 'active' : ''}" data-filter="${x}">${x}</button>`).join('')}<button class="pill cart-toggle" id="toggleCart" type="button" aria-expanded="false">${t('merch.bag')} <span id="cartCount">0</span></button></div>
   <div class="product-grid" id="productGrid">${products.map(productCard).join('')}</div>
-  <div class="callout"><div><p class="eyebrow">${t('merch.call.eyebrow')}</p><h3>${t('merch.call.h')}</h3><p class="lede">${t('merch.call.lede')}</p></div><button class="pill" id="checkoutDemo">${t('merch.checkout')}</button></div></section>`
+  <!-- Prompt 22: isi keranjang (qty ±, hapus, total otomatis) -->
+  <div class="cart-box" id="cartBox" hidden aria-live="polite"></div>
+  <!-- Prompt 23: order card — terpisah proporsional dari produk terakhir -->
+  <div class="order-card"><div class="order-copy"><p class="eyebrow accent-orange">${t('merch.order.eyebrow')}</p><h3>${t('merch.order.h')}</h3><p class="lede">${t('merch.order.d')}</p><p class="order-note"><small>${t('merch.hero.lede')}</small></p></div><div class="order-actions"><button class="pill order-cta" id="checkoutWA" type="button">${t('merch.order.cta')}</button><button class="pill secondary" id="orderScrollTop" type="button" onclick="document.getElementById('productGrid').scrollIntoView({behavior:'smooth'})">${t('merch.order.cta2')}</button></div></div>
+</section>`
 }
 
 /* ---------- GALLERY — editorial, live API ---------- */
@@ -407,11 +420,59 @@ let toastTimer; function toast(msg) { const el = document.getElementById('toast'
 /* ---------- filters (preserved behavior) ---------- */
 function setFilter(container, selector, filter) { container.querySelectorAll('[data-filter]').forEach(b => b.classList.toggle('active', b.dataset.filter === filter)); document.querySelectorAll(selector).forEach(card => { const category = card.dataset.category || ''; card.style.display = (filter === 'All' || filter === 'All Events' || category === filter || category.includes(filter) || card.textContent.includes(filter)) ? '' : 'none' }); }
 document.getElementById('eventFilters')?.addEventListener('click', e => { const b = e.target.closest('[data-filter]'); if (!b) return; setFilter(document.getElementById('eventFilters'), '.event-card', b.dataset.filter); if (b.dataset.filter === 'All Events') document.querySelectorAll('.event-card').forEach(c => c.style.display = '') });
+/* Prompt 9: filter agenda di homepage — pakai setFilter yang sama (compat dengan Events) */
+document.getElementById('agendaFilters')?.addEventListener('click', e => { const b = e.target.closest('[data-filter]'); if (!b) return; setFilter(document.getElementById('agendaFilters'), '#agendaGrid .event-card', b.dataset.filter); if (b.dataset.filter === 'All Events' || b.dataset.filter === 'Semua Event') document.querySelectorAll('#agendaGrid .event-card').forEach(c => c.style.display = '') });
 document.getElementById('productFilters')?.addEventListener('click', e => { const b = e.target.closest('[data-filter]'); if (!b) return; setFilter(document.getElementById('productFilters'), '.product-card', b.dataset.filter === 'All' ? 'All' : b.dataset.filter) });
 
-/* ---------- demo cart (preserved) ---------- */
-let cart = []; document.addEventListener('click', e => { const add = e.target.closest('[data-product]'); if (add) { const p = products[Number(add.dataset.product)]; cart.push(p); document.getElementById('cartCount').textContent = cart.length; toast(`${p.name} ${t('merch.added')}`) } const interest = e.target.closest('.event-interest'); if (interest) toast(`${t('ui.demo')} ${interest.dataset.event}. ${t('ui.demo2')}`) });
-document.getElementById('checkoutDemo')?.addEventListener('click', () => { if (!cart.length) { toast(t('merch.empty')); return } const total = cart.reduce((s, p) => s + p.price, 0); toast(`${t('merch.summary')} ${cart.length} ${t('merch.items')} ${money(total)}. ${t('merch.nocheckout')}`) });
+/* ---------- P22: keranjang belanja + checkout WhatsApp ----------
+   Nomor WA resmi TOBA yang sudah ada di konfigurasi (footer): 6281285704946.
+   Tidak ada klaim pembayaran/pesanan — hanya template pesan rapi ke admin. */
+const TOBA_WA = '6281285704946';
+let cart = [];   /* {p: product, qty: n} */
+const cartTotal = () => cart.reduce((s, l) => s + l.p.price * l.qty, 0);
+const cartCount = () => cart.reduce((s, l) => s + l.qty, 0);
+function renderCartUI() {
+  document.getElementById('cartCount').textContent = cartCount();
+  const box = document.getElementById('cartBox');
+  if (!box) return;
+  if (!cart.length) { box.innerHTML = `<p class="cart-empty">${t('merch.empty')}</p>`; return; }
+  box.innerHTML = cart.map((l, i) => `
+    <div class="cart-line">
+      <div class="cart-info"><strong>${l.p.name}</strong><span>${money(l.p.price)} × ${l.qty} = <b>${money(l.p.price * l.qty)}</b></span></div>
+      <div class="cart-qty">
+        <button type="button" class="cart-step" data-cart-step="-1" data-cart-line="${i}" aria-label="−">−</button>
+        <span>${l.qty}</span>
+        <button type="button" class="cart-step" data-cart-step="1" data-cart-line="${i}" aria-label="+">+</button>
+        <button type="button" class="cart-del" data-cart-del="${i}" aria-label="Hapus">✕</button>
+      </div>
+    </div>`).join('') + `<div class="cart-total"><span>${t('merch.total')}</span><b>${money(cartTotal())}</b></div>`;
+}
+document.addEventListener('click', e => {
+  const add = e.target.closest('[data-product]');
+  if (add) {
+    const p = products[Number(add.dataset.product)];
+    const line = cart.find(l => l.p === p); line ? line.qty++ : cart.push({ p, qty: 1 });
+    document.getElementById('cartCount').textContent = cartCount(); renderCartUI();
+    toast(`${p.name} ${t('merch.added')}`);
+  }
+  const step = e.target.closest('[data-cart-step]');
+  if (step) { const l = cart[Number(step.dataset.cartLine)]; l.qty += Number(step.dataset.cartStep); if (l.qty <= 0) cart.splice(Number(step.dataset.cartLine), 1); renderCartUI(); }
+  const del = e.target.closest('[data-cart-del]');
+  if (del) { cart.splice(Number(del.dataset.cartDel), 1); renderCartUI(); }
+  const interest = e.target.closest('.event-interest'); if (interest) toast(`${t('ui.demo')} ${interest.dataset.event}. ${t('ui.demo2')}`)
+});
+document.getElementById('checkoutWA')?.addEventListener('click', () => {
+  if (!cart.length) { toast(t('merch.empty')); return; }
+  const lines = cart.map((l, i) =>
+    `${i + 1}. ${l.p.name}\n   ${t('merch.msg.qty')}: ${l.qty}\n   ${t('merch.msg.price')}: ${money(l.p.price)}\n   ${t('merch.msg.sub')}: ${money(l.p.price * l.qty)}`).join('\n');
+  const msg = `${t('merch.msg.hello')}\n\n${t('merch.msg.detail')}:\n${lines}\n\n${t('merch.msg.total')}: ${money(cartTotal())}\n\n${t('merch.msg.confirm')} ${t('merch.msg.thanks')}!`;
+  window.open('https://wa.me/' + TOBA_WA + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+  toast(t('merch.wa.open'));
+});
+document.getElementById('toggleCart')?.addEventListener('click', () => {
+  const box = document.getElementById('cartBox');
+  if (box) box.hidden = !box.hidden;
+});
 document.getElementById('partnerForm')?.addEventListener('submit', e => { e.preventDefault(); toast(t('part.sent')); e.target.reset() });
 /* Prompt 9/21: "Kembali ke atas" dihapus dari semua halaman — guard agar error tidak muncul jika markup sisa */
 document.getElementById('backTop')?.addEventListener('click', e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }) });
@@ -698,92 +759,161 @@ initMerchTilt();
 })();
 
 /* =====================================================================
-   PROMPT 27 · HERO SVG CUTOUT SLIDESHOW
+   HERO SVG CUTOUT — REBUILD: SCHEDULER PER-FOTO (pace independen)
    Aset lokal: assets/img/cutout/*.svg (cutout orang, transparan).
-   Fade 800ms, durasi tiap slide 3s. Timer + class toggle saja.
-   Slide di-preload; gambar aktif dipertahankan sampai berikutnya siap.
-   prefers-reduced-motion → tampilan statis (slide pertama, tanpa autoplay).
-   ===================================================================== */
-/* =====================================================
-   PROMPT 37-38 · HERO SVG CUTOUT — MULTIPLE PHOTOS COMPOSITION
-   Semua aset di assets/img/cutout/ diaudit; aset valid dipakai.
-   3 foto tampil BERSAMAAN per komposisi (1 utama + 2 pendukung).
-   4 preset komposisi dikontrol (bukan posisi acak), fade 900ms,
-   durasi komposisi 5s. Foto tetap di bawah judul, di atas CTA
-   (container .hero-cut-slideshow ada di grid-area "visual").
+
+   Setiap foto punya node DOM PERSISTEN + timeline sendiri:
+     delay   → jeda sebelum kemunculan pertama
+     fadeIn  → durasi transisi 0 → 1 (slow fade-in)
+     hold    → lama terlihat penuh
+     fadeOut → durasi transisi 1 → 0 (slow fade-out)
+     rest    → jeda sebelum foto boleh muncul lagi
+   Dua foto boleh overlap terbatas (yang satu fade-in saat lain fade-out),
+   tapi setiap foto punya POSISI UNIK sehingga tidak pernah menumpuk
+   di titik yang sama. Semua transisi pakai opacity + transform saja.
    prefers-reduced-motion → komposisi statis pertama, tanpa timer.
    ===================================================================== */
 (function heroCutShow(){
   if (document.body.dataset.page !== 'home') return;
   const CUT = 'assets/img/cutout/';
-  /* audit aset: semua SVG lokal cutout; 9 valid (transparan, tanpa mask/clip rusak).
-     "bola basket.svg" dipakai sebagai pendukung kecil (.cut-ball) di beberapa komposisi. */
-  const FILES = ['fuzisal.svg','mandy.svg','dw nai.svg','vina.svg','yuiii.svg','grup dina.svg','yuki.svg','zia.svg','grup lastri.svg','bola basket.svg'];
-  const BALL = 'bola basket.svg';
   const box = document.getElementById('heroCutShow');
-  if (!box || box.dataset.cutBound) return;
-  box.dataset.cutBound = '1';
+  if (!box) return;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* Prompt 50: rotasi satu-per-satu — setiap komposisi punya durasi tampil
-     BERBEDA (2.6s-6.4s), bukan interval identik. Bola basket (Prompt 48)
-     muncul lebih sering: slot kecil .cut-ball di 5 dari 7 komposisi,
-     posisi bergantian (kanan/kiri) tanpa mendominasi frame. */
-  const COMPOS = [
-    { d: 4200, main:'fuzisal.svg',   s1:['mandy.svg','cut-slot-b'],       ball:['cut-slot-a'] },
-    { d: 2600, main:'mandy.svg',     s1:['yuiii.svg','cut-slot-c'],       ball:null },
-    { d: 6400, main:'grup dina.svg', s1:['zia.svg','cut-slot-e'],         ball:['cut-slot-f'] },
-    { d: 3000, main:'vina.svg',      s1:['yuki.svg','cut-slot-g'],        ball:null },
-    { d: 5200, main:'dw nai.svg',    s1:['grup lastri.svg','cut-slot-d'], ball:['cut-slot-e'] },
-    { d: 2400, main:'yuiii.svg',     s1:['zia.svg','cut-slot-h'],         ball:['cut-slot-c'] },
-    { d: 5800, main:'yuki.svg',      s1:['mandy.svg','cut-slot-a'],       ball:['cut-slot-g'] }
+  /* delay/fadeIn/hold/fadeOut/rest dalam ms — sengaja TIDAK seragam:
+     fade-in 2.0–3.0s, hold 4.0–7.0s, fade-out 2.0–3.2s, rest 3.0–8.0s. */
+  const PLAN = [
+    { file:'grup dina.svg',    cls:'cut-p1',  z:4, delay:0,     fi:2200, hold:5000, fo:2500, rest:3000 },
+    { file:'fuzisal.svg',      cls:'cut-p2',  z:2, delay:2800,  fi:2800, hold:6000, fo:2200, rest:4000 },
+    { file:'bola basket.svg',  cls:'cut-p3',  z:5, delay:5200,  fi:1800, hold:4500, fo:2000, rest:8000 },
+    { file:'vina.svg',         cls:'cut-p4',  z:3, delay:6000,  fi:2500, hold:4000, fo:3000, rest:5000 },
+    { file:'yuki.svg',         cls:'cut-p5',  z:2, delay:9500,  fi:3000, hold:7000, fo:2800, rest:3500 },
+    { file:'mandy.svg',        cls:'cut-p6',  z:2, delay:13500, fi:2000, hold:5500, fo:3000, rest:4500 },
+    { file:'dw nai.svg',       cls:'cut-p7',  z:3, delay:17500, fi:2600, hold:6500, fo:2400, rest:4200 },
+    { file:'zia.svg',          cls:'cut-p8',  z:2, delay:21000, fi:2800, hold:5000, fo:2600, rest:4000 },
+    { file:'grup lastri.svg',  cls:'cut-p9',  z:2, delay:24500, fi:2400, hold:6000, fo:2800, rest:4600 },
+    { file:'yuiii.svg',        cls:'cut-p10', z:2, delay:29000, fi:2200, hold:5500, fo:3000, rest:5000 },
+    { file:'dw.svg',           cls:'cut-p11', z:2, delay:33000, fi:3000, hold:6500, fo:2600, rest:4200 },
+    { file:'anon.svg',         cls:'cut-p12', z:2, delay:37500, fi:2600, hold:5000, fo:3200, rest:4800 }
   ];
+
   /* preload semua aset sekali — tidak ada reload per pergantian */
   const cache = {};
-  FILES.forEach(f => { const i = new Image(); i.src = CUT + encodeURIComponent(f); i.decoding = 'async'; cache[f] = i; });
-
-  let idx = 0, timer = 0, started = false;
-  function render(ci){
-    const c = COMPOS[ci % COMPOS.length];
-    box.innerHTML = '';
-    const put = (file, cls, extra) => {
-      const img = cache[file];
-      if (!img || !img.complete || !img.naturalWidth) return false;
-      const node = img.cloneNode(false);
-      node.className = 'hero-cut-img ' + cls + (extra ? ' ' + extra : '');
-      node.alt = '';
-      box.appendChild(node);
-      return true;
-    };
-    /* gambar belum siap → pertahankan render sebelumnya (tanpa frame kosong) */
-    const ready = put(c.main, 'cut-main');
-    put(c.s1[0], 'cut-sup', c.s1[1]);
-    if (c.ball) put(BALL, 'cut-ball', c.ball[0]);
-    return ready;
-  }
-  function advance(){
-    const next = (idx + 1) % COMPOS.length;
-    const c = COMPOS[next];
-    const need = [c.main, c.s1[0]].concat(c.ball ? [BALL] : []);
-    const allReady = need.every(f => cache[f] && cache[f].complete && cache[f].naturalWidth);
-    if (!allReady) { schedule(); return; }   /* pertahankan komposisi aktif */
-    idx = next;
-    render(idx);   /* CSS cutIn animation menangani fade ~700ms */
-  }
-  function schedule(){ clearTimeout(timer); timer = setTimeout(advance, COMPOS[idx].d); }
-  const start = () => {
-    if (started) return; started = true;
-    render(0);
-    if (!reduce) schedule();
-  };
-  if (cache[FILES[0]].complete) start();
-  else { cache[FILES[0]].onload = start; cache[FILES[0]].onerror = () => box.remove(); }
-  document.addEventListener('visibilitychange', () => {
-    if (reduce || document.hidden) return;
-    clearTimeout(timer);
-    if (started) schedule();
+  PLAN.forEach(p => {
+    const i = new Image();
+    i.src = CUT + encodeURIComponent(p.file);
+    i.decoding = 'async';
+    cache[p.file] = i;
   });
-  window.addEventListener('pagehide', () => clearTimeout(timer));
+
+  /* desktop: container dipindah ke slot kanan hero (mobile: dalam flow) */
+  if (window.matchMedia('(min-width: 761px)').matches && !box.classList.contains('hero-cut-desktop')) box.classList.add('hero-cut-desktop');
+
+  /* node persisten — dibuat SEKALI di awal (masih opacity 0, tak terlihat).
+     Loop tiap foto hanya dimulai setelah SVG-nya benar-benar selesai dimuat,
+     sehingga tidak pernah muncul frame kosong / pop-in. */
+  const items = [];
+  PLAN.forEach(p => {
+    const src = cache[p.file];
+    if (!src) return; /* preload gagal dibuat — sangat tidak mungkin */
+    const node = src.cloneNode(false);
+    node.className = 'hero-cut-img ' + p.cls;
+    node.alt = '';
+    node.style.zIndex = p.z;
+    box.appendChild(node);
+    items.push({ cfg: p, el: node, timer: 0 });
+  });
+
+  const setFade = (it, ms) => { it.el.style.setProperty('--fade', ms + 'ms'); };
+  const show = it => { setFade(it, it.cfg.fi); it.el.classList.add('cut-on'); };
+  const hide = it => { setFade(it, it.cfg.fo); it.el.classList.remove('cut-on'); };
+
+  const ready = it => it.el.complete && it.el.naturalWidth > 0;
+
+  const isBall = it => it.cfg.file === 'bola basket.svg';
+
+  /* --- TASK 01B/01C distribusi slot ---
+     Desktop: foto bergantian memakai 5 slot horizontal (tengah / tengah-kanan /
+     kanan / tengah-bawah / kanan-atas-kecil) secara round-robin per kemunculan —
+     sehingga area tengah Hero ikut terpakai dan tidak ada foto yang selalu
+     muncul di titik yang sama. Pergantian slot animasi halus via transition
+     transform (var --fade * 1.6), tidak ada lompatan. Bola tidak ikut rotasi
+     — posisinya tetap dekat lantai komposisi agar tidak mengambang. */
+  const SLOTS = ['slot-a', 'slot-b', 'slot-c', 'slot-d', 'slot-e'];
+  const rotation = {};
+  function assignSlot(it){
+    if (isBall(it)) return;                 /* bola: slot tetap (lantai) */
+    const k = it.cfg.cls;
+    const prev = it.el.dataset.slot;
+    let next = ((rotation[k] || 0) % SLOTS.length);
+    /* hindari slot yang sama dua kali berturut-turut */
+    if (SLOTS[next] === prev) next = (next + 1) % SLOTS.length;
+    rotation[k] = next + 1;
+    it.el.dataset.slot = SLOTS[next];
+    it.el.classList.remove('slot-a','slot-b','slot-c','slot-d','slot-e');
+    it.el.classList.add(SLOTS[next]);
+  }
+
+  /* --- TASK 01C gate: SATU foto utama pada satu waktu ---
+     Foto pemain hanya tampil sendirian; foto berikutnya baru boleh mulai
+     fade-in SETELAH pemain sebelumnya hampir transparan (opacity < 0.1).
+     Bola basket boleh mendampingi sebagai aksen kecil di lantai.
+     Timing per-foto (delay/fi/hold/fo/rest) TIDAK diubah — tetap independen. */
+  const peopleOn = () => items.filter(it => !isBall(it) && it.el.classList.contains('cut-on')).length;
+
+  function loop(it){
+    clearTimeout(it.timer);
+    if (!ready(it)) {           /* SVG belum termuat → cek ulang, tanpa pop-in */
+      it.timer = setTimeout(() => loop(it), 250);
+      return;
+    }
+    if (!isBall(it) && peopleOn() > 0) {
+      /* pemain lain masih terlihat → tunggu sampai hampir transparan.
+         Polling ringan, cek ulang tiap 400ms. */
+      it.timer = setTimeout(() => loop(it), 400);
+      return;
+    }
+    assignSlot(it);   /* pindah slot SEBELUM fade-in (masih opacity 0) —
+                         tidak ada perpindahan yang terlihat mata */
+    show(it);
+    it.timer = setTimeout(() => {
+      hide(it);
+      it.timer = setTimeout(() => loop(it), it.cfg.rest);
+    }, it.cfg.fi + it.cfg.hold);
+  }
+
+  function startAll(){
+    items.forEach(it => loop(it));
+  }
+  function stopAll(){ items.forEach(it => clearTimeout(it.timer)); }
+
+  if (reduce) {
+    /* tampilan statis: foto utama pertama saja (begitu siap), tanpa timer */
+    const first = items.find(it => ready(it)) || items[0];
+    if (first) {
+      const reveal = () => { setFade(first, 0); first.el.classList.add('cut-on'); };
+      ready(first) ? reveal() : first.el.addEventListener('load', reveal, { once: true });
+    }
+    return;
+  }
+
+  startAll();
+
+  /* hemat resource: tab tersembunyi → timer dibersihkan; kembali → lanjut
+     dari kondisi saat ini tanpa blink (yang terlihat fade-out, lainnya menunggu) */
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) { stopAll(); return; }
+    items.forEach((it, i) => {
+      clearTimeout(it.timer);
+      if (it.el.classList.contains('cut-on')) {
+        hide(it);
+        it.timer = setTimeout(() => loop(it), it.cfg.rest);
+      } else {
+        it.timer = setTimeout(() => loop(it), 600 + i * 900);
+      }
+    });
+  });
+  window.addEventListener('pagehide', stopAll);
 })();
 /* ---------- home hero entrance: staged reveal after the welcome intro ----------
    The river + copy fade in as one choreographed moment; if the intro is skipped
@@ -801,6 +931,21 @@ initMerchTilt();
     const poll = setInterval(() => { if (!document.getElementById('tobaIntro')) { clearInterval(poll); settle(); } }, 300);
     setTimeout(() => { clearInterval(poll); settle(); }, 3000);
   }
+})();
+
+/* ---------- P11/P12: marquee TOBA APPAREL — kalimat seamless, warna orange.
+   Dibangun di sini (bukan inline HTML) supaya tiap item identik: loop modulo
+   tanpa celah, teks tidak pernah terpotong di tengah kalimat. ---------- */
+(function marqueeApparel(){
+  const inner = document.querySelector('.cine-marquee-inner');
+  if (!inner) return;
+  const phrase = '<span class="cm-toba">TOBA APPAREL.</span> <span class="cm-apparel">GET YOURS NOW.</span> <span class="cm-other">WEAR YOUR COMMUNITY ANYTIME, ANYWHERE.</span> <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg>';
+  inner.innerHTML = '<div class="cine-m-track" data-dir="ltr" data-speed="22"><div class="cine-m-inner">'
+   + `<span class="cine-m-item">${phrase}</span>`
+   + `<span class="cine-m-item" aria-hidden="true">${phrase}</span>`
+   + `<span class="cine-m-item" aria-hidden="true">${phrase}</span>`
+   + `<span class="cine-m-item" aria-hidden="true">${phrase}</span>`
+   + '</div></div>';
 })();
 
 /* =====================================================================

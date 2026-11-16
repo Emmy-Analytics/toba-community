@@ -3585,9 +3585,16 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   object-fit: contain;
   object-position: center bottom;
   opacity: 0;
-  transition: opacity .9s ease;      /* fade 900ms — beberapa foto bersamaan */
-  will-change: opacity;
+  transform: translateY(14px) scale(.985);
+  transition:
+    opacity var(--fade, 2200ms) cubic-bezier(0.22, 1, 0.36, 1),
+    transform calc(var(--fade, 2200ms) * 1.4) cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
   height: auto;
+}
+.hero-cut-img.cut-on {
+  opacity: 1;
+  transform: translateY(0) scale(1);
 }
 .hero-cut-img.cut-main {
   width: clamp(38vw, 40vw, 52vw);
@@ -3620,15 +3627,37 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 .hero-cut-img.cut-slot-g { left: 2%;   top: 6%;  bottom: auto }
 .hero-cut-img.cut-slot-h { right: 1%;  bottom: 4%; top: auto }
 
-/* fade masuk saat pergantian komposisi — foto lama bertahan sampai
-   foto baru siap, fade ~700ms, tanpa frame kosong */
-.hero-cut-slideshow .hero-cut-img { animation: cutIn .7s ease both }
-@keyframes cutIn { from { opacity: 0 } }
-.hero-cut-img.cut-main { animation: cutInMain .7s ease both }
-@keyframes cutInMain { from { opacity: 0 } to { opacity: 1 } }
+/* Rebuild: TANPA animation yang saling mengontrol opacity —
+   fade lambat lewat transition + var(--fade), disetel per foto oleh JS.
+   Gerakan sangat halus (14px drift + scale .985) tidak dominan. */
+.hero-cut-img.cut-p1 { left: 8%;  top: 6%;   bottom: auto; }
+.hero-cut-img.cut-p2 { left: 2%;  bottom: 2%; top: auto; }
+.hero-cut-img.cut-p3 { right: 4%; top: 2%;   bottom: auto; width: clamp(7vw, 8vw, 10vw) !important; }
+.hero-cut-img.cut-p4 { right: 1%; bottom: 0;  top: auto; }
+.hero-cut-img.cut-p5 { left: 14%; top: 10%;  bottom: auto; }
+.hero-cut-img.cut-p6 { right: 7%; top: 12%;  bottom: auto; }
+.hero-cut-img.cut-p7 { left: 4%;  top: 2%;   bottom: auto; }
+.hero-cut-img.cut-p8 { right: 2%; bottom: 6%; top: auto; }
+.hero-cut-img.cut-p9 { left: 1%;  top: 16%;  bottom: auto; }
+.hero-cut-img.cut-p10{ right: 12%; bottom: 8%; top: auto; }
+.hero-cut-img.cut-p11{ left: 10%; bottom: 4%; top: auto; }
+.hero-cut-img.cut-p12{ right: 0;  top: 7%;   bottom: auto; }
+
+/* ukuran: tidak seragam — 1 focal besar + sisanya pendukung bervariasi */
+.hero-cut-img.cut-p1 { width: clamp(34vw, 38vw, 48vw); max-height: 96%; }
+.hero-cut-img.cut-p2 { width: clamp(24vw, 27vw, 34vw); max-height: 64%; }
+.hero-cut-img.cut-p4 { width: clamp(28vw, 32vw, 40vw); max-height: 72%; }
+.hero-cut-img.cut-p5 { width: clamp(26vw, 30vw, 38vw); max-height: 66%; }
+.hero-cut-img.cut-p6 { width: clamp(20vw, 24vw, 30vw); max-height: 56%; }
+.hero-cut-img.cut-p7 { width: clamp(30vw, 34vw, 42vw); max-height: 78%; }
+.hero-cut-img.cut-p8 { width: clamp(22vw, 26vw, 32vw); max-height: 58%; }
+.hero-cut-img.cut-p9 { width: clamp(26vw, 30vw, 38vw); max-height: 64%; }
+.hero-cut-img.cut-p10{ width: clamp(18vw, 22vw, 28vw); max-height: 50%; }
+.hero-cut-img.cut-p11{ width: clamp(24vw, 28vw, 34vw); max-height: 60%; }
+.hero-cut-img.cut-p12{ width: clamp(20vw, 23vw, 29vw); max-height: 54%; }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-cut-img, .hero-cut-img.cut-main { transition: none; animation: none; opacity: 1 }
+  .hero-cut-img, .hero-cut-img.cut-main { transition: none; animation: none; opacity: 1; transform: none }
 }
 
 /* mobile: komposisi multi-foto di alur dokumen; desktop: slot kanan hero */
@@ -3639,16 +3668,37 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   .hero-cut-desktop {
     position: absolute;
     right: clamp(20px, 6vw, 96px);
-    bottom: 0;
-    width: min(38vw, 520px);
-    height: min(56vh, 560px);
+    bottom: clamp(64px, 12vh, 110px);  /* naik dari dasar — ruang untuk bar info di bawah */
+    width: min(54vw, 780px);           /* TASK 01B: diperluas ke arah tengah, tidak menumpuk di pojok */
+    height: min(62vh, 620px);
     z-index: 1;
   }
   .hero-cut-desktop .hero-cut-img.cut-main {
     width: clamp(46%, 52%, 60%);
     left: 50%; transform: translateX(-50%);
   }
-  .hero-cut-desktop .hero-cut-img.cut-sup { width: clamp(30%, 34%, 40%); max-height: 46% }
+  .hero-cut-desktop .hero-cut-img.cut-ball,
+  .hero-cut-desktop .hero-cut-img.cut-p3 { width: clamp(5%, 6%, 8%) !important; max-height: 13% !important; }
+  /* bola DI LANTAI komposisi, dekat pemain — tidak mengambang */
+  .hero-cut-desktop .hero-cut-img.cut-p3 {
+    z-index: 0 !important;
+    right: 20% !important; left: auto !important;
+    bottom: 0 !important; top: auto !important;
+    opacity: .95;
+  }
+  .hero-cut-desktop .hero-cut-img[class*='cut-p']:not(.cut-p3) { z-index: 2 !important; }
+
+  /* TASK 01C: 5 slot distribusi horizontal — tengah / tengah-kanan / kanan /
+     tengah-bawah / kanan-atas-kecil. Foto berpindah slot antar kemunculan
+     (round-robin dari JS). Slot pakai left (bukan semua right) supaya
+     distribusi benar-benar merata, bukan kelompok di pojok kanan. */
+  .hero-cut-desktop .hero-cut-img[class*='cut-p']:not(.cut-p3) { bottom: 0; top: auto; }
+  .hero-cut-desktop .hero-cut-img.slot-a { left: 22%; width: clamp(30%, 34%, 40%) !important; max-height: 74%; }  /* tengah */
+  .hero-cut-desktop .hero-cut-img.slot-b { left: 44%; width: clamp(30%, 34%, 40%) !important; max-height: 78%; }  /* tengah-kanan */
+  .hero-cut-desktop .hero-cut-img.slot-c { left: 68%; width: clamp(20%, 23%, 28%) !important; max-height: 60%; }  /* kanan, lebih kecil */
+  .hero-cut-desktop .hero-cut-img.slot-d { left: 30%; width: clamp(26%, 30%, 36%) !important; max-height: 66%; bottom: 4% !important; } /* tengah-bawah */
+  .hero-cut-desktop .hero-cut-img.slot-e { left: 52%; width: clamp(32%, 36%, 42%) !important; max-height: 84%; }  /* tengah-kanan besar */
+  .hero-cut-desktop .hero-cut-img[class*='cut-p']:not(.cut-p3):not([class*='slot-']) { left: 44%; width: clamp(30%, 34%, 40%) !important; max-height: 78%; } /* fallback sebelum JS menetapkan slot */
 }
 
 /* mobile: hero satu kolom, urutan vertikal sesuai Prompt 26 */
@@ -3666,7 +3716,25 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   /* mobile: komposisi di dalam flow — di antara deskripsi dan CTA */
   .hero-home .hero-head { grid-area: head; align-self: start }
   .hero-home .hero-sub-identity { grid-area: sub }
-  .hero-cut-slideshow { display: block !important; grid-area: visual; height: clamp(210px, 30vh, 300px); margin: 12px 0 10px }
+  .hero-cut-slideshow { display: block !important; grid-area: visual; height: clamp(200px, 27vh, 260px); margin: 8px 0 6px }
+  /* TASK 01C mobile: SATU foto utama pada satu waktu (gate JS sama) —
+     semua foto orang di posisi tengah stage yang sama sehingga pergantian
+     terasa seperti ganti subjek, bukan tumpukan. Bola kecil di lantai kanan
+     sebagai aksen, tetap dekat komposisi. */
+  .hero-cut-slideshow .hero-cut-img[class*='cut-p']:not(.cut-p3) {
+    left: 50% !important; right: auto !important;
+    transform: translateX(-50%) !important;
+    width: min(56vw, 250px) !important;
+    max-height: 92%;
+    bottom: 0; top: auto;
+  }
+  .hero-cut-slideshow .hero-cut-img.cut-p3 {
+    left: auto !important; right: 6% !important;
+    bottom: 2% !important; top: auto !important;
+    width: min(14vw, 58px) !important; max-height: 18% !important;
+    z-index: 0 !important;
+    opacity: .95;
+  }
   /* jadwal & lokasi tetap paling bawah, tidak menutupi foto */
   .hero-home .hero-body { grid-area: body; align-self: end }
   .hero-home .hero-atmosphere { height: 100%; }   /* gradasi mencakup seluruh hero */
@@ -6813,15 +6881,10 @@ main.page-content section:last-of-type {
 
 /* ---------- Prompt 41 diganti Prompt 55: TOBA hitam gelap, APPAREL hijau TOBA.
    Setiap salinan teks marquee dibungkus span per kata, warna diterapkan per kata
-   (bukan mewarnai parent). Loop & kecepatan tidak diubah. ---------- */
-.cine-marquee .cine-m-item,
-.cine-m-item { color: #20231F; }
-.cine-m-item .cm-toba,
-.cine-m-item .cm-toba * { color: #20231F; }
-.cine-m-item .cm-apparel,
-.cine-m-item .cm-apparel * { color: #2E804D; }
-.cine-m-item .cm-other,
-.cine-m-item .cm-other * { color: #20231F; }
+   (bukan mewarnai parent). Loop & kecepatan tidak diubah.
+   FIX FINAL: blok warna hijau/charcoal lama dihapus dari sumbernya —
+   sekarang satu-satunya sumber warna marquee adalah blok orange di P25
+   (akhir file), tanpa konflik specificity. ---------- */
 
 /* ---------- Prompt 45: WhatsApp TOBA Community — gaya sama dgn link IG,
    satu warna identitas (ink), tanpa card/border/hijau WhatsApp ---------- */
@@ -7235,4 +7298,255 @@ section.cine-gallery { margin-top: clamp(6px, 3vh, 40px); }
 html { scroll-behavior: auto; }               /* hindari lag rAF pada smooth global */
 @media (min-width: 1001px) {
   html { scroll-behavior: smooth; }
+}
+
+/* ============================================================
+   PROMPT 1-25 IMPLEMENTATION PASS (Nov 2026)
+   ============================================================ */
+
+/* ---------- P12+P11: marquee TOBA APPAREL — orange, seamless ---------- */
+/* FIX FINAL: warna dikunci ke orange solid #E65C25 (sama dengan teks "MERCH."),
+   tidak mengikuti --accent tema hijau/pink; teks uppercase dari sumber JS. */
+.cine-marquee .cine-m-item,
+.cine-marquee .cine-m-item .cm-toba,
+.cine-marquee .cine-m-item .cm-apparel,
+.cine-marquee .cine-m-item .cm-other,
+.cine-marquee .cine-m-item .cm-toba *,
+.cine-marquee .cine-m-item .cm-apparel *,
+.cine-marquee .cine-m-item .cm-other * { color: #E65C25; }
+.cine-m-star { fill: #E65C25; }
+.cine-m-item { text-transform: uppercase; font-weight: 800; letter-spacing: -.01em; }
+/* FIX FINAL: marquee→heading merch lebih dekat (padding atas + bawah dirapatkan,
+   padding-top merch-section konsolidasi di sini, tidak lagi pakai !important) */
+.cine-marquee { padding: clamp(10px, 1.4vw, 18px) 0 clamp(6px, 1vw, 12px); }
+.merch-section, .merch-page-wrap { padding-top: clamp(14px, 2.4vh, 28px); }
+
+/* ---------- P2: hero mobile memenuhi layar ---------- */
+@media (max-width: 760px) {
+  .hero-home {
+    min-height: calc(100svh - var(--header-h) - 34px);
+    grid-template-rows: auto auto 1fr auto;
+    padding-bottom: clamp(28px, 5vh, 44px);
+  }
+  .hero-cut-slideshow { height: clamp(240px, 34vh, 380px); }
+  .hero-info { margin-top: 14px; }
+}
+
+/* ---------- P1: bola basket cutout lebih kecil & proporsional ---------- */
+.hero-cut-img.cut-ball { width: clamp(12vw, 15vw, 18vw); max-height: 22%; opacity: .92; }
+@media (min-width: 761px) {
+  .hero-cut-desktop .hero-cut-img.cut-ball { width: clamp(7%, 9%, 11%); max-height: 18%; }
+}
+/* fade di-handle transition + var(--fade) di atas (rebuild) */
+
+/* ---------- P8: founder section — cinematic sports editorial ---------- */
+.founder-story {
+  position: relative;
+  background:
+    radial-gradient(60% 90% at 85% 10%, color-mix(in srgb, var(--accent) 10%, transparent) 0%, transparent 70%),
+    radial-gradient(45% 70% at 8% 90%, color-mix(in srgb, #D64D78 6%, transparent) 0%, transparent 70%),
+    var(--bg);
+  border-top: 0;
+  overflow: hidden;
+}
+.founder-grid { gap: clamp(20px, 3vw, 48px); align-items: center; }
+.founder-story .founder-photo { justify-self: center; }
+.founder-story .founder-photo img {
+  max-width: min(460px, 100%);
+  filter: drop-shadow(0 30px 60px rgba(20, 37, 26, .18));
+}
+.founder-copy h2 {
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  letter-spacing: -.03em;
+  line-height: 1;
+}
+/* garis penghubung di atas foto dihapus */
+.founder-transit, .founder-transit-court, .founder-transit-line { display: none !important; }
+/* gerakan ringan mengikuti scroll — parallax data-parallax sudah ada di JS */
+@media (prefers-reduced-motion: reduce) {
+  .founder-story .founder-photo img { filter: none; }
+}
+
+/* ---------- P19: typography menu mobile — lebih santai, tanpa divider kaku ---------- */
+@media (max-width: 1000px) {
+  .mega-label {
+    font-family: var(--font-display);
+    font-size: 16.5px;
+    font-weight: 700;
+    letter-spacing: -.01em;
+    min-height: 50px;
+    padding: 8px 0;
+  }
+  .mega-group { border-top: 0 !important; padding: 0; }
+  .mega-group:last-child { border-bottom: 0 !important; }
+  .mega-group .nav-link {
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: .01em;
+    color: #3A4038;
+    min-height: 44px;
+  }
+  .drawer-intro { padding: 14px 2px 10px; }
+  .drawer-intro-title { font-size: 16px; font-weight: 800; letter-spacing: -.02em; }
+  .drawer-intro-sub { font-size: 13px; line-height: 1.55; }
+}
+
+/* ---------- P17: logo drawer samakan standar header/footer ---------- */
+.drawer-name small { color: #252923; font-weight: 800; }
+
+/* ---------- P21: event section homepage — bahasa visual TOBA MERCH ---------- */
+.agenda-section .section-heading h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -.03em;
+}
+.agenda-filters { margin-bottom: clamp(16px, 2.5vh, 24px); }
+.agenda-section .event-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(255px, 1fr)); gap: 18px; }
+@media (max-width: 760px) {
+  .agenda-section .event-grid { grid-template-columns: 1fr; }
+  .agenda-filters { margin-bottom: 14px; }
+}
+
+/* ---------- P22: keranjang ---------- */
+.cart-toggle {
+  margin-left: auto;
+  min-height: 36px;
+  padding: 6px 16px;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.cart-box {
+  margin-top: 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+}
+.cart-empty { margin: 0; color: var(--muted); font-size: 14px; }
+.cart-line {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 10px 0; border-top: 1px solid var(--line);
+}
+.cart-line:first-of-type { border-top: 0; }
+.cart-info { display: flex; flex-direction: column; gap: 2px; font-size: 14px; }
+.cart-info span { color: var(--muted); }
+.cart-info b { color: var(--ink); }
+.cart-qty { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
+.cart-qty span { min-width: 22px; text-align: center; font-weight: 700; }
+.cart-step, .cart-del {
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 1px solid var(--line); background: transparent;
+  cursor: pointer; font-size: 14px; line-height: 1; color: var(--ink);
+  transition: border-color .2s, background .2s;
+}
+.cart-step:hover { border-color: var(--accent); color: var(--accent); }
+.cart-del:hover { border-color: #D64D78; color: #D64D78; }
+.cart-total {
+  display: flex; justify-content: space-between; align-items: center;
+  padding-top: 12px; margin-top: 4px; border-top: 2px solid var(--ink);
+  font-weight: 800;
+}
+.cart-total span { font-size: 14px; color: var(--muted); }
+.cart-total b { font-size: 18px; }
+
+/* ---------- P23: order card redesign ---------- */
+.order-card {
+  margin-top: clamp(28px, 5vh, 48px);
+  padding: clamp(24px, 3.5vw, 40px) clamp(22px, 3vw, 36px);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 8%, var(--surface)) 0%, var(--surface) 60%);
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--line));
+  border-radius: var(--radius-xl);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: clamp(18px, 3vw, 40px); flex-wrap: wrap;
+  box-shadow: var(--shadow);
+}
+.order-copy h3 {
+  font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(22px, 3vw, 32px); letter-spacing: -.02em;
+  margin: 8px 0 10px;
+}
+.order-copy .lede { margin: 0 0 10px; max-width: 52ch; }
+.order-note { margin: 0; color: var(--muted); }
+.order-actions { display: flex; gap: 12px; flex: 0 0 auto; flex-wrap: wrap; }
+.order-cta { background: var(--accent); border-color: var(--accent); color: #fff; }
+@media (max-width: 760px) {
+  .order-card { flex-direction: column; align-items: stretch; text-align: left; padding: 22px 20px; }
+  .order-actions { flex-direction: column; }
+  .order-actions .pill { width: 100%; text-align: center; }
+}
+
+/* ---------- P24: spacing header merch ---------- */
+.merch-page-wrap .filters { margin-bottom: clamp(20px, 3vh, 32px); }
+.merch-page-wrap .hero + .merch-page-wrap, .merch-page-wrap { margin-top: 0 !important; }
+section.hero:has(+ .merch-page-wrap) { margin-bottom: clamp(10px, 2vh, 20px) !important; }
+
+/* ---------- P25: FAQ percakapan TOBA Assistant ---------- */
+.faq-chat {
+  display: flex; flex-direction: column; gap: clamp(14px, 2vh, 20px);
+  max-width: 640px;
+}
+.faq-turn { display: flex; flex-direction: column; gap: 8px; animation: faqUp .6s var(--ease-out) both; }
+@keyframes faqUp { from { opacity: 0; transform: translateY(12px) } }
+.faq-bubble { border-radius: 16px; padding: 13px 16px; line-height: 1.65; }
+.faq-bubble p { margin: 0; }
+.faq-bubble-user {
+  align-self: flex-end;
+  background: var(--accent-soft);
+  color: var(--ink);
+  max-width: 78%;
+  border-bottom-right-radius: 4px;
+  font-weight: 600;
+  font-size: 14.5px;
+}
+.faq-bubble-bot {
+  align-self: flex-start;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  max-width: 92%;
+  border-bottom-left-radius: 4px;
+  box-shadow: 0 2px 10px rgba(36, 39, 34, .04);
+}
+.faq-bot-label {
+  display: inline-block;
+  font-size: 9.5px; font-weight: 800; letter-spacing: .16em;
+  color: var(--accent);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+@media (prefers-reduced-motion: reduce) {
+  .faq-turn { animation: none; }
+}
+@media (max-width: 900px) {
+  .faq-bubble-user { max-width: 88%; }
+  .faq-bubble-bot { max-width: 100%; }
+  .faq-bubble { padding: 11px 14px; font-size: 14px; }
+}
+
+/* ---------- P16: email resmi di footer ---------- */
+.footer-emails {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 18px clamp(20px, 4vw, 48px) 4px;
+  border-top: 1px solid rgba(255,255,255,.08);
+  margin-top: 12px;
+}
+.footer-emails > b {
+  font-size: 11px; letter-spacing: .18em; font-weight: 700;
+  color: rgba(255,255,255,.55);
+  margin-bottom: 2px;
+}
+.footer-email-list { display: flex; flex-direction: column; gap: 4px; }
+.footer-email {
+  color: rgba(255,255,255,.85); text-decoration: none; font-size: 13.5px;
+  display: inline-flex; align-items: baseline; gap: 8px;
+  transition: color .2s;
+}
+.footer-email small { color: rgba(255,255,255,.45); font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; }
+.footer-email:hover { color: #fff; text-decoration: underline; }
+
+/* ---------- P2 safety: hero mobile tak ada overflow ---------- */
+@media (max-width: 760px) {
+  .hero-home, .hero-cut-slideshow { overflow: hidden; }
+  .hero-cut-img.cut-sup { opacity: .9; }
 }
