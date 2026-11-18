@@ -3370,10 +3370,11 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
    ============================================================ */
 .hero-home {
   width: 100%; /* full viewport width, no narrow container */
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto auto 1fr;
   grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
     "head"
+    "visual"
     "body";
   column-gap: 0;
   align-content: end;
@@ -3498,16 +3499,21 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 @media (max-width: 760px) {
   .hero-home {
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto;
+    grid-template-rows: auto auto auto;
     grid-template-areas:
       "head"
+      "visual"
       "body";
     row-gap: 0;
     min-height: auto;
     padding: 20px 22px 64px;   /* Prompt 36: bawah cukup agar gradient menutup sisa konten */
+    height: auto !important;
+    max-height: none !important;
   }
 
   .hero-home .hero-head { align-self: start; padding-bottom: 4px }
+
+  .hero-home .hero-cut-slideshow { grid-area: visual; }   /* slot foto = area visual hero mobile */
 
   .hero-home .hero-visual {
     min-height: 0;
@@ -3581,9 +3587,18 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
    Prompt 48: bola basket diperkecil — slot bola pakai ukuran khusus
    (.cut-ball): mobile 18-24vw, desktop 11-16% dari container. */
 .hero-cut-img {
-  position: absolute;
+  position: static;                     /* OVERLAP FIX: posisi oleh SLOT GRID,
+                                          bukan absolute bebas — foto tidak mungkin
+                                          keluar slot / menutup slot lain. */
+  display: block;
   object-fit: contain;
   object-position: center bottom;
+  /* SVG cutout: tanpa latar apa pun — kotak putih sebelumnya berasal dari
+     thumbnail Drive (raster PNG berlatar putih), bukan dari CSS. Guard:
+     eksplisit transparan + isolaasi komposit supaya layer di dalam SVG
+     (mask/feColorMatrix) tidak "mengental" jadi blok penuh. */
+  background: transparent !important;
+  isolation: isolate;
   opacity: 0;
   transform: translateY(14px) scale(.985);
   transition:
@@ -3617,15 +3632,8 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 @media (min-width: 761px) {
   .hero-cut-desktop .hero-cut-img.cut-ball { width: clamp(11%, 13%, 16%); max-height: 26% }
 }
-/* preset slot komposisi A-F (kontrol penuh, bukan acak) */
-.hero-cut-img.cut-slot-a { right: 2%;  top: 4%;  bottom: auto }
-.hero-cut-img.cut-slot-b { left: 1%;   bottom: 2%; top: auto }
-.hero-cut-img.cut-slot-c { left: 0;    top: 8%;  bottom: auto }
-.hero-cut-img.cut-slot-d { right: 0;   bottom: 0; top: auto }
-.hero-cut-img.cut-slot-e { right: 4%;  top: 2%;  bottom: auto }
-.hero-cut-img.cut-slot-f { left: 6%;   bottom: 6%; top: auto }
-.hero-cut-img.cut-slot-g { left: 2%;   top: 6%;  bottom: auto }
-.hero-cut-img.cut-slot-h { right: 1%;  bottom: 4%; top: auto }
+/* preset slot komposisi — dua kanal terpisah (BIG utama besar, SUP pendukung) */
+/* (slot lama cut-slot-a..h dipensiunkan — diganti big-* / sup-* di bawah) */
 
 /* Rebuild: TANPA animation yang saling mengontrol opacity —
    fade lambat lewat transition + var(--fade), disetel per foto oleh JS.
@@ -3663,78 +3671,248 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 /* mobile: komposisi multi-foto di alur dokumen; desktop: slot kanan hero */
 @media (min-width: 761px) {
   .hero-cut-slideshow:not(.hero-cut-desktop) { display: none }
-  /* desktop: sisi kanan, utama dominan + 2 pendukung lebih kecil,
-     tidak menutupi judul/CTA (z-index 1, teks z-index 2) */
+/* desktop: komposisi editorial — UTAMA besar di tengah-kanan, PENDUKUNG
+   lebih kecil di kiri/kanan-bawah dengan ruang masing-masing, SATU bola
+   persisten di lantai dekat pemain utama. Container melebar ke tengah
+   hero supaya area tengah ikut terisi (tidak menempel batas kanan). */
   .hero-cut-desktop {
     position: absolute;
-    right: clamp(20px, 6vw, 96px);
-    bottom: clamp(64px, 12vh, 110px);  /* naik dari dasar — ruang untuk bar info di bawah */
-    width: min(54vw, 780px);           /* TASK 01B: diperluas ke arah tengah, tidak menumpuk di pojok */
-    height: min(62vh, 620px);
+    left: clamp(24px, 4vw, 90px);      /* melebar dari kiri hingga kanan hero */
+    right: clamp(24px, 6vw, 140px);
+    bottom: clamp(140px, 18vh, 200px);  /* di atas bar CTA + info jadwal */
+    width: auto;
+    height: min(52vh, 520px);
     z-index: 1;
+    box-sizing: border-box;
   }
-  .hero-cut-desktop .hero-cut-img.cut-main {
-    width: clamp(46%, 52%, 60%);
-    left: 50%; transform: translateX(-50%);
+  /* visual slot report: anggota di luar slot 3 kolom disembunyikan */
+  .hero-cut-desktop .hero-cut-img:not(.slot-a):not(.slot-b):not(.slot-c):not(.cut-ball):not([data-size='ball']) { display: none !important; }
+
+  /* --- pemain UTAMA dihapus — diganti slot data-size di bawah --- */
+
+  /* --- slot desktop diukur dari lebar container (bukan vw) —
+      4 slot: kiri-tengah / tengah / kanan-tengah / kanan-luar + bola lantai.
+      Ukuran berbeda-beda (100 / 80 / 72 / 62%), asas no-overlap: slot yang
+      bersebelahan tidak pernah aktif bersamaan (rotation per kanal). */
+  .hero-cut-desktop .hero-cut-img[data-size] {
+    bottom: 0; top: auto;
   }
+  /* REVISI KOMPOSISI — 3 band vertikal setara tinggi:
+     semua foto diberi max-height sama (94%), tinggi visual dipimpin oleh
+     aspect ratio asli SVG, bukan dibatasi per-band. Foto tengah tetap
+     sedikit lebih dominan via lebar; kiri/kanan besar & jelas. */
+  .hero-cut-desktop .hero-cut-img[data-size='big']   { width: clamp(30%, 36%, 42%) !important; max-height: 96% !important; z-index: 4 !important; }
+  .hero-cut-desktop .hero-cut-img[data-size='mid']   { width: clamp(26%, 30%, 34%) !important; max-height: 94% !important; z-index: 3 !important; }
+  .hero-cut-desktop .hero-cut-img[data-size='sup']   { width: clamp(26%, 30%, 34%) !important; max-height: 94% !important; z-index: 3 !important; }
+  .hero-cut-desktop .hero-cut-img[data-size='small'] { width: clamp(24%, 28%, 32%) !important; max-height: 94% !important; z-index: 4 !important; }
+  /* bola: dekorasi lantai — absolute dalam container, bukan pemain slot */
   .hero-cut-desktop .hero-cut-img.cut-ball,
-  .hero-cut-desktop .hero-cut-img.cut-p3 { width: clamp(5%, 6%, 8%) !important; max-height: 13% !important; }
-  /* bola DI LANTAI komposisi, dekat pemain — tidak mengambang */
   .hero-cut-desktop .hero-cut-img.cut-p3 {
-    z-index: 0 !important;
-    right: 20% !important; left: auto !important;
+    position: absolute !important;
+    grid-column: auto !important; grid-row: auto !important;
+    left: auto !important; right: 2% !important;
     bottom: 0 !important; top: auto !important;
+    width: clamp(6%, 7%, 9%) !important;
+    max-height: 14% !important;
+    z-index: 5 !important;
     opacity: .95;
   }
-  .hero-cut-desktop .hero-cut-img[class*='cut-p']:not(.cut-p3) { z-index: 2 !important; }
+  /* --- 3 SLOT TERPISAH via CSS Grid: kolom = SLOT (bukan foto) ---
+     Setiap foto menempati TEPAT satu kolom grid → mustahil keluar dari slot
+     atau menutupi slot lain (tanpa left/width absolut per foto). Gap jelas
+     antar kolom; foto besar/kecil sama-sama di-anchor ke dasar stage. */
+  .hero-cut-desktop {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) minmax(0,1.15fr) minmax(0,1fr);   /* kiri | TENGAH dominan | kanan */
+    column-gap: clamp(16px, 2.5vw, 44px);
+    align-items: end;                        /* semua pemain berdiri di lantai sama */
+    justify-items: center;
+  }
+  .hero-cut-desktop .hero-cut-img.slot-a { grid-column: 1; grid-row: 1; }
+  .hero-cut-desktop .hero-cut-img.slot-b { grid-column: 2; grid-row: 1; }
+  .hero-cut-desktop .hero-cut-img.slot-c { grid-column: 3; grid-row: 1; }
+  /* normalisasi tinggi VISUAL: semua foto dibatasi tinggi slot yang SAMA —
+     width:auto + max-height identik memakai object-fit:contain, jadi tinggi
+     objek pemain setara tanpa crop/renggang, lebar mengikuti rasio asli. */
+  .hero-cut-desktop .hero-cut-img.slot-a,
+  .hero-cut-desktop .hero-cut-img.slot-b,
+  .hero-cut-desktop .hero-cut-img.slot-c {
+    grid-row: 1;
+    bottom: auto; top: auto;            /* posisi MURNI grid — tanpa offset absolut */
+    width: 100% !important;
+    height: auto !important;            /* tinggi mengikuti rasio asli × lebar kolom */
+    max-height: 96% !important;
+    max-width: 100%;
+    min-width: 0; min-height: 0;
+    transform: none !important;
+  }
+  .hero-cut-desktop .hero-cut-img.slot-b { max-height: 100% !important; }
+  /* slot lama sup-* dipensiunkan — anggota rotasi dipindah ke slot-a/slot-c */
+  .hero-cut-desktop .hero-cut-img.sup-a,
+  .hero-cut-desktop .hero-cut-img.sup-b,
+  .hero-cut-desktop .hero-cut-img.sup-c { display: none !important; }
 
-  /* TASK 01C: 5 slot distribusi horizontal — tengah / tengah-kanan / kanan /
-     tengah-bawah / kanan-atas-kecil. Foto berpindah slot antar kemunculan
-     (round-robin dari JS). Slot pakai left (bukan semua right) supaya
-     distribusi benar-benar merata, bukan kelompok di pojok kanan. */
-  .hero-cut-desktop .hero-cut-img[class*='cut-p']:not(.cut-p3) { bottom: 0; top: auto; }
-  .hero-cut-desktop .hero-cut-img.slot-a { left: 22%; width: clamp(30%, 34%, 40%) !important; max-height: 74%; }  /* tengah */
-  .hero-cut-desktop .hero-cut-img.slot-b { left: 44%; width: clamp(30%, 34%, 40%) !important; max-height: 78%; }  /* tengah-kanan */
-  .hero-cut-desktop .hero-cut-img.slot-c { left: 68%; width: clamp(20%, 23%, 28%) !important; max-height: 60%; }  /* kanan, lebih kecil */
-  .hero-cut-desktop .hero-cut-img.slot-d { left: 30%; width: clamp(26%, 30%, 36%) !important; max-height: 66%; bottom: 4% !important; } /* tengah-bawah */
-  .hero-cut-desktop .hero-cut-img.slot-e { left: 52%; width: clamp(32%, 36%, 42%) !important; max-height: 84%; }  /* tengah-kanan besar */
-  .hero-cut-desktop .hero-cut-img[class*='cut-p']:not(.cut-p3):not([class*='slot-']) { left: 44%; width: clamp(30%, 34%, 40%) !important; max-height: 78%; } /* fallback sebelum JS menetapkan slot */
+  /* fallback sebelum JS menetapkan slot: tengah (utama) */
+  .hero-cut-desktop .hero-cut-img[class*='cut-p']:not(.cut-p3):not([class*='slot-']):not([data-size]) {
+    grid-column: 2; grid-row: 1;
+    left: auto !important; width: 100% !important; max-height: 100%;
+    bottom: 0; top: auto;
+  }
 }
 
 /* mobile: hero satu kolom, urutan vertikal sesuai Prompt 26 */
 @media (max-width: 760px) {
   .hero-home {
     grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
     grid-template-areas:
       "head"
-      "sub"
       "visual"
       "body";
     min-height: auto;
+    height: auto !important;
+    max-height: none !important;
     padding: 20px 22px 48px;
   }
   /* mobile: komposisi di dalam flow — di antara deskripsi dan CTA */
   .hero-home .hero-head { grid-area: head; align-self: start }
-  .hero-home .hero-sub-identity { grid-area: sub }
-  .hero-cut-slideshow { display: block !important; grid-area: visual; height: clamp(200px, 27vh, 260px); margin: 8px 0 6px }
-  /* TASK 01C mobile: SATU foto utama pada satu waktu (gate JS sama) —
-     semua foto orang di posisi tengah stage yang sama sehingga pergantian
-     terasa seperti ganti subjek, bukan tumpukan. Bola kecil di lantai kanan
-     sebagai aksen, tetap dekat komposisi. */
-  .hero-cut-slideshow .hero-cut-img[class*='cut-p']:not(.cut-p3) {
-    left: 50% !important; right: auto !important;
-    transform: translateX(-50%) !important;
-    width: min(56vw, 250px) !important;
-    max-height: 92%;
+  .hero-home .hero-sub-identity { grid-area: head; margin-top: 6px }
+  /* FIX 355/375: min-content hero-body (354px) memaksa track 1fr
+     meluas melewati viewport — min-width:0 membolehkan track menyusut */
+  .hero-home > * { min-width: 0; }
+  /* MOBILE: komposisi vertikal tersendiri (bukan desktop diperkecil).
+     Slot posisi relatif stage: kiri-atas / kanan-tengah / kiri-bawah /
+     kanan-bawah — pemain tidak pernah dalam satu garis lurus.
+     Ukuran dari data-size; tidak menutupi CTA (stage di flow grid). */
+  .hero-cut-slideshow { display: grid !important; grid-area: visual; height: clamp(340px, 46vh, 480px); margin: 8px 0 14px }
+
+  .hero-cut-slideshow .hero-cut-img[data-size] {
+    bottom: auto; top: 0;
+    transform: none !important;
+  }
+  /* MOBILE: stage foto juga ikut grid hero (bukan absolute desktop yang
+     bocor ke mobile) — duduk di area "visual" antara kop & CTA. */
+  .hero-home .hero-cut-slideshow {
+    position: relative !important;      /* FIX: anchor absolute bola = stage,
+                                           bukan hero (static membuat bola bocor
+                                           ke bawah stage / menempel CTA) */
+    left: auto !important; right: auto !important;
+    bottom: auto !important;
+    width: auto !important;
+    z-index: 2;
+  }
+
+  /* REVISI MOBILE: SATU GRID 3 KOLOM (kiri | tengah | kanan) — slot
+     terpisah total, mustahil bertumpuk, tinggi visual setara, mengisi
+     lebar layar penuh tanpa horizontal overflow. */
+  .hero-cut-slideshow {
+    display: grid !important;
+    /* min-width:0 FIX: sebagai grid-item .hero-home (1fr), min-width:auto
+       membuat min-content img ber-height (lebar intrinsik = tinggi × rasio
+       > viewport) mendorong track 1fr → slideshow meluber (R:376 @355px). */
+    min-width: 0 !important;
+    width: 100%;
+    /* minmax(0,…) FIX: kolom terkunci alokasinya — foto tidak mungkin
+       mendorong kolom lain / keluar viewport (penyebab overlap 430px) */
+    grid-template-columns: minmax(0,1fr) minmax(0,1.15fr) minmax(0,1fr);
+    column-gap: 0;                       /* gap dihitung JS (normalizeRow) */
+    align-items: end;
+    justify-items: center;
+    height: clamp(340px, 48vh, 460px);
+    margin: 10px 0 16px;
+    overflow: hidden;
+  }
+  .hero-cut-slideshow .hero-cut-img[data-size] {
+    grid-row: 1;
+    transform: none !important;
+  }
+  /* NORMALISASI TINGGI VISUAL (bbox-content, bukan kanvas file):
+     img diberi HEIGHT slot eksplisit (bukan width:100% + max-height rasio).
+     Dengan object-fit:contain, konten gambar selalu mengisi tinggi slot
+     (dibatasi lebar kolom) → objek manusia kiri/tengah/kanan menyentuh
+     tinggi visual yang SAMA terlepas dari whitespace transparan SVG. */
+  .hero-cut-slideshow .hero-cut-img.slot-a { grid-column: 1; height: 94% !important; max-height: 94% !important; }
+  .hero-cut-slideshow .hero-cut-img.slot-b { grid-column: 2; height: 100% !important; max-height: 100% !important; }
+  .hero-cut-slideshow .hero-cut-img.slot-c { grid-column: 3; height: 94% !important; max-height: 94% !important; }
+  /* foto ke-4: menggantikan slot kiri/kanan yang sedang kosong tidak bisa
+     via grid 1-row — dilarang tampil di mobile agar tetap tidak tumpuk */
+  .hero-cut-slideshow .hero-cut-img[data-size='small']:not(.slot-a):not(.slot-b):not(.slot-c) { display: none; }
+  .hero-cut-slideshow .hero-cut-img.slot-a,
+  .hero-cut-slideshow .hero-cut-img.slot-b,
+  .hero-cut-slideshow .hero-cut-img.slot-c {
+    top: auto !important; bottom: auto;
+    align-self: end;                    /* semua berdiri di lantai sama */
+    /* TINGGI VISUAL = TINGGI SLOT: img disizing oleh HEIGHT (bukan width),
+       lebar mengikuti rasio asli file. Karena pad transparan lokal ≤2% dari
+       kanvas, bbox konten ≈ bbox kanvas → objek manusia menyentuh tinggi slot.
+       Foto sempit/lebar sama-sama setinggi slot — tanpa crop, tanpa stretch. */
+    /* width:100% = ukuran BOX ikut kolom (bukan rasio file); konten tetap
+       rasio asli via object-fit:contain → tinggi visual tepat = tinggi slot,
+       tanpa letterbox, tanpa overflow, tanpa distorsi */
+    height: 94% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0; min-height: 0;
+    object-position: center bottom;
+  }
+  .hero-cut-slideshow .hero-cut-img.slot-b { height: 100% !important; }
+
+  /* ANTI-OVERFLOW KERAS (355/375px): apa pun yang terjadi di JS
+     (race decode, fr dinamis, foto fade-out), kotak IMG tidak boleh
+     melebihi lebar kolomnya — konten tetap utuh via object-fit:contain */
+  .hero-cut-slideshow .hero-cut-img {
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  /* fallback sebelum JS menetapkan slot: tengah, ukuran pemain utama */
+  .hero-cut-slideshow .hero-cut-img[class*='cut-p']:not(.cut-p3):not([class*='slot-']):not([data-size]) {
+    grid-column: 2; grid-row: 1;
+    left: auto !important; right: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-height: 100%;
     bottom: 0; top: auto;
   }
+
+  /* bola: satu, kecil, di lantai kanan-bawah, tidak menutupi pemain */
+  .hero-cut-slideshow .hero-cut-img.cut-ball,
   .hero-cut-slideshow .hero-cut-img.cut-p3 {
-    left: auto !important; right: 6% !important;
+    position: absolute !important;
+    grid-column: auto !important; grid-row: auto !important;
+    left: auto !important; right: 10% !important;
     bottom: 2% !important; top: auto !important;
-    width: min(14vw, 58px) !important; max-height: 18% !important;
-    z-index: 0 !important;
+    width: min(14vw, 58px) !important; max-height: 16% !important;
+    z-index: 5 !important;
     opacity: .95;
   }
+  /* bola: satu, kecil, di lantai kanan-bawah, tidak menutupi pemain */
+  .hero-cut-slideshow .hero-cut-img.cut-ball,
+  .hero-cut-slideshow .hero-cut-img.cut-p3 {
+    position: absolute !important;
+    grid-column: auto !important; grid-row: auto !important;
+    left: auto !important; right: 10% !important;
+    bottom: 2% !important; top: auto !important;
+    width: min(14vw, 58px) !important; max-height: 16% !important;
+    z-index: 5 !important;
+    opacity: .95;
+    /* transform dikendalikan JS lewat var --bx/--by/--br (px & deg) —
+       titik nol = posisi CSS kanan-bawah; JS menggeser relatif dari sana */
+    transform: translate3d(var(--bx, 0px), var(--by, 0px), 0) rotate(var(--br, 0deg));
+    cursor: grab;
+    touch-action: none;
+    will-change: transform;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none; -webkit-user-select: none;
+  }
+  .hero-cut-slideshow .hero-cut-img.cut-ball:active,
+  .hero-cut-slideshow .hero-cut-img.cut-ball.cut-ball-grab { cursor: grabbing; }
+  /* saat JS menggerakkan bola (idle/physics), transisi CSS dimatikan agar tidak lag/kaku */
+  .hero-cut-slideshow .hero-cut-img.cut-ball.cut-ball-live { transition: none !important; }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-cut-slideshow .hero-cut-img.cut-ball { transform: none !important; }
+  }
+
   /* jadwal & lokasi tetap paling bawah, tidak menutupi foto */
   .hero-home .hero-body { grid-area: body; align-self: end }
   .hero-home .hero-atmosphere { height: 100%; }   /* gradasi mencakup seluruh hero */
@@ -7321,19 +7499,51 @@ html { scroll-behavior: auto; }               /* hindari lag rAF pada smooth glo
 .cine-marquee { padding: clamp(10px, 1.4vw, 18px) 0 clamp(6px, 1vw, 12px); }
 .merch-section, .merch-page-wrap { padding-top: clamp(14px, 2.4vh, 28px); }
 
-/* ---------- P2: hero mobile memenuhi layar ---------- */
+/* ---------- P2: hero mobile memenuhi layar ----------
+   DISESUAIKAN: foto tampil sejak first visit (height stage tidak diperkenke
+   turun drastis lagi — stage kembali ke clamp() yang menyokong 3 foto).
+   Proporsi foto grup: .cut-group (rasio lebar) diberi tinggi slot lebih
+   besar + scale lembut supaya tinggi visual orang setara foto individu. */
+.hero-cut-img.cut-group { transform-origin: center bottom; }
+
 @media (max-width: 760px) {
   .hero-home {
-    min-height: calc(100svh - var(--header-h) - 34px);
-    grid-template-rows: auto auto 1fr auto;
+    min-height: auto;
+    grid-template-rows: auto auto auto;
     padding-bottom: clamp(28px, 5vh, 44px);
   }
-  .hero-cut-slideshow { height: clamp(240px, 34vh, 380px); }
+  .hero-cut-slideshow { height: clamp(360px, 48vh, 500px); }
   .hero-info { margin-top: 14px; }
+
+  /* NORMALISASI TINGGI VISUAL GRUP (bbox konten orang):
+     foto grup (rasio ≈1.0, lebar) di-sizing oleh tinggi slot yang sama —
+     dengan height-driven sizing, grup otomatis melebar (bukan menyusut)
+     sehingga kumpulan orang berdiri setinggi foto individu.
+     Lebar maksimum dijaga overflow-x hidden di stage (tidak hscroll). */
+  .hero-cut-slideshow .hero-cut-img.slot-a.cut-group,
+  .hero-cut-slideshow .hero-cut-img.slot-c.cut-group,
+  .hero-cut-slideshow .hero-cut-img.cut-group.slot-b {
+    height: 100% !important;
+    max-height: 100% !important;
+  }
+  .hero-cut-slideshow .hero-cut-img.cut-group {
+    align-self: end;
+  }
+
+  /* bola: dekorasi komposisi — duduk di LANTAI (align bawah stage),
+     di celah antara slot tengah & kanan; tidak menggantung, tidak menutupi
+     CTA (stage foto terpisah dari hero-body), tidak menempel batas hero */
+  .hero-cut-slideshow .hero-cut-img.cut-ball,
+  .hero-cut-slideshow .hero-cut-img.cut-p3 {
+    bottom: 2% !important;
+    right: 24% !important;
+    width: min(13vw, 52px) !important;
+    max-height: 14% !important;
+  }
 }
 
-/* ---------- P1: bola basket cutout lebih kecil & proporsional ---------- */
-.hero-cut-img.cut-ball { width: clamp(12vw, 15vw, 18vw); max-height: 22%; opacity: .92; }
+/* ---------- P1: bola basket cutout lebih kecil & proporsional ----------
+   (ukuran dasar dipindah ke media query mobile di atas; ukuran desktop tetap) */
 @media (min-width: 761px) {
   .hero-cut-desktop .hero-cut-img.cut-ball { width: clamp(7%, 9%, 11%); max-height: 18%; }
 }
@@ -7550,3 +7760,117 @@ section.hero:has(+ .merch-page-wrap) { margin-bottom: clamp(10px, 2vh, 20px) !im
   .hero-home, .hero-cut-slideshow { overflow: hidden; }
   .hero-cut-img.cut-sup { opacity: .9; }
 }
+
+/* ============================================================
+   FINAL FIX — MOBILE HERO: background penuh sampai bawah
+   ============================================================
+   Strip putih di bawah Hero berasal dari margin atas section berikutnya
+   (comm-cards margin-top clamp(40px,7vh,56px) di @media 760px + 6184px)
+   yang membiarkan bidang body --bg terlihat di antara hero dan konten.
+   Solusi: hero margin-bottom = 0 di mobile + margin-top section
+   berikutnya dikecilkan; padding-bottom hero tetap menutup gradasi. */
+@media (max-width: 760px) {
+  .hero-home { margin-bottom: 0 !important; padding-bottom: clamp(36px, 6vh, 52px) }
+  .hero-home + .comm-cards,
+  .comm-cards { margin-top: clamp(24px, 4vh, 40px) !important; }
+  .hero-home .hero-gradient-shift,
+  .hero-home .hero-atmosphere { bottom: 0; top: 0; height: 100%; }
+}
+/* reduced-motion: gradasi shift disembunyikan — background statis hero
+   tetap menutupi seluruh area (linear-gradient di .hero-home sendiri) */
+
+
+/* =====================================================================
+   TOBA MUSIC PLAYER — floating FAB + panel (konsisten identitas TOBA:
+   sporty/premium, palet hijau gelap #14251A, Plus Jakarta Sans)
+   ===================================================================== */
+#tobaMusicRoot { position: fixed; z-index: 9990; right: 22px; bottom: 22px; font-family: 'Plus Jakarta Sans', sans-serif; }
+.tm-fab {
+  position: relative; width: 54px; height: 54px; border-radius: 50%;
+  border: none; cursor: pointer; display: grid; place-items: center;
+  background: linear-gradient(145deg, #1d3527, #14251a);
+  color: #eaf5ec; box-shadow: 0 6px 20px rgba(10, 22, 14, .45);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.tm-fab svg { width: 26px; height: 26px; }
+.tm-fab:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 10px 26px rgba(10, 22, 14, .55); }
+.tm-eq { position: absolute; bottom: 7px; left: 50%; transform: translateX(-50%); display: none; gap: 2px; align-items: flex-end; height: 9px; }
+.tm-eq i { width: 3px; background: #7fd8a0; border-radius: 1px; animation: tmEq .9s ease-in-out infinite; }
+.tm-eq i:nth-child(2) { animation-delay: .2s; } .tm-eq i:nth-child(3) { animation-delay: .45s; }
+@keyframes tmEq { 0%, 100% { height: 3px; } 50% { height: 9px; } }
+body.tm-playing .tm-eq { display: flex; }
+
+.tm-panel {
+  position: absolute; right: 0; bottom: 66px; width: 320px; max-width: calc(100vw - 32px);
+  background: #14251a; color: #eaf5ec; border-radius: 18px; padding: 18px 18px 14px;
+  box-shadow: 0 18px 48px rgba(5, 12, 8, .6); border: 1px solid rgba(127, 216, 160, .18);
+}
+.tm-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.tm-head b { font-size: 13px; letter-spacing: .14em; color: #7fd8a0; }
+.tm-head b span { color: #eaf5ec; }
+.tm-x { background: none; border: none; color: #9db8a5; font-size: 15px; cursor: pointer; }
+.tm-x:hover { color: #fff; }
+.tm-now { margin-bottom: 8px; }
+.tm-title { font-weight: 700; font-size: 14.5px; line-height: 1.35; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tm-status { font-size: 11.5px; color: #9db8a5; margin: 3px 0 0; }
+.tm-status.err { color: #ff9d8a; }
+.tm-progress { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.tm-progress input[type=range] { flex: 1; accent-color: #7fd8a0; height: 4px; }
+.tm-time { font-size: 10.5px; color: #9db8a5; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.tm-controls { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 6px 0 8px; }
+.tm-controls button {
+  background: rgba(127, 216, 160, .08); color: #eaf5ec; border: 1px solid rgba(127, 216, 160, .2);
+  border-radius: 50%; width: 38px; height: 38px; font-size: 15px; cursor: pointer;
+  transition: background .15s ease, transform .15s ease; display: grid; place-items: center;
+}
+.tm-controls button:hover:not(:disabled) { background: rgba(127, 216, 160, .2); transform: scale(1.06); }
+.tm-controls button:disabled { opacity: .35; cursor: default; }
+.tm-controls .tm-play { width: 48px; height: 48px; font-size: 19px; background: #7fd8a0; color: #10241a; border: none; font-weight: 700; }
+.tm-controls .tm-repeat.on { background: rgba(127, 216, 160, .35); color: #fff; }
+.tm-volume { display: flex; align-items: center; gap: 8px; font-size: 13px; margin-bottom: 10px; color: #9db8a5; }
+.tm-volume input[type=range] { flex: 1; accent-color: #7fd8a0; height: 4px; }
+.tm-list { list-style: none; margin: 0; padding: 0; max-height: 168px; overflow-y: auto; border-top: 1px solid rgba(127, 216, 160, .15); }
+.tm-list button {
+  width: 100%; text-align: left; background: none; border: none; color: #cfe6d6;
+  padding: 9px 10px; font-size: 12.5px; cursor: pointer; border-radius: 8px;
+  font-family: inherit; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.tm-list button:hover { background: rgba(127, 216, 160, .1); }
+.tm-list .active button { color: #7fd8a0; font-weight: 700; }
+
+@media (max-width: 640px) {
+  #tobaMusicRoot { right: 12px; bottom: 12px; }
+  .tm-fab { width: 44px; height: 44px; }
+  .tm-fab svg { width: 22px; height: 22px; }
+  /* PANEL COMPACT MOBILE: tinggi dibatasi viewport, scroll internal,
+     TIDAK mengunci halaman; kontrol tetap tersedia dalam pandangan */
+  .tm-panel {
+    bottom: 58px;
+    right: -6px;
+    width: min(320px, calc(100vw - 24px));
+    max-height: min(65dvh, 520px);
+    max-height: min(65vh, 520px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 12px 14px 10px;
+    border-radius: 14px;
+  }
+  .tm-head { margin-bottom: 6px; }
+  .tm-x { font-size: 17px; padding: 4px 6px; -webkit-tap-highlight-color: transparent; }
+  .tm-now { margin-bottom: 4px; }
+  .tm-title { font-size: 13px; }
+  .tm-status { font-size: 10.5px; }
+  .tm-controls { margin: 4px 0 6px; }
+  .tm-controls button { width: 34px; height: 34px; font-size: 13px; }
+  .tm-controls .tm-play { width: 42px; height: 42px; font-size: 16px; }
+  .tm-list { max-height: min(24dvh, 180px); max-height: min(24vh, 180px); flex: 1 1 auto; min-height: 0; }
+  .tm-list button { padding: 7px 8px; font-size: 11.5px; }
+}
+/* fallback browser lama tanpa dvh sudah ditangani dua deklarasi max-height di atas;
+   sangat pendek (landscape kecil): playlist menyusut lebih jauh */
+@media (max-width: 640px) and (max-height: 560px) {
+  .tm-panel { max-height: min(78dvh, 78vh, 420px); }
+  .tm-list { max-height: min(30dvh, 30vh, 150px); }
+}
+/* jangan kunci scroll halaman saat panel terbuka (semua ukuran) */
+body.tm-panel-open { overflow: '' !important; }

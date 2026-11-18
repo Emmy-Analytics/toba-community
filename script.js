@@ -759,18 +759,18 @@ initMerchTilt();
 })();
 
 /* =====================================================================
-   HERO SVG CUTOUT — REBUILD: SCHEDULER PER-FOTO (pace independen)
+   HERO SVG CUTOUT — EDITORIAL TWO-PLAYER COMPOSITION
    Aset lokal: assets/img/cutout/*.svg (cutout orang, transparan).
 
-   Setiap foto punya node DOM PERSISTEN + timeline sendiri:
-     delay   → jeda sebelum kemunculan pertama
-     fadeIn  → durasi transisi 0 → 1 (slow fade-in)
-     hold    → lama terlihat penuh
-     fadeOut → durasi transisi 1 → 0 (slow fade-out)
-     rest    → jeda sebelum foto boleh muncul lagi
-   Dua foto boleh overlap terbatas (yang satu fade-in saat lain fade-out),
-   tapi setiap foto punya POSISI UNIK sehingga tidak pernah menumpuk
-   di titik yang sama. Semua transisi pakai opacity + transform saja.
+   Konsep: SATU komposisi dengan DUA pemain bersamaan —
+     • pemain UTAMA  (kanal BIG)  : ukuran besar, focal point
+     • pemain PENDUKUNG (kanal SUP): ~55-70% dari pemain utama
+     • bola basket: SATU, elemen persisten di lantai komposisi
+
+   Dua kanal punya timeline SENDIRI (delay/fadeIn/hold/fadeOut/rest tidak
+   sama), jadi pergantian tidak pernah bersamaan dan komposisi hampir
+   selalu memuat dua orang. Semua transisi opacity + transform saja
+   (slow fade, tanpa blink, tanpa lompatan).
    prefers-reduced-motion → komposisi statis pertama, tanpa timer.
    ===================================================================== */
 (function heroCutShow(){
@@ -780,21 +780,116 @@ initMerchTilt();
   if (!box) return;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* delay/fadeIn/hold/fadeOut/rest dalam ms — sengaja TIDAK seragam:
-     fade-in 2.0–3.0s, hold 4.0–7.0s, fade-out 2.0–3.2s, rest 3.0–8.0s. */
+  /* ---- GOOGLE SHEETS API (api=hero, JSONP) ----
+     Endpoint Apps Script yang sama dengan Gallery (deployment terverifikasi).
+     Respons berupa JSONP JavaScript: tobaHeroCallback({...photos:[...]}).
+     Field: photoId,title,photoType,displayRole,displayOrder,active,altText,imageUrl.
+     Bola = photoType BALL; pemain utama = displayRole PRIMARY.
+     Cache 5 menit (sessionStorage) — perubahan admin di Sheet tampil maks 5 menit. */
+  const HERO_API = 'https://script.google.com/macros/s/AKfycbxgx0kHXRa7uR3PuADKiEgvs_sLHp0U9UbxHsxkPwWl9kjlCZnQWa6iZBa1NW9tjrcLvg/exec'; 
+  const DRIVE_IMG_BASE = 'https://drive.usercontent.google.com/download?id=';
+  const HERO_CACHE_KEY = 'tobaHeroCache.v2';
+  const HERO_CACHE_TTL = 5 * 60 * 1000;
+
+  function heroCacheRead(){
+    try {
+      const raw = sessionStorage.getItem(HERO_CACHE_KEY);
+      if (!raw) return null;
+      const obj = JSON.parse(raw);
+      if (!obj || !Array.isArray(obj.photos) || (Date.now() - obj.ts) > HERO_CACHE_TTL) return null;
+      return obj.photos;
+    } catch(_) { return null; }
+  }
+  function heroCacheWrite(photos){
+    try { sessionStorage.setItem(HERO_CACHE_KEY, JSON.stringify({ ts: Date.now(), photos: photos })); } catch(_){}
+  }
+
+  let heroJsonp = null;
+  function heroFetchApi(cb){
+    const cached = heroCacheRead();
+    if (cached) { cb(cached, 'cache'); return; }
+    if (heroJsonp) { clearTimeout(heroJsonp.timeout); heroJsonp.script.remove(); heroJsonp = null; }
+    const old = document.getElementById('tobaHeroJsonp'); if (old) old.remove();
+    const script = document.createElement('script');
+    script.id = 'tobaHeroJsonp';
+    script.src = HERO_API + '?api=hero&callback=tobaHeroCallback';
+    heroJsonp = { script: script, timeout: setTimeout(() => { heroJsonp = null; cb(null, 'timeout'); }, 15000) };
+    script.onerror = () => { heroJsonp = null; cb(null, 'network'); };
+    document.body.appendChild(script);
+  }
+  /* callback JSONP dari Apps Script — validasi + fallback per foto */
+  window.tobaHeroCallback = function(res){
+    if (heroJsonp) { clearTimeout(heroJsonp.timeout); heroJsonp.script.remove(); heroJsonp = null; }
+    const out = [];
+    if (res && res.success && Array.isArray(res.photos)) {
+      res.photos.forEach(p => {
+        /* hanya ACTIVE + imageUrl valid; bola dipisah dari pemain */
+        if (p && (p.active === undefined || p.active === true || p.active === 'TRUE' || p.active === 'true') && typeof p.imageUrl === 'string' && p.imageUrl.startsWith('http')) {
+          /* SEMUA foto Drive: jangan pakai thumbnail (merender raster + bg
+             putih untuk SVG, dan kompres). Pakai file asli via download URL —
+             SVG tetap SVG transparan, JPG/PNG tetap gambar aslinya. */
+          const gid = p.imageUrl.match(/[?&]id=([^&]+)/);
+          let url = p.imageUrl;
+          if (gid && /drive\.google\.com\/thumbnail/.test(p.imageUrl)) {
+            url = DRIVE_IMG_BASE + gid[1] + '&export=view';
+          }
+          out.push({
+            id: p.photoId || '', title: String(p.title || '').trim(),
+            type: (p.photoType || 'PLAYER').toUpperCase(),
+            role: (p.displayRole || 'SECONDARY').toUpperCase(),
+            order: Number(p.displayOrder) || 99,
+            alt: p.altText || p.title || 'Foto TOBA Community',
+            url: url
+          });
+        } else if (p) {
+          console.warn('[TOBA Hero] foto dilewati:', p.photoId, 'active=', p.active, 'imageUrl=', p.imageUrl);
+        }
+      });
+      out.sort((a, b) => a.order - b.order);
+      heroCacheWrite(out);
+    }
+    if (heroApiDone) heroApiDone(out.length ? out : null, out.length ? 'api' : 'empty');
+  };
+  let heroApiDone = null;
+  let compositionDone = false;
+
+  /* preload + validasi gambar; gagal load → dibuang (tidak pernah tampil rusak) */
+  function validatePhotos(list, cb){
+    if (!list || !list.length) { cb([]); return; }
+    let left = list.length;
+    const ok = [];
+    list.forEach(p => {
+      const im = new Image();
+      im.decoding = 'async';
+      let settled = false;
+      const done = good => {
+        if (settled) return;   /* guard: timeout vs onload tidak boleh dobel */
+        settled = true;
+        if (good) ok.push(Object.assign(p, { img: im }));
+        else console.warn('[TOBA Hero] gambar gagal dimuat:', p.id, p.title, p.url);
+        if (--left === 0) cb(ok.sort((a, b) => a.order - b.order));
+      };
+      im.onload = () => done(true);
+      im.onerror = () => done(false);
+      im.src = p.url;
+      setTimeout(() => { if (!im.complete) done(false); }, 12000);
+    });
+  }
+
+  /* fallback aset lokal — dipakai hanya jika API gagal / semua gambar rusak */
   const PLAN = [
-    { file:'grup dina.svg',    cls:'cut-p1',  z:4, delay:0,     fi:2200, hold:5000, fo:2500, rest:3000 },
-    { file:'fuzisal.svg',      cls:'cut-p2',  z:2, delay:2800,  fi:2800, hold:6000, fo:2200, rest:4000 },
-    { file:'bola basket.svg',  cls:'cut-p3',  z:5, delay:5200,  fi:1800, hold:4500, fo:2000, rest:8000 },
-    { file:'vina.svg',         cls:'cut-p4',  z:3, delay:6000,  fi:2500, hold:4000, fo:3000, rest:5000 },
-    { file:'yuki.svg',         cls:'cut-p5',  z:2, delay:9500,  fi:3000, hold:7000, fo:2800, rest:3500 },
-    { file:'mandy.svg',        cls:'cut-p6',  z:2, delay:13500, fi:2000, hold:5500, fo:3000, rest:4500 },
-    { file:'dw nai.svg',       cls:'cut-p7',  z:3, delay:17500, fi:2600, hold:6500, fo:2400, rest:4200 },
-    { file:'zia.svg',          cls:'cut-p8',  z:2, delay:21000, fi:2800, hold:5000, fo:2600, rest:4000 },
-    { file:'grup lastri.svg',  cls:'cut-p9',  z:2, delay:24500, fi:2400, hold:6000, fo:2800, rest:4600 },
-    { file:'yuiii.svg',        cls:'cut-p10', z:2, delay:29000, fi:2200, hold:5500, fo:3000, rest:5000 },
-    { file:'dw.svg',           cls:'cut-p11', z:2, delay:33000, fi:3000, hold:6500, fo:2600, rest:4200 },
-    { file:'anon.svg',         cls:'cut-p12', z:2, delay:37500, fi:2600, hold:5000, fo:3200, rest:4800 }
+    { file:'grup dina.svg',    cls:'cut-p1',  z:4 },
+    { file:'fuzisal.svg',      cls:'cut-p2',  z:3 },
+    { file:'bola basket.svg',  cls:'cut-p3',  z:2, ball:true },
+    { file:'vina.svg',         cls:'cut-p4',  z:4 },
+    { file:'yuki.svg',         cls:'cut-p5',  z:3 },
+    { file:'mandy.svg',        cls:'cut-p6',  z:4 },
+    { file:'dw nai.svg',       cls:'cut-p7',  z:3 },
+    { file:'zia.svg',          cls:'cut-p8',  z:4 },
+    { file:'grup lastri.svg',  cls:'cut-p9',  z:3 },
+    { file:'yuiii.svg',        cls:'cut-p10', z:4 },
+    { file:'dw.svg',           cls:'cut-p11', z:3 },
+    { file:'anon.svg',         cls:'cut-p12', z:4 }
   ];
 
   /* preload semua aset sekali — tidak ada reload per pergantian */
@@ -806,110 +901,481 @@ initMerchTilt();
     cache[p.file] = i;
   });
 
+  /* --- SUMBER DATA: Google Sheets API dulu, fallback aset lokal ---
+     buildItems(list) membuat item komposisi dari data API (url Drive);
+     jika API gagal/kosong, pakai PLAN lokal seperti sebelumnya. */
+  let items = [];
+  const isBall = it => !!it.cfg.ball;
+  let ball = null;
+  let compositionReady = null;
+
+  /* FIX PROPORSI FOTO GRUP: SVG grup (rasio lebar, banyak orang per frame)
+     dengan width:100% + object-fit:contain tampil lebih pendek secara visual
+     daripada foto individu. Ukur rasio asli file dan tandai .cut-group —
+     CSS mobile memperbesar slotnya agar tinggi visual orang setara. */
+  function markAspect(node){
+    const tag = () => {
+      if (node.naturalWidth && node.naturalHeight && node.naturalWidth / node.naturalHeight > 1.05) {
+        node.classList.add('cut-group');
+      }
+    };
+    if (node.complete) tag(); else node.addEventListener('load', tag, { once: true });
+  }
+
+  function makeNode(cfg){
+    const node = cfg.img ? cfg.img.cloneNode(false) : new Image();
+    if (!cfg.img) node.src = CUT + encodeURIComponent(cfg.file);
+    markAspect(node);
+    node.className = 'hero-cut-img ' + cfg.cls + (cfg.ball ? ' cut-ball' : '');
+    node.alt = cfg.alt || '';
+    node.setAttribute('aria-hidden', 'true');
+    node.loading = 'eager';
+    node.decoding = 'async';
+    node.setAttribute('fetchpriority', 'high');
+    node.style.zIndex = cfg.z;
+    return node;
+  }
+
+  function buildItems(list){
+    box.innerHTML = '';
+    items = [];
+    const players = list.filter(p => p.type === 'PLAYER');
+    const balls  = list.filter(p => p.type === 'BALL');
+    const primary = players.find(p => p.role === 'PRIMARY') || players[0];
+    const second  = players.filter(p => p !== primary);
+    const rows = [];
+    if (primary) rows.push({ src: primary, cls: 'cut-p1', z: 4, size: 'big' });
+    /* pemain kedua 75-85% */
+    if (second[0]) rows.push({ src: second[0], cls: 'cut-p2', z: 3, size: 'sup' });
+    /* pemain ketiga 65-75% */
+    if (second[1]) rows.push({ src: second[1], cls: 'cut-p7', z: 3, size: 'mid' });
+    /* pemain keempat 55-70% */
+    if (second[2]) rows.push({ src: second[2], cls: 'cut-p10', z: 4, size: 'small' });
+    const ballCfg = balls[0] ? { src: balls[0], cls: 'cut-p3', z: 2, ball: true, size: 'ball' } : null;
+    if (ballCfg) rows.push(ballCfg);
+    rows.forEach(r => {
+      const node = makeNode({ img: r.src.img, cls: r.cls, ball: !!r.ball, z: r.z, alt: r.src.alt });
+      node.dataset.size = r.size;
+      box.appendChild(node);
+      const it = { cfg: { cls: r.cls, ball: !!r.ball, size: r.size, alt: r.src.alt, id: r.src.id }, el: node, timer: 0 };
+      items.push(it);
+      if (it.cfg.ball) ball = it;
+    });
+    return items.length;
+  }
+
+  /* ---- FIRST-VISIT FIX (tidak ada hero kosong) ----
+     Komposisi lokal dirender + dianimasikan SEGERA (aset sudah di-preload),
+     sementara API Google Sheets diminta di belakang. Foto Sheets diadopsi
+     PER SLOT tepat pada momen foto lama fade-out — tanpa layar kosong,
+     tanpa flicker, tanpa refresh. Jika API gagal/timeout, lokal tetap jalan. */
+  let apiLanePhotos = null;              /* {big:[],mid:[],sup:[]} foto Sheets tervalidasi */
+  const adoptedLanes = { big:false, mid:false, sup:false };
+  function prepareApiPhotos(list){
+    const players = list.filter(p => p.type === 'PLAYER');
+    if (!players.length) return;
+    const cycle = ['big', 'mid', 'sup'];   /* utama → tengah, sisanya kiri/kanan */
+    apiLanePhotos = { big: [], mid: [], sup: [] };
+    players.forEach((p, i) => { apiLanePhotos[cycle[i % 3]].push(p); });
+    if (reduce) {                          /* reduced-motion: adopsi langsung, tanpa timer */
+      ['big','mid','sup'].forEach(l => adoptLane(l, true));
+    }
+  }
+  function adoptLane(lane, instant){
+    if (!apiLanePhotos || adoptedLanes[lane] || !apiLanePhotos[lane] || !apiLanePhotos[lane].length) return;
+    adoptedLanes[lane] = true;
+    /* buang foto lokal slot ini, pasang foto Sheets (sudah tervalidasi/preload) */
+    items.filter(it => it.cfg.lane === lane).forEach(it => it.el.remove());
+    items = items.filter(it => it.cfg.lane !== lane);
+    apiLanePhotos[lane].forEach(src => {
+      const size = lane;                    /* big | mid | sup */
+      const node = makeNode({ img: src.img, cls: '', ball: false, z: lane === 'big' ? 4 : 3, alt: src.alt });
+      node.dataset.size = size;
+      node.style.display = 'none';   /* FIX: tak auto-flow sebelum dapat slot */
+      box.appendChild(node);
+      const it = { cfg: { cls: '', ball: false, size: size, lane: lane, alt: src.alt, id: src.id }, el: node, timer: 0 };
+      items.push(it);
+      if (instant) { assignSlot(it); setFade(it, 0); it.el.classList.add('cut-on'); }
+    });
+    console.info('[TOBA Hero] slot', lane, 'adopsi', apiLanePhotos[lane].length, 'foto Google Sheets');
+  }
+  function startComposition(){
+    compositionDone = false;
+    buildLocal();
+    items.forEach(it => { it.cfg.lane = laneFor(it); });
+    if (compositionReady) compositionReady();
+    /* API diminta sekarang (cache sessionStorage → instan; baru → JSONP).
+       Kegagalan network/timeout/kosong TIDAK menghentikan apa pun. */
+    heroFetchApi(list => {
+      if (list && list.length) {
+        validatePhotos(list, ok => {
+          if (ok.length) {
+            console.info('[TOBA Hero] memuat', ok.length, 'foto dari Google Sheets');
+            prepareApiPhotos(ok);
+          } else {
+            console.warn('[TOBA Hero] gambar API gagal dimuat — tetap pakai aset lokal');
+          }
+        });
+      } else {
+        console.warn('[TOBA Hero] API tidak merespons — tetap pakai aset lokal');
+      }
+    });
+  }
+
+  function buildLocal(){
+    /* ukuran bervariasi seperti komposisi API: 1 utama + mid + sup + small,
+       bola persisten — 4 kanal independen, beberapa foto terlihat bersamaan */
+    const SIZE_OF = { 'cut-p1':'big', 'cut-p2':'mid', 'cut-p4':'sup', 'cut-p5':'small',
+      'cut-p6':'big', 'cut-p7':'mid', 'cut-p8':'sup', 'cut-p9':'small',
+      'cut-p10':'big', 'cut-p11':'mid', 'cut-p12':'sup' };
+    PLAN.forEach(p => {
+      const src = cache[p.file];
+      if (!src) return;
+      const size = p.ball ? 'ball' : SIZE_OF[p.cls] || 'mid';
+      const node = src.cloneNode(false);
+      markAspect(node);
+      node.className = 'hero-cut-img ' + p.cls + (p.ball ? ' cut-ball' : '');
+      node.alt = '';
+      node.style.zIndex = p.z;
+      node.dataset.size = size;
+      /* FIX LAYOUT MOBILE: foto yang belum mendapat slot JANGAN ikut auto-flow
+         grid — auto-placed items menciptakan kolom implisit sehingga 3 kolom
+         slot menyusut jadi ~46px (foto tampak 0px / kecil). display:none
+         sampai assignSlot menambahkan kelas slot. */
+      if (!p.ball) node.style.display = 'none';
+      box.appendChild(node);
+      const it = { cfg: { cls: p.cls, ball: !!p.ball, size: size }, el: node, timer: 0 };
+      items.push(it);
+      if (it.cfg.ball) ball = it;
+    });
+  }
+
   /* desktop: container dipindah ke slot kanan hero (mobile: dalam flow) */
   if (window.matchMedia('(min-width: 761px)').matches && !box.classList.contains('hero-cut-desktop')) box.classList.add('hero-cut-desktop');
 
-  /* node persisten — dibuat SEKALI di awal (masih opacity 0, tak terlihat).
-     Loop tiap foto hanya dimulai setelah SVG-nya benar-benar selesai dimuat,
-     sehingga tidak pernah muncul frame kosong / pop-in. */
-  const items = [];
-  PLAN.forEach(p => {
-    const src = cache[p.file];
-    if (!src) return; /* preload gagal dibuat — sangat tidak mungkin */
-    const node = src.cloneNode(false);
-    node.className = 'hero-cut-img ' + p.cls;
-    node.alt = '';
-    node.style.zIndex = p.z;
-    box.appendChild(node);
-    items.push({ cfg: p, el: node, timer: 0 });
-  });
+  /* node komposisi dibuat oleh startComposition() → buildItems()/buildLocal() */
 
   const setFade = (it, ms) => { it.el.style.setProperty('--fade', ms + 'ms'); };
-  const show = it => { setFade(it, it.cfg.fi); it.el.classList.add('cut-on'); };
-  const hide = it => { setFade(it, it.cfg.fo); it.el.classList.remove('cut-on'); };
+  /* show/hide membaca timing KANAL foto (BIG/SUP punya durasi berbeda) */
+  const TIMING = {
+    big:   { delay: 400,  fi: 2400, hold: 7000, fo: 2600, rest: 800 },
+    mid:   { delay: 1400, fi: 2800, hold: 6000, fo: 3000, rest: 1200 },
+    sup:   { delay: 2400, fi: 2600, hold: 5600, fo: 2800, rest: 1600 },
+    small: { delay: 3400, fi: 3000, hold: 5200, fo: 3200, rest: 2000 }
+  };
+  const show = it => { const t = TIMING[it.cfg.lane]; setFade(it, t ? t.fi : 2400); it.el.classList.add('cut-on'); };
+  const hide = it => { const t = TIMING[it.cfg.lane]; setFade(it, t ? t.fo : 2600); it.el.classList.remove('cut-on'); };
 
   const ready = it => it.el.complete && it.el.naturalWidth > 0;
 
-  const isBall = it => it.cfg.file === 'bola basket.svg';
-
-  /* --- TASK 01B/01C distribusi slot ---
-     Desktop: foto bergantian memakai 5 slot horizontal (tengah / tengah-kanan /
-     kanan / tengah-bawah / kanan-atas-kecil) secara round-robin per kemunculan —
-     sehingga area tengah Hero ikut terpakai dan tidak ada foto yang selalu
-     muncul di titik yang sama. Pergantian slot animasi halus via transition
-     transform (var --fade * 1.6), tidak ada lompatan. Bola tidak ikut rotasi
-     — posisinya tetap dekat lantai komposisi agar tidak mengambang. */
-  const SLOTS = ['slot-a', 'slot-b', 'slot-c', 'slot-d', 'slot-e'];
-  const rotation = {};
-  function assignSlot(it){
-    if (isBall(it)) return;                 /* bola: slot tetap (lantai) */
-    const k = it.cfg.cls;
-    const prev = it.el.dataset.slot;
-    let next = ((rotation[k] || 0) % SLOTS.length);
-    /* hindari slot yang sama dua kali berturut-turut */
-    if (SLOTS[next] === prev) next = (next + 1) % SLOTS.length;
-    rotation[k] = next + 1;
-    it.el.dataset.slot = SLOTS[next];
-    it.el.classList.remove('slot-a','slot-b','slot-c','slot-d','slot-e');
-    it.el.classList.add(SLOTS[next]);
+  /* --- KANAL = SLOT (setiap foto kanal sendiri) ---
+     4 pemain tampil BERSAMAAN di 4 slot berbeda, masing-masing punya
+     timeline independen (entry delay / fade-in / hold / fade-out / rest
+     tidak sama) sehingga pergantian tidak pernah serentak — komposisi
+     selalu hidup, bukan slideshow satu-foto. */
+  function laneFor(it){
+    /* REVISI: foto ke-4 (small) ikut antrean band samping (sup) — jumlah band
+       tetap 3 (kiri/tengah/kanan), tiap band tepat satu foto aktif, jadi
+       4 foto aktif pun tidak pernah saling menutupi. */
+    if (isBall(it)) return null;
+    return it.cfg.size === 'small' ? 'sup' : it.cfg.size; /* big | mid | sup */
   }
 
-  /* --- TASK 01C gate: SATU foto utama pada satu waktu ---
-     Foto pemain hanya tampil sendirian; foto berikutnya baru boleh mulai
-     fade-in SETELAH pemain sebelumnya hampir transparan (opacity < 0.1).
-     Bola basket boleh mendampingi sebagai aksen kecil di lantai.
-     Timing per-foto (delay/fi/hold/fo/rest) TIDAK diubah — tetap independen. */
-  const peopleOn = () => items.filter(it => !isBall(it) && it.el.classList.contains('cut-on')).length;
 
-  function loop(it){
-    clearTimeout(it.timer);
-    if (!ready(it)) {           /* SVG belum termuat → cek ulang, tanpa pop-in */
-      it.timer = setTimeout(() => loop(it), 250);
+
+  /* --- DUA KANAL SLOT TERPISAH ---
+     BIG (utama) dan SUP (pendukung) memakai set slot yang TIDAK saling
+     tumpang tindih, jadi kedua pemain selalu punya ruang masing-masing.
+     Round-robin per kemunculan → kombinasi foto bervariasi tiap siklus. */
+  /* 3 SLOT TERPISAH: KIRI (slot-a) — TENGAH (slot-b, utama) — KANAN (slot-c).
+     Slot dipisahkan CSS Grid (lihat style.css): foto tidak mungkin keluar
+     dari slotnya / masuk slot lain. Foto ke-4 ikut antrean kiri/kanan. */
+  const SLOTS_BIG = ['slot-b'];
+  const SLOTS_MID = ['slot-a', 'slot-c'];
+  const SLOTS_SUP = ['slot-c', 'slot-a'];
+  const SLOTS_SMALL = ['slot-a', 'slot-c'];
+  const rotation = { big: 0, mid: 0, sup: 0, small: 0 };
+  function assignSlot(it){
+    if (isBall(it)) return;
+    const lane = it.cfg.lane;
+    if (!lane) return;
+    const slots = lane === 'big' ? SLOTS_BIG : lane === 'mid' ? SLOTS_MID : SLOTS_SUP;
+    const prev = it.el.dataset.slot;
+    let next = rotation[lane] % slots.length;
+    if (slots[next] === prev) next = (next + 1) % slots.length;
+    rotation[lane] = next + 1;
+    it.el.dataset.slot = slots[next];
+    it.el.classList.remove(...SLOTS_BIG, ...SLOTS_MID, ...SLOTS_SUP, ...SLOTS_SMALL);
+    it.el.style.gridColumn = '';                /* slot CSS Grid yang memposisikan */
+    /* FIX LAYOUT MOBILE: foto masuk slot → boleh ikut grid lagi */
+    it.el.style.display = '';
+    it.el.classList.add(slots[next]);
+    /* tinggi inline lama milik slot LAMA — buang supaya normalisasi
+       menghitung dari nol (mencegah tinggi stale > tinggi slot baru) */
+    it.el.style.removeProperty('height');
+    it.el.style.removeProperty('max-height');
+    /* ladder kolisi bisa saja menyembunyikan foto di putaran sebelumnya —
+       slot baru = keputusan baru, buang penyembunyiannya */
+    it.el.style.removeProperty('display');
+    it.el.style.removeProperty('visibility');
+    normalizeRow();
+  }
+
+  /* --- NORMALISASI LEBAR KOLOM & TINGGI VISUAL (mobile) ---
+     Masalah: lebar render foto (height-driven) bisa melebihi lebar kolom
+     grid → foto saling bertumpuk / ter-clip tepi viewport. Solusi: kolom
+     grid dihitung ulang dari aspect-ratio KONTEN foto yang sedang menempati
+     slot (naturalWidth/Height ≈ bbox, pad transparan lokal ≤3%), lalu semua
+     tinggi diskalakan sama supaya Σlebar = lebar stage — nol overlap,
+     nol clipping, tinggi visual kiri/tengah/kanan tetap setara.
+     Hanya mobile (<761px); desktop pakai grid statisnya sendiri. */
+  const ASPECT_FALLBACK = 0.55;
+  function imgAspect(el){
+    return (el.complete && el.naturalWidth && el.naturalHeight)
+      ? el.naturalWidth / el.naturalHeight : ASPECT_FALLBACK;
+  }
+  function normalizeRow(){
+    if (window.matchMedia('(min-width: 761px)').matches) { box.style.gridTemplateColumns = ''; return; }
+    /* SEMUA foto per slot (slot bisa menampung foto lama yang sedang fade-out
+       + foto baru yang sudah fade-in — keduanya harus dinormalisasi) */
+    const occ = { a: [], b: [], c: [] };
+    items.forEach(it => {
+      if (isBall(it) || !it.el.dataset.slot) return;
+      const s = it.el.dataset.slot.charAt(5);
+      if (!occ[s].includes(it.el)) occ[s].push(it.el);
+    });
+    if (!occ.a.length && !occ.b.length && !occ.c.length) { box.style.gridTemplateColumns = ''; return; }
+    /* foto Drive belum terdecode → tunggu decode() supaya aspect akurat;
+       sementara itu tinggi inline dihapus (fallback ke CSS slot) */
+    const pend = ['a','b','c'].flatMap(s => occ[s]).filter(el => !(el.complete && el.naturalWidth));
+    if (pend.length) {
+      pend.forEach(el => { el.style.removeProperty('height'); el.style.removeProperty('max-height'); });
+      Promise.all(pend.map(el => el.decode().catch(() => {}))).then(normalizeRow);
       return;
     }
-    if (!isBall(it) && peopleOn() > 0) {
-      /* pemain lain masih terlihat → tunggu sampai hampir transparan.
-         Polling ringan, cek ulang tiap 400ms. */
-      it.timer = setTimeout(() => loop(it), 400);
+    const H = box.clientHeight || 360;
+    const gap = parseFloat(getComputedStyle(box).columnGap) || 0;
+    const availW = Math.max(box.clientWidth - 2 * gap, 200);
+    const maxH = { a: .94, b: 1, c: .94 };
+    /* aspect foto TERAKHIR (paling atas) per slot yang menentukan kolom */
+    const top = { a: occ.a[occ.a.length - 1], b: occ.b[occ.b.length - 1], c: occ.c[occ.c.length - 1] };
+    /* total lebar aktual = Σ lebar SEMUA foto yang terlihat (cut-on) per slot —
+       foto lama fade-out + foto baru fade-in tampil BERSAMAAN, jadi keduanya
+       dihitung; tanpa ini kolom terlalu sempit → foto melebihi kolom */
+    let sumW = 0;
+    ['a','b','c'].forEach(s => {
+      occ[s].forEach(el => { if (el.classList.contains('cut-on')) sumW += H * maxH[s] * imgAspect(el); });
+    });
+    /* clip hard-cap: kiri/kanan individual sangat sempit (aspect ~0.33-0.55).
+       Pada layar ≤375px, pemain SEMPELUT tidak boleh melebihi tepi viewport */
+    ['a','c'].forEach(s => {
+      const el = top[s];
+      if (el && el.classList.contains('cut-on')) {
+        const maxW = availW * (s === 'a' ? .34 : .36);
+        const a = imgAspect(el);
+        if (H * maxH[s] * a > maxW) {
+          sumW = Math.max(sumW, availW);
+        }
+      }
+    });
+    if (!sumW) return;
+    const baseScale = Math.min(1, availW / sumW);
+
+    /* --- PRIORITAS 1-3: COLLISION LADDER -------------------------------
+       Lebar konten nyata (height-driven) foto TENGAH + samping dibanding
+       dengan lebar stage. Ladder: 3 foto → perkecil samping bertahap →
+       sembunyikan samping pelaku tabrakan → tengah saja. TENGAH tidak
+       pernah disembunyikan dan tidak pernah diperkecil demi samping. */
+    function sideVisible(s){
+      const el = top[s];
+      return el && el.classList.contains('cut-on') && el.style.display !== 'none';
+    }
+    const centerEl = top.b, centerW = H * imgAspect(centerEl) * baseScale;
+    const sideW = {};
+    ['a','c'].forEach(s => {
+      sideW[s] = sideVisible(s) ? H * .94 * imgAspect(top[s]) : 0;
+    });
+    function hideSide(el, list){
+      if (!el) return;
+      el.style.setProperty('display', 'none', 'important');
+      (list || []).forEach(e => { if (e !== el) e.style.setProperty('visibility', 'hidden', 'important'); });
+    }
+    function showSide(el, list){
+      (list || []).forEach(e => { e.style.removeProperty('display'); e.style.removeProperty('visibility'); });
+    }
+    const SCALES = [1, .8, .7, .6];
+    function attempt(iL, iR){
+      const wl = sideW.a * SCALES[iL], wr = sideW.c * SCALES[iR];
+      if (centerW + wl + wr <= availW) {                          /* semua muat */
+        showSide(top.a, occ.a); showSide(top.c, occ.c);
+        return { sl: SCALES[iL], sr: SCALES[iR], scale: 1 };
+      }
+      if (centerW + Math.min(wl, wr) <= availW && iL < 3 && iR < 3) {
+        /* satu sisi masih muat penuh — perkecil hanya sisi lain */
+        if (wl <= wr) return attempt(Math.min(iL + 1, 3), iR);
+        return attempt(iL, Math.min(iR + 1, 3));
+      }
+      if (iL < 3 || iR < 3) return attempt(Math.min(iL + 1, 3), Math.min(iR + 1, 3));
+      /* ladder habis → sembunyikan sisi yang paling tabrakan */
+      if (wl >= wr && sideVisible('a')) { hideSide(top.a, occ.a); showSide(top.c, occ.c); return { sl: 1, sr: 1, scale: 1, hid: 'a' }; }
+      if (sideVisible('c'))              { hideSide(top.c, occ.c); showSide(top.a, occ.a); return { sl: 1, sr: 1, scale: 1, hid: 'c' }; }
+      hideSide(top.a, occ.a);                                          /* tengah saja */
+      return { sl: 1, sr: 1, scale: 1, hid: 'both' };
+    }
+    const res = attempt(0, 0);
+
+    const effSide = { a: sideVisible('a') ? res.sl : 0, c: sideVisible('c') ? res.sr : 0 };
+    const totW = centerW + sideW.a * effSide.a + sideW.c * effSide.c;
+    const scale = Math.min(1, availW / totW) ;                        /* jaminan akhir */
+    let fr = [];
+    ['a','b','c'].forEach(s => {
+      const el = top[s];
+      const hidden = (s === 'b') ? false : !sideVisible(s);
+      if (!el || hidden) { fr.push(s === 'b' ? '1.15fr' : '0.001fr'); if (hidden) occ[s].forEach(hideTop); return; }
+      const mult = (s === 'b') ? 1 : effSide[s];
+      const h = Math.round(H * maxH[s] * scale * (mult === 0 ? 1 : mult));
+      /* SEMUA foto di slot ini di-cap tinggi slot — termasuk foto lama
+         yang sedang fade-out, agar tidak ada yang menjulur melebihi stage */
+      occ[s].forEach(e => {
+        e.style.setProperty('height', h + 'px', 'important');
+        e.style.setProperty('max-height', h + 'px', 'important');
+      });
+      fr.push(Math.max(h * imgAspect(el), s === 'b' ? 1 : 0.001).toFixed(1));
+    });
+    function hideTop(e){ e.style.setProperty('visibility','hidden','important'); }
+    box.style.gridTemplateColumns = fr[0] + 'fr ' + fr[1] + 'fr ' + fr[2] + 'fr';
+
+    /* VERIFIKASI AKHIR: ukur posisi nyata pasca-grid. Jika foto samping
+       masih meluber melebihi tepi stage (race/rounding), sembunyikan —
+       TENGAH tidak pernah disembunyikan. */
+    requestAnimationFrame(() => {
+      const stageR = box.getBoundingClientRect();
+      ['a','c'].forEach(s => {
+        const el = top[s];
+        if (!el || !sideVisible(s)) return;
+        const r = el.getBoundingClientRect();
+        if (r.right > stageR.right + 1 || r.left < stageR.left - 1) hideSide(el, occ[s]);
+      });
+    });
+  }
+  /* pengaman keras: apa pun yang terjadi (race decode/adoption), TIDAK ADA
+     foto pemain boleh melebihi tinggi stage — dipanggil periodik + rAF */
+  function clampRow(){
+    if (window.matchMedia('(min-width: 761px)').matches) return;
+    const H = box.clientHeight || 360;
+    items.forEach(it => {
+      if (isBall(it)) return;
+      const el = it.el;
+      if (!el.dataset.slot) return;
+      const s = el.dataset.slot.charAt(5);
+      const cap = Math.round(H * (s === 'b' ? 1 : .94));
+      if (el.getBoundingClientRect().height > cap + 1) {
+        el.style.setProperty('height', cap + 'px', 'important');
+        el.style.setProperty('max-height', cap + 'px', 'important');
+      }
+    });
+  }
+  setInterval(clampRow, 1200);
+  window.addEventListener('resize', normalizeRow);
+  /* API Drive: foto yang selesai decode belakangan / adoption slot baru
+     tetap memicu normalisasi (aspect raster berbeda dari aset lokal) */
+  setInterval(normalizeRow, 2500);
+
+
+
+  /* --- LOOP PER KANAL (bukan per foto) ---
+     Tiap kanal menjalankan queue foto-nya sendiri dengan timing independen.
+     Kedua kanal tidak sinkron karena hold/rest sengaja dibedakan. */
+  function laneQueue(lane){
+    return items.filter(it => it.cfg.lane === lane);
+  }
+
+  /* timing per kanal — sengaja BEDA agar tidak pernah berganti bersamaan:
+     BIG: fade-in lambat 2.4s, hold 5.5s, fade-out 2.6s, rest 2.2s
+     SUP: fade-in 2.8s, hold 4.2s, fade-out 3.0s, rest 3.6s
+     Total siklus beda → pergantian selalu bergeser (off-beat, natural). */
+  function loopLaneFix(lane, idx){
+    const t = TIMING[lane];
+    const q = laneQueue(lane);
+    if (!q.length) { setTimeout(() => loopLaneFix(lane, 0), 600); return; }
+    const it = q[idx % q.length];
+    if (!ready(it)) {
+      /* FIX FIRST-VISIT: gambar MATI (load selesai tapi naturalWidth=0)
+         tidak boleh menggantung kanal selamanya — buang dan lanjut ke foto
+         berikutnya, sehingga slot lain tetap terisi. Gambar yang masih
+         downloading diberi tenggat 4 detik lalu dilewati juga. */
+      if (it.el.complete && it.el.naturalWidth === 0) {
+        console.warn('[TOBA Hero] foto gagal dimuat — kanal', lane, 'lanjut foto berikutnya');
+        it.timer = setTimeout(() => loopLaneFix(lane, idx + 1), 300);
+      } else {
+        it.wait = (it.wait || 0) + 250;
+        if (it.wait > 4000) {
+          it.wait = 0;
+          it.timer = setTimeout(() => loopLaneFix(lane, idx + 1), 100);
+        } else {
+          it.timer = setTimeout(() => loopLaneFix(lane, idx), 250);
+        }
+      }
       return;
     }
-    assignSlot(it);   /* pindah slot SEBELUM fade-in (masih opacity 0) —
-                         tidak ada perpindahan yang terlihat mata */
+    it.wait = 0;
+    assignSlot(it);
     show(it);
+    /* normalisasi ulang setelah foto benar-benar terdecode (foto Drive
+       punya aspect berbeda; normalisasi saat assignSlot masih pakai aspect
+       foto lama karena decode() belum selesai) */
+    (it.el.decode ? it.el.decode().catch(() => {}) : Promise.resolve()).then(normalizeRow);
+    setTimeout(normalizeRow, 300);
     it.timer = setTimeout(() => {
       hide(it);
-      it.timer = setTimeout(() => loop(it), it.cfg.rest);
-    }, it.cfg.fi + it.cfg.hold);
+      /* foto Sheets diadopsi saat slot SUDAH kosong (fade-out selesai) —
+         pergantian terasa seperti rotasi foto biasa, bukan swap kasar */
+      adoptLane(lane, false);
+      setTimeout(normalizeRow, 300);
+      it.timer = setTimeout(() => loopLaneFix(lane, idx + 1), t.rest);
+    }, t.fi + t.hold);
   }
 
+  function activeLanes(){
+    const lanes = [];
+    items.forEach(it => { if (it.cfg.lane && !lanes.includes(it.cfg.lane)) lanes.push(it.cfg.lane); });
+    return lanes;
+  }
   function startAll(){
-    items.forEach(it => loop(it));
+    /* bola: satu elemen persisten — fade-in sekali, tetap di lantai */
+    if (ball && ready(ball)) { setFade(ball, 2600); ball.el.classList.add('cut-on'); }
+    else if (ball) ball.el.addEventListener('load', () => { setFade(ball, 2600); ball.el.classList.add('cut-on'); }, { once: true });
+    activeLanes().forEach(lane => setTimeout(() => loopLaneFix(lane, 0), TIMING[lane] ? TIMING[lane].delay : 400));
   }
   function stopAll(){ items.forEach(it => clearTimeout(it.timer)); }
 
   if (reduce) {
-    /* tampilan statis: foto utama pertama saja (begitu siap), tanpa timer */
-    const first = items.find(it => ready(it)) || items[0];
-    if (first) {
-      const reveal = () => { setFade(first, 0); first.el.classList.add('cut-on'); };
-      ready(first) ? reveal() : first.el.addEventListener('load', reveal, { once: true });
-    }
+    startComposition();
+    compositionReady = () => {
+      const players = items.filter(it => !isBall(it));
+      players.slice(0, 4).forEach(it => { assignSlot(it); setFade(it, 0); it.el.classList.add('cut-on'); });
+      if (ball && ready(ball)) { assignSlot(ball); setFade(ball, 0); ball.el.classList.add('cut-on'); }
+    };
     return;
   }
 
-  startAll();
+  compositionReady = () => {
+    compositionDone = true;
+    startAll();
+  };
+  startComposition();
 
   /* hemat resource: tab tersembunyi → timer dibersihkan; kembali → lanjut
-     dari kondisi saat ini tanpa blink (yang terlihat fade-out, lainnya menunggu) */
+     tanpa blink (yang terlihat fade-out, lainnya dijadwalkan ulang) */
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) { stopAll(); return; }
-    items.forEach((it, i) => {
-      clearTimeout(it.timer);
-      if (it.el.classList.contains('cut-on')) {
-        hide(it);
-        it.timer = setTimeout(() => loop(it), it.cfg.rest);
+    if (document.hidden || !compositionDone) { stopAll(); return; }
+    activeLanes().forEach(lane => {
+      const on = items.find(it => it.cfg.lane === lane && it.el.classList.contains('cut-on'));
+      if (on) {
+        hide(on);
+        on.timer = setTimeout(() => loopLaneFix(lane, (items.indexOf(on) + 1)), TIMING[lane].rest);
       } else {
-        it.timer = setTimeout(() => loop(it), 600 + i * 900);
+        loopLaneFix(lane, 0);
       }
     });
   });
@@ -1271,4 +1737,192 @@ initMerchTilt();
     init();
   };
   init();
+})();
+
+/* =====================================================================
+   PROMPT — INTERACTIVE BASKETBALL (easter egg physics)
+   Bola basket cutout (.hero-cut-img.cut-ball) di Hero menjadi objek
+   fisika ringan: tap = bounce, drag = ikut pointer, lepas = lempar
+   (velocity gesture), gravity + bounce + friction natural, rotasi
+   mengikuti momentum. Tanpa canvas, tanpa library — DOM + rAF saja.
+   Area gerak DIBATASI ke stage foto (.hero-cut-slideshow) sehingga
+   bola tidak mungkin menutupi CTA, navbar, teks, atau Music Player.
+   prefers-reduced-motion → bola tetap statis (modul tidak aktif).
+   ===================================================================== */
+(function interactiveBall(){
+  const box = document.querySelector('.hero-home .hero-cut-slideshow');
+  if (!box) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const BALL_SEL = '.hero-cut-img.cut-ball';
+  let ballEl = null;
+
+  /* bola dirender asinkron oleh modul komposisi → poll sampai ada */
+  let tries = 0;
+  const find = setInterval(() => {
+    ballEl = box.querySelector(BALL_SEL);
+    if (ballEl) { clearInterval(find); init(); }
+    else if (++tries > 80) clearInterval(find);   /* ~8s, lalu menyerah */
+  }, 100);
+
+  function init(){
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return;
+
+    /* --- state fisika (satuan: px & px/frame ~60fps) --- */
+    const GRAVITY = 0.45, BOUNCE = 0.62, FRICTION = 0.992, WALL_FRICTION = 0.85;
+    const AIR_DRAG = 0.995, MAX_V = 34, MIN_IDLE_V = 0.06;
+    let x = 0, y = 0, vx = 0, vy = 0, rot = 0, vrot = 0;
+    let grabDX = 0, grabDY = 0;
+    let W = 0, H = 0, BW = 0;
+    let dragging = false, pointerId = null;
+    let lastPX = 0, lastPY = 0, lastT = 0, velX = 0, velY = 0;
+    let idleTimer = 0, idleKick = Math.random() < 0.5 ? 1 : -1;
+    let rafId = 0, running = false, userTouched = false;
+
+    const size = () => {
+      const r = box.getBoundingClientRect();
+      W = r.width; H = r.height;
+      BW = ballEl.getBoundingClientRect().width || 44;
+      if (!userTouched) {                 /* posisi awal: lantai kanan (sesuai CSS) */
+        x = W * 0.82; y = H - BW * 0.6;
+      }
+      x = Math.min(Math.max(x, BW / 2), W - BW / 2);
+      y = Math.min(Math.max(y, BW / 2), H - BW / 2);
+    };
+    size();
+    window.addEventListener('resize', () => { size(); }, { passive: true });
+    if ('ResizeObserver' in window) new ResizeObserver(size).observe(box);
+
+    const apply = () => {
+      /* CSS menempatkan bola via right/bottom; transform harus RELATIF
+         dari posisi layout itu — offsetLeft/Top mengabaikan transform */
+      const baseX = ballEl.offsetLeft + ballEl.offsetWidth / 2;
+      const baseY = ballEl.offsetTop + ballEl.offsetHeight / 2;
+      ballEl.style.setProperty('--bx', (x - baseX) + 'px');
+      ballEl.style.setProperty('--by', (y - baseY) + 'px');
+      ballEl.style.setProperty('--br', rot + 'deg');
+    };
+
+    /* --- loop fisika --- */
+    function step(){
+      if (!dragging) {
+        vy += GRAVITY;
+        vx *= AIR_DRAG; vy *= AIR_DRAG;
+        vx = Math.min(Math.max(vx, -MAX_V), MAX_V);
+        vy = Math.min(Math.max(vy, -MAX_V), MAX_V);
+        x += vx; y += vy;
+        rot += vrot;
+
+        const half = BW / 2, floor = H - half, ceil = half,
+              left = half, right = W - half;
+        if (y > floor) { y = floor; vy = -vy * BOUNCE; vx *= WALL_FRICTION;
+          vrot = vx * 1.4;
+          if (Math.abs(vy) < 1.1) vy = 0;
+        }
+        if (y < ceil)  { y = ceil;  vy = -vy * BOUNCE; }
+        if (x < left)  { x = left;  vx = -vx * BOUNCE; vrot = -Math.abs(vrot) * 0.7; }
+        if (x > right) { x = right; vx = -vx * BOUNCE; vrot = Math.abs(vrot) * 0.7; }
+
+        /* gesekan tanah + redam rotasi */
+        if (y >= floor - 0.5) vx *= FRICTION;
+        vrot *= 0.985;
+
+        /* IDLE: kalau hampir diam, drift/bounce kecil berkala —
+           bola tidak pernah "stuck" di satu posisi */
+        if (Math.abs(vx) < MIN_IDLE_V && Math.abs(vy) < MIN_IDLE_V && y >= floor - 2) {
+          idleTimer++;
+          if (idleTimer > 150 + Math.random() * 180) {   /* ~3-5.5s */
+            idleTimer = 0;
+            vx = idleKick * (1.6 + Math.random() * 1.8);
+            vy = -(3.4 + Math.random() * 2.2);
+            vrot = vx * 2;
+            idleKick *= -1;
+          }
+        }
+        apply();
+      }
+      rafId = requestAnimationFrame(step);
+    }
+    const ensureRun = () => {
+      if (!running) { running = true; rafId = requestAnimationFrame(step); }
+    };
+    /* hemat resource: pause saat tab/hero tak terlihat */
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) { running = false; cancelAnimationFrame(rafId); }
+      else ensureRun();
+    });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(en => {
+        if (en[0].isIntersecting) ensureRun();
+        else { running = false; cancelAnimationFrame(rafId); }
+      }).observe(box);
+    } else ensureRun();
+
+    /* --- pointer interaksi (mouse + touch via Pointer Events) --- */
+    const toLocal = e => {
+      const r = box.getBoundingClientRect();
+      return { x: e.clientX - r.left, y: e.clientY - r.top };
+    };
+    ballEl.addEventListener('pointerdown', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      dragging = true; pointerId = e.pointerId; userTouched = true;
+      const p = toLocal(e);
+      lastPX = p.x; lastPY = p.y; lastT = performance.now();
+      velX = 0; velY = 0;
+      grabDX = x - p.x; grabDY = y - p.y;   /* bola tidak melompat ke titik sentuh */
+      x = p.x + grabDX; y = p.y + grabDY;
+      idleTimer = 0;
+      ballEl.classList.add('cut-ball-grab');
+      try { ballEl.setPointerCapture(e.pointerId); } catch (_) {}
+      apply();
+    });
+    ballEl.addEventListener('pointermove', e => {
+      if (!dragging || e.pointerId !== pointerId) return;
+      const p = toLocal(e), now = performance.now();
+      const dt = Math.max(now - lastT, 1);
+      /* rotasi mengikuti gerakan horizontal drag (momentum) */
+      rot += (p.x - lastPX) * 0.45;
+      /* velocity gesture (px/frame dinormalisasi 60fps), dieksponansi agar lemparan terasa */
+      velX = ((p.x - lastPX) / dt) * 10.5;
+      velY = ((p.y - lastPY) / dt) * 10.5;
+      lastPX = p.x; lastPY = p.y; lastT = now;
+      x = Math.min(Math.max(p.x + grabDX, BW / 2), W - BW / 2);
+      y = Math.min(Math.max(p.y + grabDY, BW / 2), H - BW / 2);
+      apply();
+    });
+    const release = e => {
+      if (!dragging || (e.pointerId !== undefined && e.pointerId !== pointerId)) return;
+      dragging = false; pointerId = null;
+      ballEl.classList.remove('cut-ball-grab');
+      vx = Math.min(Math.max(velX, -MAX_V), MAX_V);
+      vy = Math.min(Math.max(velY, -MAX_V), MAX_V);
+      vrot = vx * 1.6;
+      idleTimer = 0;
+    };
+    ballEl.addEventListener('pointerup', release);
+    ballEl.addEventListener('pointercancel', release);
+    ballEl.addEventListener('lostpointercapture', release);
+
+    /* TAP (tanpa drag berarti): bounce responsif ke atas */
+    let downT = 0, downCX = 0, downCY = 0;
+    ballEl.addEventListener('pointerdown', e => {
+      downT = performance.now(); downCX = e.clientX; downCY = e.clientY;
+    }, true);
+    ballEl.addEventListener('pointerup', e => {
+      if (performance.now() - downT < 240 &&
+          Math.abs(e.clientX - downCX) < 12 &&
+          Math.abs(e.clientY - downCY) < 12) {
+        vy = -(6.5 + Math.random() * 2);
+        vx = (Math.random() - 0.5) * 3;
+        vrot = vx * 2;
+        idleTimer = 0;
+      }
+    });
+
+    ballEl.classList.add('cut-ball-live');   /* matikan transisi CSS posisi */
+    apply();
+    ensureRun();
+  }
 })();

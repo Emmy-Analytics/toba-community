@@ -1,0 +1,230 @@
+[
+ {
+  "file": "anon.svg",
+  "vw": 600,
+  "vh": 1009,
+  "aspectCanvas": 0.595,
+  "bbox": {
+   "x0": 0.013,
+   "x1": 0.974,
+   "y0": 0.02,
+   "y1": 1
+  },
+  "contentW": 0.961,
+  "contentH": 0.98,
+  "contentAspect": 0.583,
+  "padLeft": 0.013,
+  "padRight": 0.026,
+  "padTop": 0.02,
+  "padBottom": 0
+ },
+ {
+  "file": "bola basket.svg",
+  "vw": 107,
+  "vh": 121,
+  "aspectCanvas": 0.884,
+  "bbox": {
+   "x0": 0.04,
+   "x1": 0.978,
+   "y0": 0.113,
+   "y1": 0.973
+  },
+  "contentW": 0.938,
+  "contentH": 0.859,
+  "contentAspect": 0.965,
+  "padLeft": 0.04,
+  "padRight": 0.022,
+  "padTop": 0.113,
+  "padBottom": 0.027
+ },
+ {
+  "file": "dw nai.svg",
+  "vw": 709,
+  "vh": 1182,
+  "aspectCanvas": 0.6,
+  "bbox": {
+   "x0": 0,
+   "x1": 1,
+   "y0": 0.008,
+   "y1": 0.992
+  },
+  "contentW": 1,
+  "contentH": 0.984,
+  "contentAspect": 0.609,
+  "padLeft": 0,
+  "padRight": 0,
+  "padTop": 0.008,
+  "padBottom": 0.008
+ },
+ {
+  "file": "dw.svg",
+  "vw": 518,
+  "vh": 960,
+  "aspectCanvas": 0.54,
+  "bbox": {
+   "x0": 0,
+   "x1": 1,
+   "y0": 0,
+   "y1": 0.996
+  },
+  "contentW": 1,
+  "contentH": 0.996,
+  "contentAspect": 0.542,
+  "padLeft": 0,
+  "padRight": 0,
+  "padTop": 0,
+  "padBottom": 0.004
+ },
+ {
+  "file": "fuzisal.svg",
+  "vw": 1029,
+  "vh": 1278,
+  "aspectCanvas": 0.805,
+  "bbox": {
+   "x0": 0,
+   "x1": 1,
+   "y0": 0,
+   "y1": 1
+  },
+  "contentW": 1,
+  "contentH": 1,
+  "contentAspect": 0.805,
+  "padLeft": 0,
+  "padRight": 0,
+  "padTop": 0,
+  "padBottom": 0
+ },
+ {
+  "file": "grup dina.svg",
+  "vw": 1371,
+  "vh": 1424,
+  "aspectCanvas": 0.963,
+  "bbox": {
+   "x0": 0.012,
+   "x1": 0.996,
+   "y0": 0,
+   "y1": 0.996
+  },
+  "contentW": 0.984,
+  "contentH": 0.996,
+  "contentAspect": 0.951,
+  "padLeft": 0.012,
+  "padRight": 0.004,
+  "padTop": 0,
+  "padBottom": 0.004
+ },
+ {
+  "file": "grup lastri.svg",
+  "vw": 1368,
+  "vh": 1277,
+  "aspectCanvas": 1.071,
+  "bbox": {
+   "x0": 0.008,
+   "x1": 1,
+   "y0": 0.013,
+   "y1": 0.992
+  },
+  "contentW": 0.992,
+  "contentH": 0.979,
+  "contentAspect": 1.086,
+  "padLeft": 0.008,
+  "padRight": 0,
+  "padTop": 0.013,
+  "padBottom": 0.008
+ },
+ {
+  "file": "mandy.svg",
+  "vw": 804,
+  "vh": 1567,
+  "aspectCanvas": 0.513,
+  "bbox": {
+   "x0": 0.023,
+   "x1": 0.985,
+   "y0": 0.008,
+   "y1": 0.984
+  },
+  "contentW": 0.962,
+  "contentH": 0.977,
+  "contentAspect": 0.505,
+  "padLeft": 0.023,
+  "padRight": 0.015,
+  "padTop": 0.008,
+  "padBottom": 0.016
+ },
+ {
+  "file": "vina.svg",
+  "vw": 910,
+  "vh": 1463,
+  "aspectCanvas": 0.622,
+  "bbox": {
+   "x0": 0,
+   "x1": 1,
+   "y0": 0.004,
+   "y1": 0.996
+  },
+  "contentW": 1,
+  "contentH": 0.992,
+  "contentAspect": 0.627,
+  "padLeft": 0,
+  "padRight": 0,
+  "padTop": 0.004,
+  "padBottom": 0.004
+ },
+ {
+  "file": "yuiii.svg",
+  "vw": 538,
+  "vh": 1127,
+  "aspectCanvas": 0.477,
+  "bbox": {
+   "x0": 0.008,
+   "x1": 0.975,
+   "y0": 0.016,
+   "y1": 0.996
+  },
+  "contentW": 0.967,
+  "contentH": 0.98,
+  "contentAspect": 0.471,
+  "padLeft": 0.008,
+  "padRight": 0.025,
+  "padTop": 0.016,
+  "padBottom": 0.004
+ },
+ {
+  "file": "yuki.svg",
+  "vw": 433,
+  "vh": 1304,
+  "aspectCanvas": 0.332,
+  "bbox": {
+   "x0": 0.012,
+   "x1": 0.965,
+   "y0": 0.008,
+   "y1": 0.992
+  },
+  "contentW": 0.953,
+  "contentH": 0.984,
+  "contentAspect": 0.321,
+  "padLeft": 0.012,
+  "padRight": 0.035,
+  "padTop": 0.008,
+  "padBottom": 0.008
+ },
+ {
+  "file": "zia.svg",
+  "vw": 551,
+  "vh": 1254,
+  "aspectCanvas": 0.439,
+  "bbox": {
+   "x0": 0.009,
+   "x1": 0.964,
+   "y0": 0.008,
+   "y1": 1
+  },
+  "contentW": 0.955,
+  "contentH": 0.992,
+  "contentAspect": 0.423,
+  "padLeft": 0.009,
+  "padRight": 0.036,
+  "padTop": 0.008,
+  "padBottom": 0
+ }
+]
