@@ -1652,18 +1652,72 @@ initMerchTilt();
       const cardsBox = sec.querySelector('.cine-rcards');
       if (!cardsBox || sec.dataset.reviewsBound) return;
       sec.dataset.reviewsBound = '1';
-      const POS = ['pos-bl','pos-br','pos-c','pos-bl2','pos-br2'];
-      cardsBox.innerHTML = published.map((r,i) =>
-        `<figure class="cine-rcard ${POS[i % POS.length]}"><blockquote>${String(r.text).replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]))}</blockquote><figcaption>${String(r.name).replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]))}${r.group ? ' · ' + String(r.group) : ''}</figcaption></figure>`
+      
+      const POS = ['pos-bl', 'pos-br', 'pos-bl2', 'pos-br2'];
+
+      // Siapkan empat slot kartu tetap
+      const slotCount = Math.min(4, published.length);
+
+      cardsBox.innerHTML = Array.from(
+        { length: slotCount },
+        (_, i) => `
+          <figure class="cine-rcard ${POS[i]}">
+            <blockquote></blockquote>
+            <figcaption></figcaption>
+          </figure>
+        `
       ).join('');
+
       const cards = [...cardsBox.children];
-      let ci = 0;
-      cards[0].classList.add('show');
-      setInterval(() => {
-        cards.forEach(c => c.classList.remove('show'));
-        ci = (ci + 1) % cards.length;
-        cards[ci].classList.add('show');
-      }, 6000);
+
+      // Bagi seluruh review PUBLISHED ke empat posisi
+      const reviewQueues = cards.map((_, slotIndex) =>
+        published.filter((_, reviewIndex) =>
+          reviewIndex % slotCount === slotIndex
+        )
+      );
+
+      // Tampilkan isi review
+      function renderReview(card, review) {
+        card.querySelector('blockquote').textContent = review.text;
+
+        card.querySelector('figcaption').textContent =
+          review.name + (review.group ? ' · ' + review.group : '');
+      }
+
+      // Animasi independen untuk setiap posisi
+      cards.forEach((card, slotIndex) => {
+        const queue = reviewQueues[slotIndex];
+        let currentIndex = 0;
+
+        function showReview() {
+          renderReview(card, queue[currentIndex]);
+          card.classList.add('show');
+        }
+
+        function rotateReview() {
+          if (queue.length < 2) return;
+
+          card.classList.remove('show');
+
+          setTimeout(() => {
+            currentIndex = (currentIndex + 1) % queue.length;
+            showReview();
+
+            setTimeout(rotateReview, 6500 + slotIndex * 500);
+          }, 350);
+        }
+
+        setTimeout(() => {
+          showReview();
+
+          if (queue.length > 1) {
+            setTimeout(rotateReview, 6500 + slotIndex * 500);
+          }
+        }, slotIndex * 650);
+      });
+
+
     };
     const s = document.createElement('script');
     s.src = REV_API + '?api=reviews&callback=tobaReviewsCallback';

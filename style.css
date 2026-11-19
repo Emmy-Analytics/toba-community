@@ -7965,3 +7965,123 @@ body.tm-panel-open { overflow: '' !important; }
 
 #revSubmit { width: 100%; justify-content: center; border: none; cursor: pointer }
 #revSubmit:disabled { opacity: .6; cursor: wait }
+
+
+/* ===== TOBA REVIEWS — FOUR CORNER CINEMATIC LAYOUT ===== */
+
+@media (min-width: 769px) {
+  .cine-rcard {
+    width: min(24vw, 280px);
+    max-width: 280px;
+    padding: 16px 18px;
+  }
+
+  /* Kiri atas */
+  .cine-rcard.pos-bl {
+    left: 4%;
+    top: 12%;
+    bottom: auto;
+    right: auto;
+  }
+
+  /* Kanan atas */
+  .cine-rcard.pos-br {
+    right: 4%;
+    top: 9%;
+    bottom: auto;
+    left: auto;
+  }
+
+  /* Kiri bawah */
+  .cine-rcard.pos-bl2 {
+    left: 6%;
+    bottom: 7%;
+    top: auto;
+    right: auto;
+  }
+
+  /* Kanan bawah */
+  .cine-rcard.pos-br2 {
+    right: 4%;
+    bottom: 9%;
+    top: auto;
+    left: auto;
+  }
+
+  /* Tidak menggunakan kartu tengah */
+  .cine-rcard.pos-c {
+    display: none;
+  }
+}
+
+/* Animasi cepat dan lembut */
+.cine-rcard {
+  transition:
+    opacity .35s ease,
+    transform .35s ease !important;
+}
+
+/* Nama reviewer mengikuti kapitalisasi asli */
+.cine-rcard figcaption {
+  text-transform: none;
+}
+
+
+/* ===== MOBILE: FOUR CORNER REVIEW CARDS ===== */
+@media (max-width: 768px) {
+  .cine-rcard {
+    width: auto;
+    max-width: 43%;
+    padding: 11px 12px;
+    font-size: 12px;
+  }
+
+  /* Kiri atas */
+  .cine-rcard.pos-bl {
+    left: 12px !important;
+    right: auto !important;
+    top: 12% !important;
+    bottom: auto !important;
+  }
+
+  /* Kanan atas, sedikit lebih rendah */
+  .cine-rcard.pos-br {
+    right: 12px !important;
+    left: auto !important;
+    top: 23% !important;
+    bottom: auto !important;
+  }
+
+  /* Kiri bawah */
+  .cine-rcard.pos-bl2 {
+    left: 12px !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: 20% !important;
+  }
+
+  /* Kanan bawah */
+  .cine-rcard.pos-br2 {
+    right: 12px !important;
+    left: auto !important;
+    top: auto !important;
+    bottom: 9% !important;
+  }
+
+  /* Jangan tampilkan kartu tengah */
+  .cine-rcard.pos-c {
+    display: none !important;
+  }
+
+  /* Ukuran tulisan kartu */
+  .cine-rcard blockquote {
+    font-size: 11px;
+    line-height: 1.4;
+    margin-bottom: 7px;
+  }
+
+  .cine-rcard figcaption {
+    font-size: 10px;
+    letter-spacing: 0;
+  }
+}
