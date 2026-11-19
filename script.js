@@ -146,6 +146,7 @@ function home() {
   <div class="cine-rcenter">
     <h2 class="cine-rheadline">${t('cine.reviews.h')}</h2>
     <p class="cine-rsub">${t('cine.reviews.sub')}</p>
+    <button class="pill cine-rform-btn" id="reviewOpenBtn" type="button">${t('reviews.write')}</button>
   </div>
   <div class="cine-rcards" aria-live="polite"></div>
 </section>
@@ -1056,12 +1057,16 @@ initMerchTilt();
   /* node komposisi dibuat oleh startComposition() → buildItems()/buildLocal() */
 
   const setFade = (it, ms) => { it.el.style.setProperty('--fade', ms + 'ms'); };
-  /* show/hide membaca timing KANAL foto (BIG/SUP punya durasi berbeda) */
+  /* timing per kanal — sengaja BEDA agar tidak pernah berganti bersamaan.
+     FADE-OUT TIDAK TERLIHAT (R: ghosting): foto lama harus SELESAI hilang
+     sebelum foto baru slot yang sama mulai fade-in. Diubah: fade-out cepat
+     700ms, dan loop menunggu fade-out selesai + jeda 300ms sebelum foto
+     berikutnya fade-in — tidak ada dua foto hidup di slot yang sama. */
   const TIMING = {
-    big:   { delay: 400,  fi: 2400, hold: 7000, fo: 2600, rest: 800 },
-    mid:   { delay: 1400, fi: 2800, hold: 6000, fo: 3000, rest: 1200 },
-    sup:   { delay: 2400, fi: 2600, hold: 5600, fo: 2800, rest: 1600 },
-    small: { delay: 3400, fi: 3000, hold: 5200, fo: 3200, rest: 2000 }
+    big:   { delay: 400,  fi: 2400, hold: 7000, fo: 700, rest: 300 },
+    mid:   { delay: 1400, fi: 2800, hold: 6000, fo: 700, rest: 300 },
+    sup:   { delay: 2400, fi: 2600, hold: 5600, fo: 700, rest: 300 },
+    small: { delay: 3400, fi: 3000, hold: 5200, fo: 700, rest: 300 }
   };
   const show = it => { const t = TIMING[it.cfg.lane]; setFade(it, t ? t.fi : 2400); it.el.classList.add('cut-on'); };
   const hide = it => { const t = TIMING[it.cfg.lane]; setFade(it, t ? t.fo : 2600); it.el.classList.remove('cut-on'); };
@@ -1171,7 +1176,9 @@ initMerchTilt();
     ['a','c'].forEach(s => {
       const el = top[s];
       if (el && el.classList.contains('cut-on')) {
-        const maxW = availW * (s === 'a' ? .34 : .36);
+        /* FOTO LEBIH DOMINAN: hard-cap samping dinaikkan dari .34/.36 → .40/.42
+           supaya pemain kiri/kanan tidak terlalu diperkecil oleh normalisasi */
+        const maxW = availW * (s === 'a' ? .40 : .42);
         const a = imgAspect(el);
         if (H * maxH[s] * a > maxW) {
           sumW = Math.max(sumW, availW);
@@ -1191,6 +1198,9 @@ initMerchTilt();
       return el && el.classList.contains('cut-on') && el.style.display !== 'none';
     }
     const centerEl = top.b, centerW = H * imgAspect(centerEl) * baseScale;
+    /* TENGAH LEBIH DOMINAN: fr tengah dikunci minimal 1.3fr supaya kolom
+       tengah selalu lebih lebar dari samping; sisi tetap terlihat jelas.
+       Sebelumnya 1fr / 1.15fr — kolom tengah tidak cukup didominasi. */
     const sideW = {};
     ['a','c'].forEach(s => {
       sideW[s] = sideVisible(s) ? H * .94 * imgAspect(top[s]) : 0;
@@ -1203,7 +1213,7 @@ initMerchTilt();
     function showSide(el, list){
       (list || []).forEach(e => { e.style.removeProperty('display'); e.style.removeProperty('visibility'); });
     }
-    const SCALES = [1, .8, .7, .6];
+    const SCALES = [1, .85, .75, .7];
     function attempt(iL, iR){
       const wl = sideW.a * SCALES[iL], wr = sideW.c * SCALES[iR];
       if (centerW + wl + wr <= availW) {                          /* semua muat */
@@ -1222,6 +1232,8 @@ initMerchTilt();
       hideSide(top.a, occ.a);                                          /* tengah saja */
       return { sl: 1, sr: 1, scale: 1, hid: 'both' };
     }
+    /* FOTO LEBIH DOMINAN: ladder hanya perkecil sampai .7 (bukan .6) —
+       setelah itu foto samping disembunyikan, bukan menyusut sampai terlalu kecil */
     const res = attempt(0, 0);
 
     const effSide = { a: sideVisible('a') ? res.sl : 0, c: sideVisible('c') ? res.sr : 0 };
@@ -1231,7 +1243,7 @@ initMerchTilt();
     ['a','b','c'].forEach(s => {
       const el = top[s];
       const hidden = (s === 'b') ? false : !sideVisible(s);
-      if (!el || hidden) { fr.push(s === 'b' ? '1.15fr' : '0.001fr'); if (hidden) occ[s].forEach(hideTop); return; }
+      if (!el || hidden) { fr.push(s === 'b' ? '1.3fr' : '0.001fr'); if (hidden) occ[s].forEach(hideTop); return; }
       const mult = (s === 'b') ? 1 : effSide[s];
       const h = Math.round(H * maxH[s] * scale * (mult === 0 ? 1 : mult));
       /* SEMUA foto di slot ini di-cap tinggi slot — termasuk foto lama
@@ -1240,7 +1252,7 @@ initMerchTilt();
         e.style.setProperty('height', h + 'px', 'important');
         e.style.setProperty('max-height', h + 'px', 'important');
       });
-      fr.push(Math.max(h * imgAspect(el), s === 'b' ? 1 : 0.001).toFixed(1));
+      fr.push(Math.max(h * imgAspect(el), s === 'b' ? 1.3 : 0.001).toFixed(1));
     });
     function hideTop(e){ e.style.setProperty('visibility','hidden','important'); }
     box.style.gridTemplateColumns = fr[0] + 'fr ' + fr[1] + 'fr ' + fr[2] + 'fr';
@@ -1327,12 +1339,13 @@ initMerchTilt();
     (it.el.decode ? it.el.decode().catch(() => {}) : Promise.resolve()).then(normalizeRow);
     setTimeout(normalizeRow, 300);
     it.timer = setTimeout(() => {
+      /* FADE-OUT CEPAT (700ms) lalu foto baru MASUK SETELAH lama benar-benar
+         hilang (fo + 300ms) → slot tidak pernah berisi dua foto hidup = no
+         ghosting. adoptLane dijalankan saat slot kosong. */
       hide(it);
-      /* foto Sheets diadopsi saat slot SUDAH kosong (fade-out selesai) —
-         pergantian terasa seperti rotasi foto biasa, bukan swap kasar */
       adoptLane(lane, false);
       setTimeout(normalizeRow, 300);
-      it.timer = setTimeout(() => loopLaneFix(lane, idx + 1), t.rest);
+      it.timer = setTimeout(() => loopLaneFix(lane, idx + 1), t.fo + t.rest);
     }, t.fi + t.hold);
   }
 
@@ -1553,9 +1566,7 @@ initMerchTilt();
       ).join('');
       cards = [...cardsBox.children];
       cards[0]?.classList.add('show');
-    } else if (cardsBox) {
-      cardsBox.remove();                                       /* tanpa review asli: sembunyikan, headline+bg tetap */
-    }
+    } 
 
     /* preload berikutnya secara terkontrol (maks 1 slot) */
     const pre = new Set();
@@ -1589,6 +1600,142 @@ initMerchTilt();
 
 
     schedule();
+  }
+
+  /* ================================================================
+     REVIEWS FRONTEND — Google Sheets (endpoint deployment yang sama
+     dengan Hero/Gallery). Published: JSONP GET api=reviews (callback
+     tobaReviewsCallback, shape terverifikasi: success/total/reviews[]
+     dengan displayName, group, reviewText, rating, publishedAt).
+     Submit: POST api=submitReview (name, group, rating, reviewText,
+     consent) → tersimpan PENDING, tidak langsung ditampilkan.
+     ================================================================ */
+  function initReviewsApi(){
+    const REV_API = 'https://script.google.com/macros/s/AKfycbxgx0kHXRa7uR3PuADKiEgvs_sLHp0U9UbxHsxkPwWl9kjlCZnQWa6iZBa1NW9tjrcLvg/exec';
+    const sec = document.getElementById('cineReviews');
+    if (!sec) return;
+
+    /* modal review — dibuat sekali, dirender ke body (di luar section) */
+    if (!document.getElementById('reviewModalWrap')) {
+      document.body.insertAdjacentHTML('beforeend', `
+      <div id="reviewModalWrap" hidden>
+        <div class="rev-modal" role="dialog" aria-modal="true" aria-label="${t('reviews.modal.aria')}">
+          <button class="rev-close" type="button" aria-label="Close">✕</button>
+          <h3>${t('reviews.modal.title')}</h3>
+          <form id="reviewForm" novalidate>
+            <label>${t('reviews.name')}<input id="revName" type="text" maxlength="40" autocomplete="name"></label>
+            <label>${t('reviews.group')}<select id="revGroup">
+              <option value="Tobaladies">Tobaladies</option>
+              <option value="Tobadeli">Tobadeli</option>
+              <option value="Weekly Fun Game">Weekly Fun Game</option>
+              <option value="Event TOBA">Event TOBA</option>
+              <option value="Lainnya">Lainnya</option>
+            </select></label>
+            <div class="rev-stars" role="radiogroup" aria-label="${t('reviews.rating')}">
+              ${[1,2,3,4,5].map(i=>`<span class="rev-star" role="radio" aria-checked="false" tabindex="0" data-v="${i}">★</span>`).join('')}
+            </div>
+            <label>${t('reviews.text')}<textarea id="revText" rows="4" maxlength="500"></textarea><span class="rev-count" id="revCount">0/500</span></label>
+            <label class="rev-consent"><input id="revConsent" type="checkbox"> ${t('reviews.consent')}</label>
+            <p class="rev-msg" id="revMsg" aria-live="polite"></p>
+            <button class="pill" id="revSubmit" type="submit">${t('reviews.submit')}</button>
+          </form>
+        </div>
+      </div>`);
+    }
+
+    /* ---- published reviews via JSONP (pola sama dengan Hero API) ---- */
+    window.tobaReviewsCallback = function(res){
+      if (!res || !res.success || !Array.isArray(res.reviews)) return;
+      const published = res.reviews.filter(r => r && r.displayName && r.reviewText)
+        .map(r => ({ name: r.displayName, text: r.reviewText, group: r.group || '', rating: r.rating }));
+      if (!published.length) return;
+      const cardsBox = sec.querySelector('.cine-rcards');
+      if (!cardsBox || sec.dataset.reviewsBound) return;
+      sec.dataset.reviewsBound = '1';
+      const POS = ['pos-bl','pos-br','pos-c','pos-bl2','pos-br2'];
+      cardsBox.innerHTML = published.map((r,i) =>
+        `<figure class="cine-rcard ${POS[i % POS.length]}"><blockquote>${String(r.text).replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]))}</blockquote><figcaption>${String(r.name).replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]))}${r.group ? ' · ' + String(r.group) : ''}</figcaption></figure>`
+      ).join('');
+      const cards = [...cardsBox.children];
+      let ci = 0;
+      cards[0].classList.add('show');
+      setInterval(() => {
+        cards.forEach(c => c.classList.remove('show'));
+        ci = (ci + 1) % cards.length;
+        cards[ci].classList.add('show');
+      }, 6000);
+    };
+    const s = document.createElement('script');
+    s.src = REV_API + '?api=reviews&callback=tobaReviewsCallback';
+    s.onerror = () => console.warn('[TOBA Reviews] published reviews tidak dapat dimuat');
+    document.body.appendChild(s);
+
+    /* ---- modal & form ---- */
+    const openBtn = document.getElementById('reviewOpenBtn');
+    const wrap = document.getElementById('reviewModalWrap');
+    if (!openBtn || !wrap) return;
+    const form = document.getElementById('reviewForm');
+    const nameEl = document.getElementById('revName');
+    const groupEl = document.getElementById('revGroup');
+    const textEl = document.getElementById('revText');
+    const consentEl = document.getElementById('revConsent');
+    const countEl = document.getElementById('revCount');
+    const stars = [...wrap.querySelectorAll('.rev-star')];
+    const msg = document.getElementById('revMsg');
+    const submitBtn = document.getElementById('revSubmit');
+    let rating = 0;
+
+    function paintStars(){ stars.forEach((st,i) => st.classList.toggle('on', i < rating)); }
+    stars.forEach((st,i) => {
+      st.addEventListener('click', () => { rating = i + 1; paintStars(); });
+      st.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); rating = i + 1; paintStars(); } });
+    });
+
+    textEl.addEventListener('input', () => { countEl.textContent = textEl.value.length + '/500'; });
+
+    function open(){ wrap.hidden = false; document.body.style.overflow = 'hidden'; setTimeout(() => nameEl.focus(), 50); }
+    function close(){ wrap.hidden = true; document.body.style.overflow = ''; }
+    openBtn.addEventListener('click', open);
+    wrap.querySelector('.rev-close').addEventListener('click', close);
+    wrap.addEventListener('click', e => { if (e.target === wrap) close(); });   /* klik backdrop saja */
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !wrap.hidden) close(); });
+
+    function feedback(ok, text){ msg.textContent = text; msg.className = 'rev-msg ' + (ok ? 'rev-ok' : 'rev-err'); }
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const name = nameEl.value.trim();
+      const text = textEl.value.trim();
+      if (!name) { feedback(false, t('reviews.err.name')); nameEl.focus(); return; }
+      if (!rating) { feedback(false, t('reviews.err.rating')); return; }
+      if (!text) { feedback(false, t('reviews.err.text')); textEl.focus(); return; }
+      if (!consentEl.checked) { feedback(false, t('reviews.err.consent')); consentEl.focus(); return; }
+      
+      const body = new URLSearchParams({
+        display_name: name,
+        group: groupEl.value,
+        rating: String(rating),
+        review_text: text,
+        consent: 'true'
+      }).toString();
+
+      submitBtn.disabled = true;
+      feedback(true, t('reviews.sending'));
+      fetch(REV_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8' },
+        body, redirect: 'follow'
+      }).then(r => r.json()).then(res => {
+        if (res && res.success) {
+          feedback(true, t('reviews.ok.pending'));
+          form.reset(); rating = 0; paintStars(); countEl.textContent = '0/500';
+          setTimeout(close, 2600);
+        } else {
+          feedback(false, (res && res.message) || t('reviews.err.generic'));
+        }
+      }).catch(() => feedback(false, t('reviews.err.generic')))
+        .finally(() => { submitBtn.disabled = false; });
+    });
   }
 
   /* ================================================================
@@ -1719,7 +1866,7 @@ initMerchTilt();
 
   /* ---------- INIT (idempotent, dipanggil juga saat re-render bahasa) ---------- */
   function init(){
-    makeTracks(); trackSections(); bindIO(); bindReveal(); startRevolving(); bindDragAndPreview();
+    makeTracks(); trackSections(); bindIO(); bindReveal(); startRevolving(); bindDragAndPreview(); initReviewsApi();
     /* hover memperlambat marquee di desktop */
     if (window.matchMedia('(pointer: fine)').matches) {
       const mq = sec('.cine-marquee');

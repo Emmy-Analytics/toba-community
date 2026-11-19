@@ -3506,12 +3506,17 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
       "body";
     row-gap: 0;
     min-height: auto;
-    padding: 20px 22px 64px;   /* Prompt 36: bawah cukup agar gradient menutup sisa konten */
+    /* HEADER KOMPAK: padding atas kecil, whitespace di atas foto ditekan */
+    padding: 14px 22px 56px;
     height: auto !important;
     max-height: none !important;
   }
 
-  .hero-home .hero-head { align-self: start; padding-bottom: 4px }
+  .hero-home .hero-head { align-self: start; padding-bottom: 2px }
+
+  /* WHITESPACE KURANG: wordmark sedikit margin-bawah, foto naik ke atas */
+  .hero-home .hero-identity { margin-bottom: 10px }
+  .hero-home .hero-sub-identity { margin-top: 4px }
 
   .hero-home .hero-cut-slideshow { grid-area: visual; }   /* slot foto = area visual hero mobile */
 
@@ -3528,11 +3533,15 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   .hero-home .hero-subtitle { margin: 0 0 20px; font-size: 15px }
 
   .hero-home .hero-actions { margin-bottom: 26px; row-gap: 10px }
-
-  .hero-home .hero-actions .pill { flex: 1 1 auto; min-width: 0; min-height: 48px }
+  .hero-home .hero-actions .pill { flex: 1 1 auto; min-width: 0; min-height: 48px; text-align: center; justify-content: center }
+  @media (max-width: 360px) {
+    .hero-home .hero-actions .pill { flex: 1 1 100%; }
+  }
 
   /* mobile info: compact stacked, still horizontal pairs where they fit */
   .hero-info { gap: 14px 28px; padding-top: 18px }
+  /* ANTI-OVERFLOW 320px: baris jadwal panjang boleh wrap, tidak meluber */
+  .hero-info-item span { overflow-wrap: anywhere; }
 
   .hero-info-item strong { font-size: 14px }
 
@@ -3785,6 +3794,9 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
      kanan-bawah — pemain tidak pernah dalam satu garis lurus.
      Ukuran dari data-size; tidak menutupi CTA (stage di flow grid). */
   .hero-cut-slideshow { display: grid !important; grid-area: visual; height: clamp(340px, 46vh, 480px); margin: 8px 0 14px }
+  /* OVERRIDE: rule stage mobile FINAL di bawah (duplikat selector lama)
+     membuat stage 405px sementara foto hanya ~300px → band kosong besar.
+     Block ini menetapkan stage FINAL = mengikuti tinggi foto nyata. */
 
   .hero-cut-slideshow .hero-cut-img[data-size] {
     bottom: auto; top: 0;
@@ -3814,12 +3826,14 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
     width: 100%;
     /* minmax(0,…) FIX: kolom terkunci alokasinya — foto tidak mungkin
        mendorong kolom lain / keluar viewport (penyebab overlap 430px) */
-    grid-template-columns: minmax(0,1fr) minmax(0,1.15fr) minmax(0,1fr);
+    grid-template-columns: minmax(0,0.92fr) minmax(0,1.3fr) minmax(0,0.92fr);
     column-gap: 0;                       /* gap dihitung JS (normalizeRow) */
     align-items: end;
     justify-items: center;
-    height: clamp(340px, 48vh, 460px);
-    margin: 10px 0 16px;
+    /* STAGE FLEKSIBEL: mengisi sisa ruang antara head & body; foto tetap
+       width-limited, whitespace minimal, hero tetap muat 1 viewport. */
+    height: clamp(196px, 32vh, 380px) !important;
+    margin: 4px 0 12px !important;
     overflow: hidden;
   }
   .hero-cut-slideshow .hero-cut-img[data-size] {
@@ -3831,9 +3845,9 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
      Dengan object-fit:contain, konten gambar selalu mengisi tinggi slot
      (dibatasi lebar kolom) → objek manusia kiri/tengah/kanan menyentuh
      tinggi visual yang SAMA terlepas dari whitespace transparan SVG. */
-  .hero-cut-slideshow .hero-cut-img.slot-a { grid-column: 1; height: 94% !important; max-height: 94% !important; }
-  .hero-cut-slideshow .hero-cut-img.slot-b { grid-column: 2; height: 100% !important; max-height: 100% !important; }
-  .hero-cut-slideshow .hero-cut-img.slot-c { grid-column: 3; height: 94% !important; max-height: 94% !important; }
+  .hero-cut-slideshow .hero-cut-img.slot-a { grid-column: 1; height: 92% !important; max-height: 92% !important; }
+  .hero-cut-slideshow .hero-cut-img.slot-b { grid-column: 2; height: 100% !important; max-height: 100% !important; z-index: 4; }
+  .hero-cut-slideshow .hero-cut-img.slot-c { grid-column: 3; height: 92% !important; max-height: 92% !important; }
   /* foto ke-4: menggantikan slot kiri/kanan yang sedang kosong tidak bisa
      via grid 1-row — dilarang tampil di mobile agar tetap tidak tumpuk */
   .hero-cut-slideshow .hero-cut-img[data-size='small']:not(.slot-a):not(.slot-b):not(.slot-c) { display: none; }
@@ -3920,7 +3934,9 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
      min-height:auto + padding bawah proporsional 40px — tidak ada strip
      putih kosong; batas ke section berikutnya tetap disengaja. */
   .hero-home::after { content: none }
-  .hero-home { padding-bottom: clamp(40px, 6vh, 48px) }
+  /* padding bawah cukup untuk music player FAB (bottom 12px + tinggi 44px) —
+     info bar tidak pernah tertutup; di layar sangat kecil tetap aman */
+  .hero-home { padding-bottom: clamp(56px, 9vh, 72px) }
   .hero-home .hero-gradient-shift { height: 100%; bottom: 0 }
 }
 
@@ -6581,7 +6597,7 @@ h3 { letter-spacing: -.015em }
   align-items: baseline;
   gap: 0;
   white-space: nowrap;
-  text-transform: uppercase;
+  text-transform: none;
 }
 /* Split brand heading: "Toba Basketball" = TOBA green, "Community" = charcoal. */
 @media (max-width: 760px) {
@@ -7508,11 +7524,12 @@ html { scroll-behavior: auto; }               /* hindari lag rAF pada smooth glo
 
 @media (max-width: 760px) {
   .hero-home {
-    min-height: auto;
+    /* HERO MEMENUHI INITIAL VIEWPORT: header sticky 60px (mobile) + hero
+       mengisi sisanya persis — section putih tidak terlihat sebelum scroll. */
+    min-height: calc(100svh - 60px) !important;
     grid-template-rows: auto auto auto;
     padding-bottom: clamp(28px, 5vh, 44px);
   }
-  .hero-cut-slideshow { height: clamp(360px, 48vh, 500px); }
   .hero-info { margin-top: 14px; }
 
   /* NORMALISASI TINGGI VISUAL GRUP (bbox konten orang):
@@ -7874,3 +7891,77 @@ body.tm-playing .tm-eq { display: flex; }
 }
 /* jangan kunci scroll halaman saat panel terbuka (semua ukuran) */
 body.tm-panel-open { overflow: '' !important; }
+
+
+/* =====================================================================
+   REVIEWS FRONTEND — tombol Tulis Review + modal form + star rating
+   (endpoint & integrasi: lihat initReviewsApi di script.js)
+   ===================================================================== */
+.cine-rform-btn { margin-top: 22px; pointer-events: auto; cursor: pointer }
+
+#reviewModalWrap {
+  position: fixed; inset: 0; z-index: 10000;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  background: rgba(10, 20, 14, .55);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+#reviewModalWrap[hidden] { display: none }
+
+.rev-modal {
+  position: relative;
+  width: min(460px, 100%);
+  max-height: min(86dvh, 640px);
+  max-height: min(86vh, 640px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: #fff;
+  color: #1c2a20;
+  border-radius: 18px;
+  padding: 26px 24px 22px;
+  box-shadow: 0 24px 64px rgba(6, 16, 10, .45);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.rev-modal h3 {
+  margin: 0 0 16px;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
+  font-size: 22px; font-weight: 800; letter-spacing: -.02em;
+}
+.rev-close {
+  position: absolute; top: 12px; right: 12px;
+  width: 36px; height: 36px; border-radius: 50%;
+  border: none; background: rgba(0,0,0,.06); color: #3A4038;
+  font-size: 15px; cursor: pointer;
+}
+.rev-close:hover { background: rgba(0,0,0,.12) }
+
+.rev-modal label {
+  display: block; margin-bottom: 14px;
+  font-size: 13px; font-weight: 700; color: #2c352e;
+}
+.rev-modal input, .rev-modal select, .rev-modal textarea {
+  display: block; width: 100%; margin-top: 6px;
+  padding: 11px 12px;
+  border: 1.5px solid rgba(20, 37, 26, .18); border-radius: 10px;
+  font: inherit; font-size: 14.5px; background: #fbfcfa;
+}
+.rev-modal input:focus, .rev-modal select:focus, .rev-modal textarea:focus {
+  outline: none; border-color: #2E804D; background: #fff;
+}
+.rev-modal textarea { resize: vertical; min-height: 96px }
+
+.rev-stars { display: flex; gap: 6px; margin: 4px 0 14px; font-size: 30px; line-height: 1 }
+.rev-star { cursor: pointer; color: rgba(20, 37, 26, .18); transition: color .12s ease, transform .12s ease; user-select: none; -webkit-user-select: none }
+.rev-star:hover { transform: scale(1.12) }
+.rev-star.on { color: #E9A13B }
+
+.rev-msg { min-height: 20px; margin: 2px 0 12px; font-size: 13.5px; font-weight: 600 }
+.rev-msg.rev-ok { color: #217a45 }
+.rev-msg.rev-err { color: #c0392b }
+
+.rev-count { display: block; margin-top: 4px; font-size: 11.5px; font-weight: 600; color: rgba(20,37,26,.45); text-align: right }
+.rev-modal .rev-consent { display: flex; gap: 9px; align-items: flex-start; margin-bottom: 14px; font-size: 12.5px; font-weight: 600; line-height: 1.45; color: #2c352e; cursor: pointer }
+.rev-modal .rev-consent input { width: 16px; height: 16px; margin: 1px 0 0; flex: none; accent-color: #2E804D; cursor: pointer }
+
+#revSubmit { width: 100%; justify-content: center; border: none; cursor: pointer }
+#revSubmit:disabled { opacity: .6; cursor: wait }
