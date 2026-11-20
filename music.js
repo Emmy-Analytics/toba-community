@@ -178,7 +178,8 @@
     });
     ['tmPlay', 'tmNext', 'tmPrev', 'tmRepeat'].forEach(function (id) { $(id).disabled = false; });
     $('tmSeek').disabled = false;
-    showStatus('Klik \u25B6 untuk memutar. ' + list.length + ' lagu dari Google Sheets.');
+    showStatus(getMusicHint());
+    $('tmStatus').dataset.kind = 'hint';
     markActive();
 
     /* pemulihan posisi antar halaman */
@@ -330,6 +331,19 @@
   }
 
   /* ---------- UI helpers ---------- */
+  function getMusicHint() {
+    return document.documentElement.lang === 'id'
+      ? 'Pilih lagu favoritmu dan nikmati musiknya.'
+      : 'Pick your favorite song and enjoy the music.';
+  }
+  document.addEventListener('toba:langchange', function () {
+    var el = $('tmStatus');
+
+    if (el && el.dataset.kind === 'hint') {
+      showStatus(getMusicHint());
+      el.dataset.kind = 'hint';
+    }
+  });
   function setPlayIcon(playing) {
     $('tmPlay').textContent = playing ? '\u23F8' : '\u25B6';
     $('tmPlay').setAttribute('aria-label', playing ? 'Jeda' : 'Putar');

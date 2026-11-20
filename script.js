@@ -75,6 +75,7 @@ function home() {
   </div>
   <!-- Prompt 37-38: multiple SVG cutout composition — di dalam kolom head/body flow -->
   <div class="hero-cut-slideshow" id="heroCutShow" aria-hidden="true"></div>
+  <div class="hero-group-slideshow" id="heroGroupShow" aria-hidden="true"></div>
   <div class="hero-head"><p class="hero-identity brand-wordmark" translate="no"><span class="id-toba">TOBA</span><span class="id-comm">COMMUNITY</span></p><small class="hero-sub-identity">${t('hero.identity.sub')}</small></div>
   <div class="hero-body">
     <div class="hero-actions"><a class="pill" href="partnership.html">${t('hero.cta1')}</a><a class="pill secondary" href="events.html">${t('hero.cta2')}</a></div>
@@ -162,9 +163,9 @@ function home() {
 
 <section class="cine-gallery" aria-label="${t('cine.gallery.aria')}">
   <div class="cine-g-head"><p class="eyebrow">${t('cine.gallery.eyebrow')}</p><h2 class="cine-g-title">${t('cine.gallery.h')}</h2><a class="text-link" href="gallery.html">${t('cine.gallery.cta')}</a></div>
-  <div class="cine-g-row cine-g-r1"><div class="cine-g-track" data-dir="rtl" data-speed="28">${cineRow(cineRow1)}</div></div>
-  <div class="cine-g-row cine-g-r2"><div class="cine-g-track" data-dir="ltr" data-speed="38">${cineRow(cineRow2)}</div></div>
-  <div class="cine-g-row cine-g-r3"><div class="cine-g-track" data-dir="rtl" data-speed="48">${cineRow(cineRow3)}</div></div>
+  <div class="cine-g-row cine-g-r1"><div class="cine-g-track" data-dir="rtl" data-speed="12">${cineRow(cineRow1)}</div></div>
+  <div class="cine-g-row cine-g-r2"><div class="cine-g-track" data-dir="ltr" data-speed="16">${cineRow(cineRow2)}</div></div>
+  <div class="cine-g-row cine-g-r3"><div class="cine-g-track" data-dir="rtl" data-speed="20">${cineRow(cineRow3)}</div></div>
   <p class="cine-g-empty" hidden>${t('cine.gallery.empty')}</p>
 </section>
 
@@ -247,25 +248,16 @@ function communityPage(which) {
 <section class="section-wrap"><div class="callout"><div><p class="eyebrow">${t('comm.join.eyebrow')}</p><h3>${t('comm.join.h')}</h3><p class="lede">${t('comm.pill.d')}</p></div><a class="pill" href="partnership.html">${ctaJoin}</a></div></section>`
 }
 
-/* ---------- P25: FAQ gaya percakapan TOBA Assistant (statis, tanpa AI) ---------- */
+/* ---------- P25: FAQ — percakapan TOBA Assistant dipindah ke chatbot global
+   (script.js, modul TOBI). Yang tersisa di halaman Events: kartu info
+   Weekly Fun Game. Tanpa bubble percakapan statis lagi. ---------- */
 function faqSection() {
-    const chat = [
-      { q: 'faq.chat.q1', a: 'faq.chat.a1' }, { q: 'faq.chat.q2', a: 'faq.chat.a2' },
-      { q: 'faq.chat.q3', a: 'faq.chat.a3' }, { q: 'faq.chat.q4', a: 'faq.chat.a4' },
-      { q: 'faq.chat.q5', a: 'faq.chat.a5' }, { q: 'faq.chat.q6', a: 'faq.chat.a6' },
-      { q: 'faq.chat.q7', a: 'faq.chat.a7' }
-    ].map((c, i) => `
-      <div class="faq-turn" style="animation-delay:${(i * .06).toFixed(2)}s">
-        <div class="faq-bubble faq-bubble-user"><p>${t(c.q)}</p></div>
-        <div class="faq-bubble faq-bubble-bot"><span class="faq-bot-label">TOBA ASSISTANT</span><p>${t(c.a)}</p></div>
-      </div>`).join('');
     const wfg = [1,2,3,4,5,6,7].map(i => `<div class="ie-fact"><dt>${t('faq.wfg.item'+i)}</dt><dd>${t('faq.wfg.v'+i)}</dd></div>`).join('');
     return `
 <section class="section-wrap faq-wrap"><div class="faq-grid">
   <div class="faq-head"><p class="eyebrow">${t('faq.eyebrow')}</p><h2>${t('faq.h')}</h2><p class="lede">${t('faq.lede')}</p>
     <div class="wfg-card"><h3>${t('faq.wfg.h')}</h3><dl class="ie-facts">${wfg}</dl><p class="wfg-note"><small>${t('faq.wfg.pricing.note')}</small></p></div>
   </div>
-  <div class="faq-chat" role="log" aria-label="TOBA Assistant">${chat}</div>
 </div></section>`;
 }
 
@@ -760,53 +752,54 @@ initMerchTilt();
 })();
 
 /* =====================================================================
-   HERO SVG CUTOUT — EDITORIAL TWO-PLAYER COMPOSITION
-   Aset lokal: assets/img/cutout/*.svg (cutout orang, transparan).
-
-   Konsep: SATU komposisi dengan DUA pemain bersamaan —
-     • pemain UTAMA  (kanal BIG)  : ukuran besar, focal point
-     • pemain PENDUKUNG (kanal SUP): ~55-70% dari pemain utama
-     • bola basket: SATU, elemen persisten di lantai komposisi
-
-   Dua kanal punya timeline SENDIRI (delay/fadeIn/hold/fadeOut/rest tidak
-   sama), jadi pergantian tidak pernah bersamaan dan komposisi hampir
-   selalu memuat dua orang. Semua transisi opacity + transform saja
-   (slow fade, tanpa blink, tanpa lompatan).
-   prefers-reduced-motion → komposisi statis pertama, tanpa timer.
+   HERO SVG CUTOUT â€” CENTER STAGE PLAYER CAROUSEL (redesign 2026-11)
+   =====================================================================
+   Konsep visual baru: PLAYER CUTOUT CENTER STAGE.
+     â€¢ SATU pemain utama besar di tengah (main), dua pemain preview lebih
+       kecil (~50%) di kiri & kanan sebagai depth/preview.
+     â€¢ Satu sistem index + satu timer autoplay (~4.5s), looping tanpa jeda.
+     â€¢ Swipe (mobile) & drag (desktop) mengganti pemain; interaksi manual
+       mereset timer autoplay.
+     â€¢ GROUP PHOTO slideshow landscape terpisah â€” timer sendiri (7s).
+     â€¢ BOLA BASKET tetap elemen persisten + modul fisika interaktif lama
+       (.hero-cut-img.cut-ball) tidak disentuh.
+   Arsitektur:
+     - renderPlayerCarousel()  : 1 sumber DOM (stage.tier-main/left/right)
+     - applyCarousel()         : transform/opacity by tier â€” smooth, loop
+     - startPlayerAuto/stopPlayerAuto : SATU timer autoplay pemain
+     - groupTimer              : SATU timer slideshow grup (7s)
+     - restartHeroCut()        : kompatibel event 'toba:langchange'
+     - buildLocal()/prepareApiPhotos() : fallback lokal + Google Sheets API
+       (endpoint, cache & JSONP TIDAK diubah)
    ===================================================================== */
-(function heroCutShow(){
+(function heroCutShow() {
   if (document.body.dataset.page !== 'home') return;
   const CUT = 'assets/img/cutout/';
-  const box = document.getElementById('heroCutShow');
+  let box = document.getElementById('heroCutShow');
+  let groupBox = document.getElementById('heroGroupShow');
   if (!box) return;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ---- GOOGLE SHEETS API (api=hero, JSONP) ----
-     Endpoint Apps Script yang sama dengan Gallery (deployment terverifikasi).
-     Respons berupa JSONP JavaScript: tobaHeroCallback({...photos:[...]}).
-     Field: photoId,title,photoType,displayRole,displayOrder,active,altText,imageUrl.
-     Bola = photoType BALL; pemain utama = displayRole PRIMARY.
-     Cache 5 menit (sessionStorage) — perubahan admin di Sheet tampil maks 5 menit. */
-  const HERO_API = 'https://script.google.com/macros/s/AKfycbxgx0kHXRa7uR3PuADKiEgvs_sLHp0U9UbxHsxkPwWl9kjlCZnQWa6iZBa1NW9tjrcLvg/exec'; 
-  const DRIVE_IMG_BASE = 'https://drive.usercontent.google.com/download?id=';
-  const HERO_CACHE_KEY = 'tobaHeroCache.v2';
+  /* ---- GOOGLE SHEETS API (api=hero, JSONP) â€” TIDAK DIUBAH ---- */
+  const HERO_API = 'https://script.google.com/macros/s/AKfycbxgx0kHXRa7uR3PuADKiEgvs_sLHp0U9UbxHsxkPwWl9kjlCZnQWa6iZBa1NW9tjrcLvg/exec';
+  const HERO_CACHE_KEY = 'tobaHeroCache.v4';
   const HERO_CACHE_TTL = 5 * 60 * 1000;
 
-  function heroCacheRead(){
+  function heroCacheRead() {
     try {
       const raw = sessionStorage.getItem(HERO_CACHE_KEY);
       if (!raw) return null;
       const obj = JSON.parse(raw);
       if (!obj || !Array.isArray(obj.photos) || (Date.now() - obj.ts) > HERO_CACHE_TTL) return null;
       return obj.photos;
-    } catch(_) { return null; }
+    } catch (_) { return null; }
   }
-  function heroCacheWrite(photos){
-    try { sessionStorage.setItem(HERO_CACHE_KEY, JSON.stringify({ ts: Date.now(), photos: photos })); } catch(_){}
+  function heroCacheWrite(photos) {
+    try { sessionStorage.setItem(HERO_CACHE_KEY, JSON.stringify({ ts: Date.now(), photos: photos })); } catch (_) { }
   }
 
   let heroJsonp = null;
-  function heroFetchApi(cb){
+  function heroFetchApi(cb) {
     const cached = heroCacheRead();
     if (cached) { cb(cached, 'cache'); return; }
     if (heroJsonp) { clearTimeout(heroJsonp.timeout); heroJsonp.script.remove(); heroJsonp = null; }
@@ -818,44 +811,68 @@ initMerchTilt();
     script.onerror = () => { heroJsonp = null; cb(null, 'network'); };
     document.body.appendChild(script);
   }
-  /* callback JSONP dari Apps Script — validasi + fallback per foto */
-  window.tobaHeroCallback = function(res){
+
+  let heroImageRequestId = 0;
+  function heroFetchSvg(photoId) {
+    return new Promise(resolve => {
+      const callbackName = 'tobaHeroImageCallback' + (++heroImageRequestId);
+      const script = document.createElement('script');
+      let finished = false;
+      const cleanup = result => {
+        if (finished) return;
+        finished = true;
+        clearTimeout(timer);
+        script.remove();
+        delete window[callbackName];
+        resolve(result);
+      };
+      window[callbackName] = res => {
+        const photo = res?.photos?.find(item => item.photoId === photoId);
+        const dataUrl = photo?.imageDataUrl;
+        if (res?.success && typeof dataUrl === 'string' && dataUrl.startsWith('data:image/svg+xml;base64,')) {
+          cleanup(dataUrl);
+        } else {
+          console.warn('[TOBA Hero] SVG tidak tersedia:', photoId, res);
+          cleanup(null);
+        }
+      };
+      const timer = setTimeout(() => { console.warn('[TOBA Hero] timeout SVG:', photoId); cleanup(null); }, 20000);
+      script.onerror = () => cleanup(null);
+      script.src = HERO_API + '?api=hero&callback=' + callbackName + '&photoId=' + encodeURIComponent(photoId);
+      document.body.appendChild(script);
+    });
+  }
+
+  window.tobaHeroCallback = async function (res) {
     if (heroJsonp) { clearTimeout(heroJsonp.timeout); heroJsonp.script.remove(); heroJsonp = null; }
     const out = [];
     if (res && res.success && Array.isArray(res.photos)) {
-      res.photos.forEach(p => {
-        /* hanya ACTIVE + imageUrl valid; bola dipisah dari pemain */
-        if (p && (p.active === undefined || p.active === true || p.active === 'TRUE' || p.active === 'true') && typeof p.imageUrl === 'string' && p.imageUrl.startsWith('http')) {
-          /* SEMUA foto Drive: jangan pakai thumbnail (merender raster + bg
-             putih untuk SVG, dan kompres). Pakai file asli via download URL —
-             SVG tetap SVG transparan, JPG/PNG tetap gambar aslinya. */
-          const gid = p.imageUrl.match(/[?&]id=([^&]+)/);
-          let url = p.imageUrl;
-          if (gid && /drive\.google\.com\/thumbnail/.test(p.imageUrl)) {
-            url = DRIVE_IMG_BASE + gid[1] + '&export=view';
-          }
-          out.push({
-            id: p.photoId || '', title: String(p.title || '').trim(),
-            type: (p.photoType || 'PLAYER').toUpperCase(),
-            role: (p.displayRole || 'SECONDARY').toUpperCase(),
-            order: Number(p.displayOrder) || 99,
-            alt: p.altText || p.title || 'Foto TOBA Community',
-            url: url
-          });
-        } else if (p) {
-          console.warn('[TOBA Hero] foto dilewati:', p.photoId, 'active=', p.active, 'imageUrl=', p.imageUrl);
-        }
-      });
+      const photos = res.photos.filter(p =>
+        p && (p.active === undefined || p.active === true || p.active === 'TRUE' || p.active === 'true') && p.photoId
+      );
+      for (const p of photos) {
+        const imageDataUrl = await heroFetchSvg(p.photoId);
+        if (!imageDataUrl) { console.warn('[TOBA Hero] SVG gagal:', p.photoId); continue; }
+        out.push({
+          id: p.photoId,
+          title: String(p.title || '').trim(),
+          type: (p.photoType || 'PLAYER').toUpperCase(),
+          role: (p.displayRole || 'SECONDARY').toUpperCase(),
+          order: Number(p.displayOrder) || 99,
+          alt: p.altText || p.title || 'Foto TOBA Community',
+          url: imageDataUrl
+        });
+      }
       out.sort((a, b) => a.order - b.order);
       heroCacheWrite(out);
     }
     if (heroApiDone) heroApiDone(out.length ? out : null, out.length ? 'api' : 'empty');
   };
-  let heroApiDone = null;
-  let compositionDone = false;
 
-  /* preload + validasi gambar; gagal load → dibuang (tidak pernah tampil rusak) */
-  function validatePhotos(list, cb){
+  let heroApiDone = null;
+
+  /* preload + validasi gambar; gagal load â†’ dibuang */
+  function validatePhotos(list, cb) {
     if (!list || !list.length) { cb([]); return; }
     let left = list.length;
     const ok = [];
@@ -864,7 +881,7 @@ initMerchTilt();
       im.decoding = 'async';
       let settled = false;
       const done = good => {
-        if (settled) return;   /* guard: timeout vs onload tidak boleh dobel */
+        if (settled) return;
         settled = true;
         if (good) ok.push(Object.assign(p, { img: im }));
         else console.warn('[TOBA Hero] gambar gagal dimuat:', p.id, p.title, p.url);
@@ -877,23 +894,23 @@ initMerchTilt();
     });
   }
 
-  /* fallback aset lokal — dipakai hanya jika API gagal / semua gambar rusak */
+  /* fallback aset lokal (dipakai bila API gagal/kosong) */
   const PLAN = [
-    { file:'grup dina.svg',    cls:'cut-p1',  z:4 },
-    { file:'fuzisal.svg',      cls:'cut-p2',  z:3 },
-    { file:'bola basket.svg',  cls:'cut-p3',  z:2, ball:true },
-    { file:'vina.svg',         cls:'cut-p4',  z:4 },
-    { file:'yuki.svg',         cls:'cut-p5',  z:3 },
-    { file:'mandy.svg',        cls:'cut-p6',  z:4 },
-    { file:'dw nai.svg',       cls:'cut-p7',  z:3 },
-    { file:'zia.svg',          cls:'cut-p8',  z:4 },
-    { file:'grup lastri.svg',  cls:'cut-p9',  z:3 },
-    { file:'yuiii.svg',        cls:'cut-p10', z:4 },
-    { file:'dw.svg',           cls:'cut-p11', z:3 },
-    { file:'anon.svg',         cls:'cut-p12', z:4 }
+    { file: 'grup dina.svg', cls: 'cut-p1', type: 'group' },
+    { file: 'fuzisal.svg', cls: 'cut-p2' },
+    { file: 'bola basket.svg', cls: 'cut-p3', ball: true },
+    { file: 'vina.svg', cls: 'cut-p4' },
+    { file: 'yuki.svg', cls: 'cut-p5' },
+    { file: 'mandy.svg', cls: 'cut-p6' },
+    { file: 'dw nai.svg', cls: 'cut-p7' },
+    { file: 'zia.svg', cls: 'cut-p8' },
+    { file: 'grup lastri.svg', cls: 'cut-p9', type: 'group' },
+    { file: 'yuiii.svg', cls: 'cut-p10' },
+    { file: 'dw.svg', cls: 'cut-p11' },
+    { file: 'anon.svg', cls: 'cut-p12' }
   ];
 
-  /* preload semua aset sekali — tidak ada reload per pergantian */
+  /* preload semua aset sekali */
   const cache = {};
   PLAN.forEach(p => {
     const i = new Image();
@@ -902,497 +919,291 @@ initMerchTilt();
     cache[p.file] = i;
   });
 
-  /* --- SUMBER DATA: Google Sheets API dulu, fallback aset lokal ---
-     buildItems(list) membuat item komposisi dari data API (url Drive);
-     jika API gagal/kosong, pakai PLAN lokal seperti sebelumnya. */
-  let items = [];
-  const isBall = it => !!it.cfg.ball;
-  let ball = null;
-  let compositionReady = null;
+  let ball = null;            /* bola: elemen persisten, di luar carousel */
+  let playerSources = [];     /* daftar foto pemain { img, alt, id } */
+  let groupPhotos = [];
+  let groupTimer = 0;
+  let groupIndex = 0;
+  let playerIndex = 0;
+  let playerTimer = 0;
 
-  /* FIX PROPORSI FOTO GRUP: SVG grup (rasio lebar, banyak orang per frame)
-     dengan width:100% + object-fit:contain tampil lebih pendek secara visual
-     daripada foto individu. Ukur rasio asli file dan tandai .cut-group —
-     CSS mobile memperbesar slotnya agar tinggi visual orang setara. */
-  function markAspect(node){
-    const tag = () => {
-      if (node.naturalWidth && node.naturalHeight && node.naturalWidth / node.naturalHeight > 1.05) {
-        node.classList.add('cut-group');
-      }
-    };
-    if (node.complete) tag(); else node.addEventListener('load', tag, { once: true });
+  const AUTO_MS = 4500;       /* autoplay player carousel */
+  const GROUP_MS = 7000;      /* slideshow foto grup */
+  const isDesktop = () => window.matchMedia('(min-width: 761px)').matches;
+
+  /* ---------- GROUP SLIDESHOW (landscape, timer terpisah 7s) ---------- */
+  function renderGroupSlideshow(list) {
+    if (!groupBox) return;
+    clearTimeout(groupTimer);
+    groupTimer = 0;
+    groupIndex = 0;
+    groupBox.innerHTML = '';
+    if (!list || !list.length) return;
+    const nodes = list.map(photo => {
+      const img = photo.img.cloneNode(false);
+      img.className = 'hero-group-img';
+      img.alt = photo.alt || 'Foto kegiatan TOBA Community';
+      img.setAttribute('aria-hidden', 'true');
+      groupBox.appendChild(img);
+      return img;
+    });
+    nodes.forEach((img, i) => { img.style.opacity = i === 0 ? '1' : '0'; });
+    if (reduce || nodes.length < 2) return;
+    function rotateGroup() {
+      const prev = groupIndex;
+      groupIndex = (groupIndex + 1) % nodes.length;
+      nodes[prev].style.opacity = '0';
+      nodes[groupIndex].style.opacity = '1';
+      groupTimer = setTimeout(rotateGroup, GROUP_MS);
+    }
+    groupTimer = setTimeout(rotateGroup, GROUP_MS);
   }
 
-  function makeNode(cfg){
-    const node = cfg.img ? cfg.img.cloneNode(false) : new Image();
-    if (!cfg.img) node.src = CUT + encodeURIComponent(cfg.file);
-    markAspect(node);
-    node.className = 'hero-cut-img ' + cfg.cls + (cfg.ball ? ' cut-ball' : '');
-    node.alt = cfg.alt || '';
+  /* ---------- CENTER STAGE PLAYER CAROUSEL ---------- */
+  function makePlayerNode(src) {
+    const node = src.img.cloneNode(false);
+    node.className = 'hero-cut-img player-img';
+    node.alt = src.alt || '';
     node.setAttribute('aria-hidden', 'true');
     node.loading = 'eager';
     node.decoding = 'async';
-    node.setAttribute('fetchpriority', 'high');
-    node.style.zIndex = cfg.z;
+    node.draggable = false;
     return node;
   }
 
-  function buildItems(list){
-    box.innerHTML = '';
-    items = [];
-    const players = list.filter(p => p.type === 'PLAYER');
-    const balls  = list.filter(p => p.type === 'BALL');
-    const primary = players.find(p => p.role === 'PRIMARY') || players[0];
-    const second  = players.filter(p => p !== primary);
-    const rows = [];
-    if (primary) rows.push({ src: primary, cls: 'cut-p1', z: 4, size: 'big' });
-    /* pemain kedua 75-85% */
-    if (second[0]) rows.push({ src: second[0], cls: 'cut-p2', z: 3, size: 'sup' });
-    /* pemain ketiga 65-75% */
-    if (second[1]) rows.push({ src: second[1], cls: 'cut-p7', z: 3, size: 'mid' });
-    /* pemain keempat 55-70% */
-    if (second[2]) rows.push({ src: second[2], cls: 'cut-p10', z: 4, size: 'small' });
-    const ballCfg = balls[0] ? { src: balls[0], cls: 'cut-p3', z: 2, ball: true, size: 'ball' } : null;
-    if (ballCfg) rows.push(ballCfg);
-    rows.forEach(r => {
-      const node = makeNode({ img: r.src.img, cls: r.cls, ball: !!r.ball, z: r.z, alt: r.src.alt });
-      node.dataset.size = r.size;
-      box.appendChild(node);
-      const it = { cfg: { cls: r.cls, ball: !!r.ball, size: r.size, alt: r.src.alt, id: r.src.id }, el: node, timer: 0 };
-      items.push(it);
-      if (it.cfg.ball) ball = it;
-    });
-    return items.length;
+  function makeBallNode(src) {
+    const node = src.img.cloneNode(false);
+    node.className = 'hero-cut-img cut-ball';
+    node.alt = '';
+    node.setAttribute('aria-hidden', 'true');
+    node.loading = 'eager';
+    node.decoding = 'async';
+    return node;
   }
 
-  /* ---- FIRST-VISIT FIX (tidak ada hero kosong) ----
-     Komposisi lokal dirender + dianimasikan SEGERA (aset sudah di-preload),
-     sementara API Google Sheets diminta di belakang. Foto Sheets diadopsi
-     PER SLOT tepat pada momen foto lama fade-out — tanpa layar kosong,
-     tanpa flicker, tanpa refresh. Jika API gagal/timeout, lokal tetap jalan. */
-  let apiLanePhotos = null;              /* {big:[],mid:[],sup:[]} foto Sheets tervalidasi */
-  const adoptedLanes = { big:false, mid:false, sup:false };
-  function prepareApiPhotos(list){
+  function findBallSource(list) {
+    const apiBall = list.find(p => p.type === 'BALL');
+    if (apiBall) return { img: apiBall.img, alt: apiBall.alt };
+    const f = PLAN.find(p => p.ball);
+    return f && cache[f.file] && cache[f.file].complete && cache[f.file].naturalWidth > 0
+      ? { img: cache[f.file], alt: '' } : null;
+  }
+
+  function renderPlayerCarousel() {
+    if (!box) return;
+    ball = null;
+
+    /* stage + ball layer PERSISTEN: dibuat sekali per BOX. Listener gesture
+       menempel di box → tidak pernah ter-drop saat re-render pemain. */
+    let stage = box.querySelector('.cut-stage');
+    if (!stage) {
+      box.innerHTML = '';
+      stage = document.createElement('div');
+      stage.className = 'cut-stage';
+      box.appendChild(stage);
+    }
+    let ballLayer = box.querySelector('.cut-ball-layer');
+    if (!ballLayer) {
+      ballLayer = document.createElement('div');
+      ballLayer.className = 'cut-ball-layer';
+      box.appendChild(ballLayer);
+    }
+
+    const bs = findBallSource(currentList);
+    if (bs) { ball = makeBallNode(bs); ballLayer.innerHTML = ''; ballLayer.appendChild(ball); }
+
+    applyCarousel(true);
+  }
+
+  let currentList = [];
+  function applyCarousel(instant) {
+    const stage = box ? box.querySelector('.cut-stage') : null;
+    if (!stage) return;
+    const n = playerSources.length;
+    if (!n) { stage.innerHTML = ''; return; }
+    const idx = ((playerIndex % n) + n) % n;
+    const at = k => playerSources[((idx + k) % n + n) % n];
+
+    stage.innerHTML = '';
+    const tiers = [
+      { src: at(-1), cls: 'tier-side tier-left' },
+      { src: at(0), cls: 'tier-main' },
+      { src: at(1), cls: 'tier-side tier-right' }
+    ];
+    const showAll = n >= 3;
+    tiers.forEach((t, pos) => {
+      if (!showAll && pos !== 1) return;           /* <3 foto â†’ hanya main */
+      const el = makePlayerNode(t.src);
+      el.classList.add(...t.cls.split(' '));
+      if (t.cls === 'tier-main') el.classList.add('cut-on');
+      else if (!instant) requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('cut-on')));
+      else el.classList.add('cut-on');
+      stage.appendChild(el);
+    });
+  }
+
+  function nextPlayer(dir) {
+    const n = playerSources.length;
+    if (!n) return;
+    playerIndex = (((playerIndex + dir) % n) + n) % n;
+    applyCarousel(false);
+  }
+
+  function startPlayerAuto() {
+    stopPlayerAuto();
+    if (reduce || playerSources.length < 2) return;
+    playerTimer = setInterval(() => nextPlayer(1), AUTO_MS);
+  }
+  function stopPlayerAuto() {
+    if (playerTimer) { clearInterval(playerTimer); playerTimer = 0; }
+  }
+  function resetPlayerAuto() { stopPlayerAuto(); startPlayerAuto(); }
+
+  /* --- swipe (mobile) + drag (desktop): pointer events, threshold 40px --- */
+  function bindGestures() {
+    if (!box || box.dataset.heroGestures) return;
+    box.dataset.heroGestures = '1';
+    let startX = 0, startY = 0, active = false, moved = false;
+    box.addEventListener('pointerdown', e => {
+      if (e.target.closest('.hero-cut-img.cut-ball')) return;   /* bola = fisika lama */
+      startX = e.clientX; startY = e.clientY; active = true; moved = false;
+    }, { passive: true });
+    box.addEventListener('pointermove', e => {
+      if (!active) return;
+      const dx = e.clientX - startX, dy = e.clientY - startY;
+      if (!moved && Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy)) moved = true;
+    }, { passive: true });
+    const end = e => {
+      if (!active) return;
+      active = false;
+      const dx = e.clientX - startX, dy = e.clientY - startY;
+      if (moved && Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.4) {
+        nextPlayer(dx < 0 ? 1 : -1);
+        resetPlayerAuto();
+      }
+    };
+    box.addEventListener('pointerup', end, { passive: true });
+    box.addEventListener('pointercancel', () => { active = false; }, { passive: true });
+  }
+
+  /* ---------- DATA SOURCES: lokal dulu, API Sheets menyusul ---------- */
+  function buildLocal() {
+    /* preload SVG lokal bisa belum selesai di first paint — retry sampai
+       aset siap (biasanya <1s, aset sudah dipreload oleh cache[]) */
+    const okImg = i => i && i.complete && i.naturalWidth > 0;
+    const localPlayers = PLAN
+      .filter(p => !p.type && !p.ball)
+      .map(p => ({ img: cache[p.file], alt: '', id: p.file }))
+      .filter(p => okImg(p.img));
+    const localGroups = PLAN
+      .filter(p => p.type === 'group')
+      .map(p => ({ img: cache[p.file], alt: 'Foto kegiatan TOBA Community' }))
+      .filter(p => okImg(p.img));
+    if (!localPlayers.length) {
+      if (buildLocal.tries === undefined) buildLocal.tries = 0;
+      if (++buildLocal.tries < 40) { setTimeout(buildLocal, 250); return; }
+      console.warn('[TOBA Hero] aset lokal belum siap — tampilkan apa adanya');
+    }
+    buildLocal.tries = 0;
+    playerSources = localPlayers;
+    currentList = localPlayers.concat(localGroups);
+    renderGroupSlideshow(localGroups);
+    renderPlayerCarousel();
+    bindGestures();
+    startPlayerAuto();
+  }
+
+  function prepareApiPhotos(list) {
+    groupPhotos = list.filter(p => p.type === 'GROUP');
+    if (groupPhotos.length) renderGroupSlideshow(groupPhotos);
     const players = list.filter(p => p.type === 'PLAYER');
-    if (!players.length) return;
-    const cycle = ['big', 'mid', 'sup'];   /* utama → tengah, sisanya kiri/kanan */
-    apiLanePhotos = { big: [], mid: [], sup: [] };
-    players.forEach((p, i) => { apiLanePhotos[cycle[i % 3]].push(p); });
-    if (reduce) {                          /* reduced-motion: adopsi langsung, tanpa timer */
-      ['big','mid','sup'].forEach(l => adoptLane(l, true));
+    if (players.length) {
+      /* PRIMARY dari Sheet jadi titik awal carousel */
+      const pi = players.findIndex(p => p.role === 'PRIMARY');
+      if (pi > 0) players.unshift(players.splice(pi, 1)[0]);
+      playerSources = players.map(p => ({ img: p.img, alt: p.alt, id: p.id }));
+      currentList = list;
+      playerIndex = 0;
+      renderPlayerCarousel();
+      resetPlayerAuto();
+      console.info('[TOBA Hero] carousel memuat', players.length, 'pemain dari Google Sheets');
+    } else if (list.some(p => p.type === 'BALL')) {
+      /* hanya bola baru dari API â†’ refresh bola saja */
+      renderPlayerCarousel();
     }
   }
-  function adoptLane(lane, instant){
-    if (!apiLanePhotos || adoptedLanes[lane] || !apiLanePhotos[lane] || !apiLanePhotos[lane].length) return;
-    adoptedLanes[lane] = true;
-    /* buang foto lokal slot ini, pasang foto Sheets (sudah tervalidasi/preload) */
-    items.filter(it => it.cfg.lane === lane).forEach(it => it.el.remove());
-    items = items.filter(it => it.cfg.lane !== lane);
-    apiLanePhotos[lane].forEach(src => {
-      const size = lane;                    /* big | mid | sup */
-      const node = makeNode({ img: src.img, cls: '', ball: false, z: lane === 'big' ? 4 : 3, alt: src.alt });
-      node.dataset.size = size;
-      node.style.display = 'none';   /* FIX: tak auto-flow sebelum dapat slot */
-      box.appendChild(node);
-      const it = { cfg: { cls: '', ball: false, size: size, lane: lane, alt: src.alt, id: src.id }, el: node, timer: 0 };
-      items.push(it);
-      if (instant) { assignSlot(it); setFade(it, 0); it.el.classList.add('cut-on'); }
-    });
-    console.info('[TOBA Hero] slot', lane, 'adopsi', apiLanePhotos[lane].length, 'foto Google Sheets');
-  }
-  function startComposition(){
-    compositionDone = false;
+
+  function startComposition() {
+    stopPlayerAuto();
+    clearTimeout(groupTimer); groupTimer = 0;
     buildLocal();
-    items.forEach(it => { it.cfg.lane = laneFor(it); });
-    if (compositionReady) compositionReady();
-    /* API diminta sekarang (cache sessionStorage → instan; baru → JSONP).
-       Kegagalan network/timeout/kosong TIDAK menghentikan apa pun. */
     heroFetchApi(list => {
       if (list && list.length) {
         validatePhotos(list, ok => {
-          if (ok.length) {
-            console.info('[TOBA Hero] memuat', ok.length, 'foto dari Google Sheets');
-            prepareApiPhotos(ok);
-          } else {
-            console.warn('[TOBA Hero] gambar API gagal dimuat — tetap pakai aset lokal');
-          }
+          if (ok.length) prepareApiPhotos(ok);
+          else console.warn('[TOBA Hero] gambar API gagal dimuat â€” tetap pakai aset lokal');
         });
       } else {
-        console.warn('[TOBA Hero] API tidak merespons — tetap pakai aset lokal');
+        console.warn('[TOBA Hero] API tidak merespons â€” tetap pakai aset lokal');
       }
     });
   }
 
-  function buildLocal(){
-    /* ukuran bervariasi seperti komposisi API: 1 utama + mid + sup + small,
-       bola persisten — 4 kanal independen, beberapa foto terlihat bersamaan */
-    const SIZE_OF = { 'cut-p1':'big', 'cut-p2':'mid', 'cut-p4':'sup', 'cut-p5':'small',
-      'cut-p6':'big', 'cut-p7':'mid', 'cut-p8':'sup', 'cut-p9':'small',
-      'cut-p10':'big', 'cut-p11':'mid', 'cut-p12':'sup' };
-    PLAN.forEach(p => {
-      const src = cache[p.file];
-      if (!src) return;
-      const size = p.ball ? 'ball' : SIZE_OF[p.cls] || 'mid';
-      const node = src.cloneNode(false);
-      markAspect(node);
-      node.className = 'hero-cut-img ' + p.cls + (p.ball ? ' cut-ball' : '');
-      node.alt = '';
-      node.style.zIndex = p.z;
-      node.dataset.size = size;
-      /* FIX LAYOUT MOBILE: foto yang belum mendapat slot JANGAN ikut auto-flow
-         grid — auto-placed items menciptakan kolom implisit sehingga 3 kolom
-         slot menyusut jadi ~46px (foto tampak 0px / kecil). display:none
-         sampai assignSlot menambahkan kelas slot. */
-      if (!p.ball) node.style.display = 'none';
-      box.appendChild(node);
-      const it = { cfg: { cls: p.cls, ball: !!p.ball, size: size }, el: node, timer: 0 };
-      items.push(it);
-      if (it.cfg.ball) ball = it;
-    });
+  /* ---- kompatibilitas pergantian bahasa ('toba:langchange') ----
+     re-render bahasa membangun ulang DOM home â†’ elemen lama hilang.
+     restartHeroCut(): stop semua timer, ambil elemen BARU, render ulang.
+     Timer listener dipasang SEKALI di luar (tidak bertambah). */
+  function restartHeroCut() {
+    stopPlayerAuto();
+    clearTimeout(groupTimer); groupTimer = 0;
+    box = document.getElementById('heroCutShow');
+    groupBox = document.getElementById('heroGroupShow');
+    if (!box) return;
+    ball = null;
+    playerSources = [];
+    groupPhotos = [];
+    groupIndex = 0;
+    playerIndex = 0;
+    if (groupBox) groupBox.innerHTML = '';
+    if (isDesktop() && !box.classList.contains('hero-cut-desktop')) box.classList.add('hero-cut-desktop');
+    startComposition();
   }
 
-  /* desktop: container dipindah ke slot kanan hero (mobile: dalam flow) */
-  if (window.matchMedia('(min-width: 761px)').matches && !box.classList.contains('hero-cut-desktop')) box.classList.add('hero-cut-desktop');
+  document.addEventListener('toba:langchange', () => {
+    if (document.body.dataset.page === 'home') restartHeroCut();
+  });
 
-  /* node komposisi dibuat oleh startComposition() → buildItems()/buildLocal() */
-
-  const setFade = (it, ms) => { it.el.style.setProperty('--fade', ms + 'ms'); };
-  /* timing per kanal — sengaja BEDA agar tidak pernah berganti bersamaan.
-     FADE-OUT TIDAK TERLIHAT (R: ghosting): foto lama harus SELESAI hilang
-     sebelum foto baru slot yang sama mulai fade-in. Diubah: fade-out cepat
-     700ms, dan loop menunggu fade-out selesai + jeda 300ms sebelum foto
-     berikutnya fade-in — tidak ada dua foto hidup di slot yang sama. */
-  const TIMING = {
-    big:   { delay: 400,  fi: 2400, hold: 7000, fo: 700, rest: 300 },
-    mid:   { delay: 1400, fi: 2800, hold: 6000, fo: 700, rest: 300 },
-    sup:   { delay: 2400, fi: 2600, hold: 5600, fo: 700, rest: 300 },
-    small: { delay: 3400, fi: 3000, hold: 5200, fo: 700, rest: 300 }
-  };
-  const show = it => { const t = TIMING[it.cfg.lane]; setFade(it, t ? t.fi : 2400); it.el.classList.add('cut-on'); };
-  const hide = it => { const t = TIMING[it.cfg.lane]; setFade(it, t ? t.fo : 2600); it.el.classList.remove('cut-on'); };
-
-  const ready = it => it.el.complete && it.el.naturalWidth > 0;
-
-  /* --- KANAL = SLOT (setiap foto kanal sendiri) ---
-     4 pemain tampil BERSAMAAN di 4 slot berbeda, masing-masing punya
-     timeline independen (entry delay / fade-in / hold / fade-out / rest
-     tidak sama) sehingga pergantian tidak pernah serentak — komposisi
-     selalu hidup, bukan slideshow satu-foto. */
-  function laneFor(it){
-    /* REVISI: foto ke-4 (small) ikut antrean band samping (sup) — jumlah band
-       tetap 3 (kiri/tengah/kanan), tiap band tepat satu foto aktif, jadi
-       4 foto aktif pun tidak pernah saling menutupi. */
-    if (isBall(it)) return null;
-    return it.cfg.size === 'small' ? 'sup' : it.cfg.size; /* big | mid | sup */
-  }
-
-
-
-  /* --- DUA KANAL SLOT TERPISAH ---
-     BIG (utama) dan SUP (pendukung) memakai set slot yang TIDAK saling
-     tumpang tindih, jadi kedua pemain selalu punya ruang masing-masing.
-     Round-robin per kemunculan → kombinasi foto bervariasi tiap siklus. */
-  /* 3 SLOT TERPISAH: KIRI (slot-a) — TENGAH (slot-b, utama) — KANAN (slot-c).
-     Slot dipisahkan CSS Grid (lihat style.css): foto tidak mungkin keluar
-     dari slotnya / masuk slot lain. Foto ke-4 ikut antrean kiri/kanan. */
-  const SLOTS_BIG = ['slot-b'];
-  const SLOTS_MID = ['slot-a', 'slot-c'];
-  const SLOTS_SUP = ['slot-c', 'slot-a'];
-  const SLOTS_SMALL = ['slot-a', 'slot-c'];
-  const rotation = { big: 0, mid: 0, sup: 0, small: 0 };
-  function assignSlot(it){
-    if (isBall(it)) return;
-    const lane = it.cfg.lane;
-    if (!lane) return;
-    const slots = lane === 'big' ? SLOTS_BIG : lane === 'mid' ? SLOTS_MID : SLOTS_SUP;
-    const prev = it.el.dataset.slot;
-    let next = rotation[lane] % slots.length;
-    if (slots[next] === prev) next = (next + 1) % slots.length;
-    rotation[lane] = next + 1;
-    it.el.dataset.slot = slots[next];
-    it.el.classList.remove(...SLOTS_BIG, ...SLOTS_MID, ...SLOTS_SUP, ...SLOTS_SMALL);
-    it.el.style.gridColumn = '';                /* slot CSS Grid yang memposisikan */
-    /* FIX LAYOUT MOBILE: foto masuk slot → boleh ikut grid lagi */
-    it.el.style.display = '';
-    it.el.classList.add(slots[next]);
-    /* tinggi inline lama milik slot LAMA — buang supaya normalisasi
-       menghitung dari nol (mencegah tinggi stale > tinggi slot baru) */
-    it.el.style.removeProperty('height');
-    it.el.style.removeProperty('max-height');
-    /* ladder kolisi bisa saja menyembunyikan foto di putaran sebelumnya —
-       slot baru = keputusan baru, buang penyembunyiannya */
-    it.el.style.removeProperty('display');
-    it.el.style.removeProperty('visibility');
-    normalizeRow();
-  }
-
-  /* --- NORMALISASI LEBAR KOLOM & TINGGI VISUAL (mobile) ---
-     Masalah: lebar render foto (height-driven) bisa melebihi lebar kolom
-     grid → foto saling bertumpuk / ter-clip tepi viewport. Solusi: kolom
-     grid dihitung ulang dari aspect-ratio KONTEN foto yang sedang menempati
-     slot (naturalWidth/Height ≈ bbox, pad transparan lokal ≤3%), lalu semua
-     tinggi diskalakan sama supaya Σlebar = lebar stage — nol overlap,
-     nol clipping, tinggi visual kiri/tengah/kanan tetap setara.
-     Hanya mobile (<761px); desktop pakai grid statisnya sendiri. */
-  const ASPECT_FALLBACK = 0.55;
-  function imgAspect(el){
-    return (el.complete && el.naturalWidth && el.naturalHeight)
-      ? el.naturalWidth / el.naturalHeight : ASPECT_FALLBACK;
-  }
-  function normalizeRow(){
-    if (window.matchMedia('(min-width: 761px)').matches) { box.style.gridTemplateColumns = ''; return; }
-    /* SEMUA foto per slot (slot bisa menampung foto lama yang sedang fade-out
-       + foto baru yang sudah fade-in — keduanya harus dinormalisasi) */
-    const occ = { a: [], b: [], c: [] };
-    items.forEach(it => {
-      if (isBall(it) || !it.el.dataset.slot) return;
-      const s = it.el.dataset.slot.charAt(5);
-      if (!occ[s].includes(it.el)) occ[s].push(it.el);
-    });
-    if (!occ.a.length && !occ.b.length && !occ.c.length) { box.style.gridTemplateColumns = ''; return; }
-    /* foto Drive belum terdecode → tunggu decode() supaya aspect akurat;
-       sementara itu tinggi inline dihapus (fallback ke CSS slot) */
-    const pend = ['a','b','c'].flatMap(s => occ[s]).filter(el => !(el.complete && el.naturalWidth));
-    if (pend.length) {
-      pend.forEach(el => { el.style.removeProperty('height'); el.style.removeProperty('max-height'); });
-      Promise.all(pend.map(el => el.decode().catch(() => {}))).then(normalizeRow);
-      return;
-    }
-    const H = box.clientHeight || 360;
-    const gap = parseFloat(getComputedStyle(box).columnGap) || 0;
-    const availW = Math.max(box.clientWidth - 2 * gap, 200);
-    const maxH = { a: .94, b: 1, c: .94 };
-    /* aspect foto TERAKHIR (paling atas) per slot yang menentukan kolom */
-    const top = { a: occ.a[occ.a.length - 1], b: occ.b[occ.b.length - 1], c: occ.c[occ.c.length - 1] };
-    /* total lebar aktual = Σ lebar SEMUA foto yang terlihat (cut-on) per slot —
-       foto lama fade-out + foto baru fade-in tampil BERSAMAAN, jadi keduanya
-       dihitung; tanpa ini kolom terlalu sempit → foto melebihi kolom */
-    let sumW = 0;
-    ['a','b','c'].forEach(s => {
-      occ[s].forEach(el => { if (el.classList.contains('cut-on')) sumW += H * maxH[s] * imgAspect(el); });
-    });
-    /* clip hard-cap: kiri/kanan individual sangat sempit (aspect ~0.33-0.55).
-       Pada layar ≤375px, pemain SEMPELUT tidak boleh melebihi tepi viewport */
-    ['a','c'].forEach(s => {
-      const el = top[s];
-      if (el && el.classList.contains('cut-on')) {
-        /* FOTO LEBIH DOMINAN: hard-cap samping dinaikkan dari .34/.36 → .40/.42
-           supaya pemain kiri/kanan tidak terlalu diperkecil oleh normalisasi */
-        const maxW = availW * (s === 'a' ? .40 : .42);
-        const a = imgAspect(el);
-        if (H * maxH[s] * a > maxW) {
-          sumW = Math.max(sumW, availW);
-        }
-      }
-    });
-    if (!sumW) return;
-    const baseScale = Math.min(1, availW / sumW);
-
-    /* --- PRIORITAS 1-3: COLLISION LADDER -------------------------------
-       Lebar konten nyata (height-driven) foto TENGAH + samping dibanding
-       dengan lebar stage. Ladder: 3 foto → perkecil samping bertahap →
-       sembunyikan samping pelaku tabrakan → tengah saja. TENGAH tidak
-       pernah disembunyikan dan tidak pernah diperkecil demi samping. */
-    function sideVisible(s){
-      const el = top[s];
-      return el && el.classList.contains('cut-on') && el.style.display !== 'none';
-    }
-    const centerEl = top.b, centerW = H * imgAspect(centerEl) * baseScale;
-    /* TENGAH LEBIH DOMINAN: fr tengah dikunci minimal 1.3fr supaya kolom
-       tengah selalu lebih lebar dari samping; sisi tetap terlihat jelas.
-       Sebelumnya 1fr / 1.15fr — kolom tengah tidak cukup didominasi. */
-    const sideW = {};
-    ['a','c'].forEach(s => {
-      sideW[s] = sideVisible(s) ? H * .94 * imgAspect(top[s]) : 0;
-    });
-    function hideSide(el, list){
-      if (!el) return;
-      el.style.setProperty('display', 'none', 'important');
-      (list || []).forEach(e => { if (e !== el) e.style.setProperty('visibility', 'hidden', 'important'); });
-    }
-    function showSide(el, list){
-      (list || []).forEach(e => { e.style.removeProperty('display'); e.style.removeProperty('visibility'); });
-    }
-    const SCALES = [1, .85, .75, .7];
-    function attempt(iL, iR){
-      const wl = sideW.a * SCALES[iL], wr = sideW.c * SCALES[iR];
-      if (centerW + wl + wr <= availW) {                          /* semua muat */
-        showSide(top.a, occ.a); showSide(top.c, occ.c);
-        return { sl: SCALES[iL], sr: SCALES[iR], scale: 1 };
-      }
-      if (centerW + Math.min(wl, wr) <= availW && iL < 3 && iR < 3) {
-        /* satu sisi masih muat penuh — perkecil hanya sisi lain */
-        if (wl <= wr) return attempt(Math.min(iL + 1, 3), iR);
-        return attempt(iL, Math.min(iR + 1, 3));
-      }
-      if (iL < 3 || iR < 3) return attempt(Math.min(iL + 1, 3), Math.min(iR + 1, 3));
-      /* ladder habis → sembunyikan sisi yang paling tabrakan */
-      if (wl >= wr && sideVisible('a')) { hideSide(top.a, occ.a); showSide(top.c, occ.c); return { sl: 1, sr: 1, scale: 1, hid: 'a' }; }
-      if (sideVisible('c'))              { hideSide(top.c, occ.c); showSide(top.a, occ.a); return { sl: 1, sr: 1, scale: 1, hid: 'c' }; }
-      hideSide(top.a, occ.a);                                          /* tengah saja */
-      return { sl: 1, sr: 1, scale: 1, hid: 'both' };
-    }
-    /* FOTO LEBIH DOMINAN: ladder hanya perkecil sampai .7 (bukan .6) —
-       setelah itu foto samping disembunyikan, bukan menyusut sampai terlalu kecil */
-    const res = attempt(0, 0);
-
-    const effSide = { a: sideVisible('a') ? res.sl : 0, c: sideVisible('c') ? res.sr : 0 };
-    const totW = centerW + sideW.a * effSide.a + sideW.c * effSide.c;
-    const scale = Math.min(1, availW / totW) ;                        /* jaminan akhir */
-    let fr = [];
-    ['a','b','c'].forEach(s => {
-      const el = top[s];
-      const hidden = (s === 'b') ? false : !sideVisible(s);
-      if (!el || hidden) { fr.push(s === 'b' ? '1.3fr' : '0.001fr'); if (hidden) occ[s].forEach(hideTop); return; }
-      const mult = (s === 'b') ? 1 : effSide[s];
-      const h = Math.round(H * maxH[s] * scale * (mult === 0 ? 1 : mult));
-      /* SEMUA foto di slot ini di-cap tinggi slot — termasuk foto lama
-         yang sedang fade-out, agar tidak ada yang menjulur melebihi stage */
-      occ[s].forEach(e => {
-        e.style.setProperty('height', h + 'px', 'important');
-        e.style.setProperty('max-height', h + 'px', 'important');
-      });
-      fr.push(Math.max(h * imgAspect(el), s === 'b' ? 1.3 : 0.001).toFixed(1));
-    });
-    function hideTop(e){ e.style.setProperty('visibility','hidden','important'); }
-    box.style.gridTemplateColumns = fr[0] + 'fr ' + fr[1] + 'fr ' + fr[2] + 'fr';
-
-    /* VERIFIKASI AKHIR: ukur posisi nyata pasca-grid. Jika foto samping
-       masih meluber melebihi tepi stage (race/rounding), sembunyikan —
-       TENGAH tidak pernah disembunyikan. */
-    requestAnimationFrame(() => {
-      const stageR = box.getBoundingClientRect();
-      ['a','c'].forEach(s => {
-        const el = top[s];
-        if (!el || !sideVisible(s)) return;
-        const r = el.getBoundingClientRect();
-        if (r.right > stageR.right + 1 || r.left < stageR.left - 1) hideSide(el, occ[s]);
-      });
-    });
-  }
-  /* pengaman keras: apa pun yang terjadi (race decode/adoption), TIDAK ADA
-     foto pemain boleh melebihi tinggi stage — dipanggil periodik + rAF */
-  function clampRow(){
-    if (window.matchMedia('(min-width: 761px)').matches) return;
-    const H = box.clientHeight || 360;
-    items.forEach(it => {
-      if (isBall(it)) return;
-      const el = it.el;
-      if (!el.dataset.slot) return;
-      const s = el.dataset.slot.charAt(5);
-      const cap = Math.round(H * (s === 'b' ? 1 : .94));
-      if (el.getBoundingClientRect().height > cap + 1) {
-        el.style.setProperty('height', cap + 'px', 'important');
-        el.style.setProperty('max-height', cap + 'px', 'important');
-      }
-    });
-  }
-  setInterval(clampRow, 1200);
-  window.addEventListener('resize', normalizeRow);
-  /* API Drive: foto yang selesai decode belakangan / adoption slot baru
-     tetap memicu normalisasi (aspect raster berbeda dari aset lokal) */
-  setInterval(normalizeRow, 2500);
-
-
-
-  /* --- LOOP PER KANAL (bukan per foto) ---
-     Tiap kanal menjalankan queue foto-nya sendiri dengan timing independen.
-     Kedua kanal tidak sinkron karena hold/rest sengaja dibedakan. */
-  function laneQueue(lane){
-    return items.filter(it => it.cfg.lane === lane);
-  }
-
-  /* timing per kanal — sengaja BEDA agar tidak pernah berganti bersamaan:
-     BIG: fade-in lambat 2.4s, hold 5.5s, fade-out 2.6s, rest 2.2s
-     SUP: fade-in 2.8s, hold 4.2s, fade-out 3.0s, rest 3.6s
-     Total siklus beda → pergantian selalu bergeser (off-beat, natural). */
-  function loopLaneFix(lane, idx){
-    const t = TIMING[lane];
-    const q = laneQueue(lane);
-    if (!q.length) { setTimeout(() => loopLaneFix(lane, 0), 600); return; }
-    const it = q[idx % q.length];
-    if (!ready(it)) {
-      /* FIX FIRST-VISIT: gambar MATI (load selesai tapi naturalWidth=0)
-         tidak boleh menggantung kanal selamanya — buang dan lanjut ke foto
-         berikutnya, sehingga slot lain tetap terisi. Gambar yang masih
-         downloading diberi tenggat 4 detik lalu dilewati juga. */
-      if (it.el.complete && it.el.naturalWidth === 0) {
-        console.warn('[TOBA Hero] foto gagal dimuat — kanal', lane, 'lanjut foto berikutnya');
-        it.timer = setTimeout(() => loopLaneFix(lane, idx + 1), 300);
-      } else {
-        it.wait = (it.wait || 0) + 250;
-        if (it.wait > 4000) {
-          it.wait = 0;
-          it.timer = setTimeout(() => loopLaneFix(lane, idx + 1), 100);
-        } else {
-          it.timer = setTimeout(() => loopLaneFix(lane, idx), 250);
-        }
-      }
-      return;
-    }
-    it.wait = 0;
-    assignSlot(it);
-    show(it);
-    /* normalisasi ulang setelah foto benar-benar terdecode (foto Drive
-       punya aspect berbeda; normalisasi saat assignSlot masih pakai aspect
-       foto lama karena decode() belum selesai) */
-    (it.el.decode ? it.el.decode().catch(() => {}) : Promise.resolve()).then(normalizeRow);
-    setTimeout(normalizeRow, 300);
-    it.timer = setTimeout(() => {
-      /* FADE-OUT CEPAT (700ms) lalu foto baru MASUK SETELAH lama benar-benar
-         hilang (fo + 300ms) → slot tidak pernah berisi dua foto hidup = no
-         ghosting. adoptLane dijalankan saat slot kosong. */
-      hide(it);
-      adoptLane(lane, false);
-      setTimeout(normalizeRow, 300);
-      it.timer = setTimeout(() => loopLaneFix(lane, idx + 1), t.fo + t.rest);
-    }, t.fi + t.hold);
-  }
-
-  function activeLanes(){
-    const lanes = [];
-    items.forEach(it => { if (it.cfg.lane && !lanes.includes(it.cfg.lane)) lanes.push(it.cfg.lane); });
-    return lanes;
-  }
-  function startAll(){
-    /* bola: satu elemen persisten — fade-in sekali, tetap di lantai */
-    if (ball && ready(ball)) { setFade(ball, 2600); ball.el.classList.add('cut-on'); }
-    else if (ball) ball.el.addEventListener('load', () => { setFade(ball, 2600); ball.el.classList.add('cut-on'); }, { once: true });
-    activeLanes().forEach(lane => setTimeout(() => loopLaneFix(lane, 0), TIMING[lane] ? TIMING[lane].delay : 400));
-  }
-  function stopAll(){ items.forEach(it => clearTimeout(it.timer)); }
+  if (isDesktop() && !box.classList.contains('hero-cut-desktop')) box.classList.add('hero-cut-desktop');
 
   if (reduce) {
-    startComposition();
-    compositionReady = () => {
-      const players = items.filter(it => !isBall(it));
-      players.slice(0, 4).forEach(it => { assignSlot(it); setFade(it, 0); it.el.classList.add('cut-on'); });
-      if (ball && ready(ball)) { assignSlot(ball); setFade(ball, 0); ball.el.classList.add('cut-on'); }
-    };
+    /* reduced-motion: satu frame statis, tanpa autoplay, tanpa gesture timer */
+    buildLocal();
+    stopPlayerAuto();
     return;
   }
 
-  compositionReady = () => {
-    compositionDone = true;
-    startAll();
-  };
   startComposition();
 
-  /* hemat resource: tab tersembunyi → timer dibersihkan; kembali → lanjut
-     tanpa blink (yang terlihat fade-out, lainnya dijadwalkan ulang) */
+  /* hemat resource: tab tersembunyi â†’ timer berhenti; kembali â†’ lanjut */
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden || !compositionDone) { stopAll(); return; }
-    activeLanes().forEach(lane => {
-      const on = items.find(it => it.cfg.lane === lane && it.el.classList.contains('cut-on'));
-      if (on) {
-        hide(on);
-        on.timer = setTimeout(() => loopLaneFix(lane, (items.indexOf(on) + 1)), TIMING[lane].rest);
-      } else {
-        loopLaneFix(lane, 0);
+    if (document.hidden) { stopPlayerAuto(); clearTimeout(groupTimer); groupTimer = 0; }
+    else {
+      startPlayerAuto(); if (groupPhotos.length > 1 || groupBox?.children.length > 1) {
+        clearTimeout(groupTimer);
+        groupTimer = setTimeout(() => {
+          const imgs = groupBox ? [...groupBox.querySelectorAll('.hero-group-img')] : [];
+          if (imgs.length > 1) {
+            const prev = groupIndex;
+            groupIndex = (groupIndex + 1) % imgs.length;
+            imgs[prev].style.opacity = '0';
+            imgs[groupIndex].style.opacity = '1';
+            groupTimer = setTimeout(arguments.callee, GROUP_MS);
+          }
+        }, GROUP_MS);
       }
-    });
+    }
   });
-  window.addEventListener('pagehide', stopAll);
+  window.addEventListener('pagehide', () => { stopPlayerAuto(); clearTimeout(groupTimer); });
 })();
 /* ---------- home hero entrance: staged reveal after the welcome intro ----------
    The river + copy fade in as one choreographed moment; if the intro is skipped
@@ -1418,8 +1229,22 @@ initMerchTilt();
 (function marqueeApparel(){
   const inner = document.querySelector('.cine-marquee-inner');
   if (!inner) return;
-  const phrase = '<span class="cm-toba">TOBA APPAREL.</span> <span class="cm-apparel">GET YOURS NOW.</span> <span class="cm-other">WEAR YOUR COMMUNITY ANYTIME, ANYWHERE.</span> <svg class="cine-m-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.6L21 11l-6.4 2.4L12 20l-2.6-6.6L3 11l6.4-2.4z"/></svg>';
-  inner.innerHTML = '<div class="cine-m-track" data-dir="ltr" data-speed="22"><div class="cine-m-inner">'
+  
+  const shirtIcon = '<svg class="cm-product-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4 4 6 2 11l4 2 2-3v10h8V10l2 3 4-2-2-5-4-2c-1 2-7 2-8 0Z"/></svg>';
+
+  const ballIcon = '<svg class="cm-product-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3c-2 5-2 13 0 18M3 12h18M5.6 5.6c4 2 8.8 2 12.8 0M5.6 18.4c4-2 8.8-2 12.8 0"/></svg>';
+
+  const sockIcon = '<svg class="cm-product-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3h7v10l5 4c1 1 0 4-2 4H7c-3 0-4-3-2-5l3-3Z"/><path d="M8 7h7"/></svg>';
+
+  const phrase =
+    '<span class="cm-toba">TOBA APPAREL</span>' +
+    shirtIcon +
+    '<span class="cm-apparel">GET YOURS NOW</span>' +
+    ballIcon +
+    '<span class="cm-other">WEAR YOUR COMMUNITY ANYTIME, ANYWHERE</span>' +
+    sockIcon;
+
+  inner.innerHTML = '<div class="cine-m-track" data-dir="rtl" data-speed="38"><div class="cine-m-inner">'
    + `<span class="cine-m-item">${phrase}</span>`
    + `<span class="cine-m-item" aria-hidden="true">${phrase}</span>`
    + `<span class="cine-m-item" aria-hidden="true">${phrase}</span>`
@@ -1458,13 +1283,11 @@ initMerchTilt();
        bukan hanya scrollWidth — scrollWidth bisa meleset bila font belum
        siap / gambar belum render, dan itulah penyebab celah kosong di
        baris kedua & pada titik pergantian kelompok marquee. */
-    let w = seq.getBoundingClientRect().width;
-    const cs = getComputedStyle(seq);
-    const sib = seq.nextElementSibling;
-    if (sib) { /* gap antar-seq (flex gap) atau padding-right seq */
-      const gap = parseFloat(getComputedStyle(tr.el).columnGap) || 0;
-      w += gap + (parseFloat(cs.paddingRight) || 0);
-    }
+    
+    // Lebar satu kelompok foto termasuk padding-right.
+    // Jangan tambahkan padding lagi agar titik loop tetap presisi.
+    const w = seq.getBoundingClientRect().width;
+
     if (w > 40) tr.half = w;                    /* jangan menurunkan half ke nilai sampah */
   }
   function makeTracks(){
@@ -1505,7 +1328,12 @@ initMerchTilt();
       /* wrap around half-width → seamless, tanpa lompatan */
       tr.pos = ((tr.pos % tr.half) + tr.half) % tr.half;
       /* dir=1 (ltr) → bergerak ke kanan (+x); dir=-1 (rtl) → bergerak ke kiri (-x) */
-      tr.el.style.transform = 'translate3d(' + (tr.pos * tr.dir).toFixed(2) + 'px,0,0)';
+      const offset = tr.dir === 1
+        ? tr.pos - tr.half
+        : -tr.pos;
+
+      tr.el.style.transform =
+        'translate3d(' + offset.toFixed(2) + 'px,0,0)';
     });
     scrollBoost *= .9;
     if (any) rafId = requestAnimationFrame(tick);
@@ -1840,8 +1668,14 @@ initMerchTilt();
         if (Math.abs(dx) > 6) moved = true;
         const tr = tracks.find(t => t.el === track);
         if (tr && tr.half) {
-          tr.pos = ((startPos - dx * tr.dir) % tr.half + tr.half) % tr.half;
-          tr.el.style.transform = 'translate3d(' + (tr.pos * tr.dir).toFixed(2) + 'px,0,0)';
+          tr.pos = ((startPos + dx * tr.dir) % tr.half + tr.half) % tr.half;
+
+          const offset = tr.dir === 1
+            ? tr.pos - tr.half
+            : -tr.pos;
+
+          tr.el.style.transform =
+            'translate3d(' + offset.toFixed(2) + 'px,0,0)';
         }
         if (e.cancelable && e.type === 'touchmove' && moved) e.preventDefault();
       };
@@ -1958,7 +1792,9 @@ initMerchTilt();
   const BALL_SEL = '.hero-cut-img.cut-ball';
   let ballEl = null;
 
-  /* bola dirender asinkron oleh modul komposisi → poll sampai ada */
+  /* bola dirender asinkron oleh modul komposisi → poll sampai ada.
+     Node bola bisa DIGANTI saat API Sheets mengadopsi foto — re-bind bila
+     node aktif tidak lagi terhubung ke dokumen. */
   let tries = 0;
   const find = setInterval(() => {
     ballEl = box.querySelector(BALL_SEL);
@@ -1996,6 +1832,7 @@ initMerchTilt();
     if ('ResizeObserver' in window) new ResizeObserver(size).observe(box);
 
     const apply = () => {
+      if (!ballEl.isConnected) { running = false; cancelAnimationFrame(rafId); return; }
       /* CSS menempatkan bola via right/bottom; transform harus RELATIF
          dari posisi layout itu — offsetLeft/Top mengabaikan transform */
       const baseX = ballEl.offsetLeft + ballEl.offsetWidth / 2;
@@ -2127,3 +1964,612 @@ initMerchTilt();
     ensureRun();
   }
 })();
+
+
+/* =====================================================================
+   TOBA AI ASSISTANT (TOBI) — GLOBAL FLOATING CHATBOT
+   Satu instance global untuk semua halaman (di-inject via JS, bukan HTML).
+   - Launcher: maskot buaya setengah badan mengintip dari tepi kanan
+     (aset existing: assets/crocodile-head-trans.png), peek-a-boo anim,
+     drag VERTIKAL sepanjang tepi kanan, klik = buka chat.
+   - Panel: header + area percakapan + suggested questions + input.
+   - Knowledge base: matcher lokal terhadap i18n.js faq.chat.q1–q7 /
+     a1–a7 (jawaban resmi TOBA, dua bahasa). Tanpa AI provider.
+   - Persistensi posisi via localStorage + validasi bounds + re-clamp
+     saat resize; default kembali ke posisi awal.
+   - Music player (#tobaMusicRoot, z-index 9990) TIDAK disentuh; TOBI
+     memakai z-index 9980 dan posisi tepi kanan atas-tengah.
+   ===================================================================== */
+(function tobiAssistant(){
+  if (window.__tobiLoaded) return;
+  window.__tobiLoaded = true;
+
+  const AVATAR = 'assets/crocodile-head-trans.png';
+  const POS_KEY = 'tobi.pos.y';
+  const OPEN_KEY = 'tobi.greeted';
+  const REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- FAQ knowledge base: matcher kata kunci vs faq.chat.* ----------
+     Semua jawaban HANYA dari string resmi i18n.js — tidak ada info tambahan. */
+  const FAQ_KEYS = [
+    ['faq.chat.a1', ['belum pernah','baru pertama','pemula','langsung join','first time','never joined','show up','newbie','start']],
+    ['faq.chat.a2', ['biaya','harga','rp','rupiah','berapa','cost','price','fee','bayar','tarif','50','30']],
+    ['faq.chat.a3', ['kapan','jadwal','jam','hari','di mana','dimana','lokasi','venue','where','when','schedule','brickhouse','duren sawit','alamat']],
+    ['faq.chat.a4', ['benefit','fasilitas','didapat','included','termasuk','apa saja','what','get','include','air minum','dokumentasi']],
+    ['faq.chat.a5', ['member','keanggotaan','harus jadi','membership','wajib']],
+    ['faq.chat.a6', ['jago','skill','pemula','bagus','good','belum bisa','not good','beginner','mahir']],
+    ['faq.chat.a7', ['daftar','register','cara gabung','gabung','join','ikut','bergabung','sign up','cara ikut']]
+  ];
+  function tobiAnswer(msg){
+    const q = msg.toLowerCase();
+    let best = null, bestScore = 0;
+    FAQ_KEYS.forEach(([aKey, words], idx) => {
+      let score = 0;
+      words.forEach(w => { if (q.includes(w)) score += w.length; });
+      if (score > bestScore) { bestScore = score; best = { aKey, qKey: 'faq.chat.q' + (idx + 1) }; }
+    });
+    if (best) return { answer: t(best.aKey), qKey: best.qKey };
+    return null;
+  }
+
+  /* ---------- improvement 4+: konteks FAQ — ingat topik & jawaban singkat ----------
+     "iya/boleh/mau" setelah jawaban FAQ melanjutkan topik yang sama;
+     "belum" setelah pertanyaan pengalaman → arahkan ke FAQ pertama. */
+  let faqPendingQuestion = null;   /* faq.chat.qN terakhir yang dijawab */
+
+  /* ---------- improvement 4: contextual engine + navigasi halaman ----------
+     - ingat topik terakhir: jawaban pendek ("di mana?", "kalau gitu biayanya?")
+       memakai konteks topik sebelumnya.
+     - deteksi halaman tujuan → arahkan ke halaman terkait. */
+  const PAGE_HINTS = [
+    ['events.html', ['event','jadwal','weekly fun','fun game','agenda','kegiatan']],
+    ['gallery.html', ['gallery','galeri','foto','photo']],
+    ['merchandise.html', ['merch','merchandise','jersey','beli','kaos','tote','hoodie']],
+    ['partnership.html', ['partnership','kerjasama','sponsor','gabung','daftar member']],
+    ['tobaladies.html', ['tobaladies','ladies','tim perempuan']],
+    ['tobadeli.html', ['tobadeli','deli','tim laki']],
+    ['game.html', ['game','mini game','main game']]
+  ];
+  let lastTopic = null;   /* index FAQ 1–7 yang terakhir dijawab */
+  function tobiReply(msg){
+    const q = msg.toLowerCase().trim();
+    /* FAQ knowledge base dulu — pertanyaan FAQ harus dijawab, bukan diarahkan */
+    let hit = tobiAnswer(q);
+    /* navigasi halaman hanya jika bukan pertanyaan FAQ */
+    if (!hit) for (const [page, words] of PAGE_HINTS) {
+      if (words.some(w => q.includes(w))) {
+        const base = document.documentElement.lang === 'id'
+          ? 'Bisa kamu lihat di halaman ' : 'You can find that on the ';
+        const tail = document.documentElement.lang === 'id' ? ' ya!' : ' page!';
+        return { answer: base + page.replace('.html','').toUpperCase() + tail, pageLink: page };
+      }
+    }
+  /* konteks: pertanyaan lanjutan yang pendek/tidak jelas → pakai topik terakhir.
+     Jawaban SANGAT pendek (iya/belum/mau/nggak/boleh) juga diarahkan ke
+     topik FAQ terakhir supaya percakapan tetap nyambung. */
+    if (!hit && lastTopic && q.split(/\s+/).length <= 4) {
+      const shortAck = /^(iya|iyah|yeah|yes|belum|nggak|gak|tidak|mau|boleh|oke|ok|sip)[\s!.]*$/i.test(q);
+      if (!shortAck || faqPendingQuestion === lastTopic) {
+        hit = { answer: t('faq.chat.a' + lastTopic), qKey: 'faq.chat.q' + lastTopic };
+      } else if (lastTopic === 1) {
+        /* konteks pengalaman: "belum" → jawaban FAQ pemula */
+        hit = { answer: t('faq.chat.a1'), qKey: 'faq.chat.q1' };
+      }
+    }
+    if (hit) {
+      const idx = hit.qKey ? parseInt(hit.qKey.replace('faq.chat.q',''), 10) : 0;
+      if (idx >= 1 && idx <= 7) { lastTopic = idx; faqPendingQuestion = idx; }
+      return hit;
+    }
+    return null;
+  }
+
+  /* ---------- markup (sekali, global) ---------- */
+  const root = document.createElement('div');
+  root.id = 'tobiRoot';
+  root.innerHTML = `
+    <button class="tobi-launcher" id="tobiLauncher" type="button" aria-label="TOBI — buka chat" aria-expanded="false">
+      <span class="tobi-peek"><img src="${AVATAR}" alt="" draggable="false"></span>
+    </button>
+    <div class="tobi-balloon" id="tobiBalloon" hidden role="status"></div>
+    <section class="tobi-panel" id="tobiPanel" role="dialog" aria-label="TOBA Assistant" aria-modal="false" hidden>
+      <header class="tobi-head">
+        <span class="tobi-head-avatar"><img src="${AVATAR}" alt=""></span>
+        <div class="tobi-head-copy">
+          <strong id="tobiName">TOBI</strong>
+          <small><span class="tobi-dot" aria-hidden="true"></span><span id="tobiSub">Toba Assistant</span><span class="tobi-sep" aria-hidden="true">·</span><span id="tobiStatus"></span></small>
+        </div>
+        <button class="tobi-head-btn" id="tobiMinimize" type="button" aria-label="Minimize chat">–</button>
+        <button class="tobi-head-btn" id="tobiClose" type="button" aria-label="Tutup chat">✕</button>
+      </header>
+      <div class="tobi-log" id="tobiLog" role="log" aria-live="polite"></div>
+      <div class="tobi-chips" id="tobiChips"></div>
+      <form class="tobi-inputbar" id="tobiForm">
+        <input id="tobiInput" type="text" autocomplete="off" maxlength="300" placeholder="">
+        <button class="tobi-send" id="tobiSend" type="submit" aria-label="Kirim">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true"><path d="M3 11.5L21 3l-7 18-2.5-7.5L3 11.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        </button>
+      </form>
+    </section>`;
+  document.body.appendChild(root);
+
+  const launcher = root.querySelector('#tobiLauncher');
+  const balloon = root.querySelector('#tobiBalloon');
+  const panel = root.querySelector('#tobiPanel');
+  const log = root.querySelector('#tobiLog');
+  const chips = root.querySelector('#tobiChips');
+  const form = root.querySelector('#tobiForm');
+  const input = root.querySelector('#tobiInput');
+  const statusEl = root.querySelector('#tobiStatus');
+  let open = false, peekIdleTimer = 0;
+
+  /* ---------- Prompt 12: variasi template — pilih acak, tidak berulang dua kali ---------- */
+  const lastPick = {};
+  function pickVar(cat, keys){
+    const opts = keys.map(k => { try { return t(k); } catch(_) { return ''; } }).filter(Boolean);
+    if (!opts.length) return '';
+    let s = Math.floor(Math.random() * opts.length);
+    if (opts.length > 1 && lastPick[cat] === s) s = (s + 1) % opts.length;
+    lastPick[cat] = s;
+    return opts[s];
+  }
+
+  /* ---------- posisi launcher: drag bebas (Prompt 11) ----------
+     posY/posX px; null = posisi default CSS (menempel tepi kanan).
+     userPlaced = pengguna pernah memindahkan → mode User-Placed (Prompt 14):
+     posisi disimpan di localStorage dan animasi keluar-masuk tepi dimatikan. */
+  let posY = null, posX = null, userPlaced = false;
+  function defaultY(){ return Math.round(window.innerHeight * 0.38); }
+  function defaultX(){ return window.innerWidth - (launcher.offsetWidth || 86); }
+  function clampX(x){
+    const w = launcher.offsetWidth || 86;
+    const min = 8, max = window.innerWidth - w * 0.7 - 8;  /* 30% boleh menempel keluar kanan */
+    return Math.min(Math.max(x, min), Math.max(min, max));
+  }
+  function clampY(y){
+    const h = launcher.offsetHeight || 96;
+    const min = 78, max = window.innerHeight - h - 92;   /* sisakan ruang utk music player di bawah */
+    return Math.min(Math.max(y, min), Math.max(min, max));
+  }
+  function applyPos(){
+    if (posY === null) { posY = defaultY(); }
+    posY = clampY(posY);
+    launcher.style.top = posY + 'px';
+    if (posX !== null) {
+      launcher.style.left = posX + 'px';
+      launcher.style.right = 'auto';
+      launcher.classList.add('tobi-free');
+    }
+    /* sinkronkan balon sapaan dgn posisi launcher (improvement 6 + Prompt 10) */
+    root.style.setProperty('--tobi-top', posY + 'px');
+    placeBalloon();
+    positionPanel();
+  }
+  /* Prompt 10: balon selalu menempel di sisi launcher, walau launcher dipindah */
+  function placeBalloon(){
+    const r = launcher.getBoundingClientRect();
+    if (r.left + r.width / 2 > window.innerWidth / 2) {
+      balloon.style.left = 'auto';
+      balloon.style.right = Math.max(8, window.innerWidth - r.left + 10) + 'px';
+    } else {
+      balloon.style.right = 'auto';
+      balloon.style.left = Math.max(8, r.right + 10) + 'px';
+    }
+  }
+  function loadPos(){
+    try {
+      const raw = localStorage.getItem(POS_KEY);
+      if (raw === null) { posY = null; posX = null; userPlaced = false; }
+      else {
+        const v = JSON.parse(raw);   /* format baru {x,y}; angka = format lama (vertikal) */
+        if (typeof v === 'number') { posY = clampY(v); posX = null; }
+        else { posY = clampY(parseFloat(v.y)); posX = clampX(parseFloat(v.x)); }
+        userPlaced = isFinite(posY) && posY !== null;
+        if (!isFinite(posY)) posY = null;
+        if (!isFinite(posX)) posX = null;
+      }
+    } catch(_) { posY = null; posX = null; userPlaced = false; }
+    applyPos();
+  }
+  function savePos(){
+    try { localStorage.setItem(POS_KEY, JSON.stringify({ x: Math.round(posX === null ? defaultX() : posX), y: Math.round(posY) })); } catch(_){}
+  }
+
+  function positionPanel(){
+    if (!open) return;
+    /* panel muncul di samping launcher; geser vertikal jika melebihi viewport */
+    const ph = panel.offsetHeight || 460;
+    const pw = panel.offsetWidth || 320;
+    let top = posY - 40;
+    top = Math.min(Math.max(top, 12), Math.max(12, window.innerHeight - ph - 12));
+    const left = Math.min(Math.max(window.innerWidth - pw - 12, 12), window.innerWidth - pw - 12);
+    panel.style.top = top + 'px';
+    panel.style.left = left + 'px';
+  }
+
+  /* drag launcher — pointer events (mouse + touch), 2 axis; klik vs drag dibedakan */
+  let drag = null;
+  launcher.addEventListener('pointerdown', e => {
+    if (e.button !== undefined && e.button !== 0) return;
+    drag = { startX: e.clientX, startY: e.clientY, top0: posY, left0: posX === null ? defaultX() : posX, moved: false };
+    launcher.classList.add('dragging');
+    clearTimeout(peekIdleTimer);
+    try { launcher.setPointerCapture(e.pointerId); } catch(_){}
+  });
+  launcher.addEventListener('pointermove', e => {
+    if (!drag) return;
+    const dy = e.clientY - drag.startY, dx = e.clientX - drag.startX;
+    if (Math.abs(dy) > 6 || Math.abs(dx) > 6) drag.moved = true;
+    if (drag.moved) {
+      posY = clampY(drag.top0 + dy);
+      posX = clampX(drag.left0 + dx);
+      launcher.style.top = posY + 'px';
+      launcher.style.left = posX + 'px';
+      launcher.style.right = 'auto';
+      launcher.classList.add('tobi-free');
+      if (!balloon.hidden) balloon.style.top = Math.round(posY) + 'px';  /* balloon ikut mascot */
+      placeBalloon();
+      positionPanel();
+    }
+  });
+  /* klik mascot = toggle (buka kalau tertutup, tutup kalau terbuka).
+     endDrag membedakan klik vs drag → tidak ada double toggle. */
+  function endDrag(e){
+    if (!drag) return;
+    const wasDrag = drag.moved;
+    drag = null;
+    launcher.classList.remove('dragging');
+    if (wasDrag) { userPlaced = true; savePos(); }   /* Prompt 14: mode User-Placed */
+    else toggleChat();                               /* klik tanpa drag → toggle */
+  }
+  launcher.addEventListener('pointerup', endDrag);
+  launcher.addEventListener('pointercancel', () => { if (drag) { drag = null; launcher.classList.remove('dragging'); } });
+  /* touch: hanya drag — halaman tetap bisa discroll karena touch-action pada CSS */
+  launcher.addEventListener('click', e => { if (drag && drag.moved) e.preventDefault(); });
+
+  window.addEventListener('resize', () => {
+    posY = clampY(posY === null ? defaultY() : posY);
+    if (posX !== null) posX = clampX(posX);
+    launcher.style.top = posY + 'px';
+    if (posX !== null) launcher.style.left = posX + 'px';
+    if (!balloon.hidden) balloon.style.top = Math.round(posY) + 'px';   /* balloon ikut mascot */
+    placeBalloon();
+    positionPanel();
+  });
+
+  /* ---------- balloon sapaan (peek-a-boo) ----------
+     GREETING PENDEK: via tobiGreeting() dari engine percakapan
+     (3-7 kata, variasi acak, tidak berulang berturut-turut).
+     Wrapper sinkron: balloon selalu digambar ulang oleh placeBalloon()
+     relatif terhadap posisi launcher terbaru (posY/posX). */
+  async function greetText(){
+    if (typeof window.tobiGreeting === 'function') {
+      const short = await window.tobiGreeting();
+      if (short) return short;
+    }
+    return isId2() ? 'Halo baller! 🐊' : 'Hey baller! 🐊';
+  }
+  const isId2 = () => document.documentElement.lang !== 'en';
+  function showBalloon(){
+    if (open || document.hidden) return;
+    greetText().then(txt => {
+      if (open || document.hidden) return;
+      balloon.textContent = txt;
+      balloon.hidden = false;
+      clearTimeout(peekIdleTimer);
+      peekIdleTimer = setTimeout(() => { balloon.hidden = true; }, 4200);
+    });
+  }
+  /* Prompt 14: peek-a-boo berkala selagi panel tertutup.
+     - Default mode (belum pernah dipindah): TOBI sembunyi ke balik tepi,
+       lalu mengintip lagi disertai balon sapaan.
+     - User-Placed mode (sudah di-drag): posisi dihormati, hanya balon sapaan.
+     - Reduced motion: tanpa animasi otomatis. */
+  setInterval(() => {
+    if (open || document.hidden || REDUCE) return;
+    if (!userPlaced) {
+      launcher.classList.add('tobi-away');
+      setTimeout(() => { launcher.classList.remove('tobi-away'); showBalloon(); }, 1400);
+    } else {
+      showBalloon();
+    }
+  }, 45000);
+  /* sapaan pertama per sesi browser */
+  setTimeout(() => { if (!sessionStorage.getItem(OPEN_KEY)) { sessionStorage.setItem(OPEN_KEY, '1'); showBalloon(); } }, 1600);
+  launcher.addEventListener('pointerenter', () => { if (!REDUCE && !open) showBalloon(); });
+
+  /* ---------- chat log ---------- */
+  function esc(s){ const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+  function addMsg(text, who){
+    const el = document.createElement('div');
+    el.className = 'tobi-msg tobi-' + who;
+    el.innerHTML = (who === 'bot' ? '<span class="tobi-label"></span>' : '') +
+      /* Prompt 15: label pengirim selalu TOBI */
+      '<div class="tobi-bubble">' + esc(text) + '</div>';
+    if (who === 'bot') el.querySelector('.tobi-label').textContent = t('tobi.name');
+    log.appendChild(el);
+    log.scrollTop = log.scrollHeight;
+    return el;
+  }
+  function typing(on){
+    let el = log.querySelector('.tobi-typing');
+    if (on && !el) {
+      el = document.createElement('div');
+      el.className = 'tobi-msg tobi-bot tobi-typing';
+      el.innerHTML = '<div class="tobi-bubble"><span class="tobi-dots"><i></i><i></i><i></i></span></div>';
+      log.appendChild(el);
+      log.scrollTop = log.scrollHeight;
+    } else if (!on && el) el.remove();
+  }
+
+  function send(text){
+    const msg = text.trim();
+    if (!msg) return;
+    addMsg(msg, 'user');
+    input.value = '';
+    typing(true);
+    setTimeout(() => {
+      typing(false);
+      /* 1) small talk & konteks dulu — jawaban friendly, bukan FAQ mentah */
+      const small = (typeof window.tobiSmallTalk === 'function') ? window.tobiSmallTalk(msg) : null;
+      if (small) { addMsg(small, 'bot'); return; }
+      /* 2) FAQ / navigasi / fallback engine lama */
+      const hit = tobiReply(msg);
+      if (hit) {
+        const el = addMsg(hit.answer, 'bot');
+        if (hit.pageLink) {
+          const link = document.createElement('a');
+          link.href = hit.pageLink;
+          link.className = 'tobi-page-link';
+          link.textContent = t('tobi.link');
+          el.querySelector('.tobi-bubble').appendChild(document.createElement('br'));
+          el.querySelector('.tobi-bubble').appendChild(link);
+        }
+        return;
+      }
+      /* 3) fallback ramah — variasi, tidak template kaku */
+      const q0 = msg.toLowerCase();
+      if (/\bbasket(ball)?\b/.test(q0)) {
+        addMsg(t('tobi.basket.1'), 'bot');
+      } else if (q0.split(/\s+/).length <= 3) {
+        addMsg(pickVar('fallback', ['tobi.fallback.1', 'tobi.fallback.2']), 'bot');
+      } else {
+        addMsg(pickVar('out', ['tobi.out.1', 'tobi.out.2']), 'bot');
+      }
+    }, REDUCE ? 80 : 650);
+  }
+
+  form.addEventListener('submit', e => { e.preventDefault(); send(input.value); });
+
+  /* suggested questions: teks resmi faq.chat.q1–q7 */
+  const CHIP_KEYS = [1,2,3,5,6,7];
+  function renderChips(){
+    chips.innerHTML = CHIP_KEYS.map(n => `<button class="tobi-chip" type="button" data-q="${n}">${esc(t('faq.chat.q' + n))}</button>`).join('');
+  }
+    chips.addEventListener('click', e => { const b = e.target.closest('.tobi-chip'); if (!b) return; const n = parseInt(b.dataset.q,10); lastTopic = n; addMsg(t('faq.chat.q' + n), 'user');
+    typing(true);
+    setTimeout(() => { typing(false); addMsg(t('faq.chat.a' + n), 'bot'); }, REDUCE ? 80 : 600);
+  });
+
+  /* ---------- open / close panel ----------
+     Riwayat chat TIDAK dibersihkan saat panel ditutup — percakapan tetap
+     utuh saat dibuka lagi, dan welcome TIDAK dikirim ulang. */
+  function toggleChat(force){
+    open = force !== undefined ? force : !open;
+    panel.hidden = !open;
+    launcher.setAttribute('aria-expanded', String(open));
+    launcher.classList.toggle('open', open);
+    balloon.hidden = true;
+    if (open) {
+      positionPanel();
+      if (!log.childElementCount) {
+      /* welcome kontekstual hanya saat log masih kosong; bahasa mengikuti
+         bahasa aktif — welcome TIDAK dikirim ulang saat dibuka kembali */
+        addMsg(pickVar('welcome', ['tobi.welcome.1', 'tobi.welcome.2', 'tobi.welcome.3']), 'bot');
+      }
+      renderChips();
+      setTimeout(() => input.focus(), 120);
+    }
+  }
+  root.querySelector('#tobiMinimize').addEventListener('click', () => toggleChat(false));
+  root.querySelector('#tobiClose').addEventListener('click', () => toggleChat(false));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && open) toggleChat(false); });
+
+  /* ---------- improvement 5: launcher sembunyi saat scroll ke bawah ----------
+     Sembunyi saat scroll turun, muncul lagi saat scroll naik / berhenti di atas. */
+  let lastScrollY = window.scrollY, hideTimer = 0;
+  function onScroll(){
+    const y = window.scrollY;
+    if (open) { root.classList.remove('tobi-hidden'); return; }
+    if (y > lastScrollY + 8 && y > 120) root.classList.add('tobi-hidden');
+    else if (y < lastScrollY - 8) root.classList.remove('tobi-hidden');
+    lastScrollY = y;
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => root.classList.remove('tobi-hidden'), 4000);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  /* ---------- label ikut bahasa aktif ---------- */
+  function refreshLang(){
+    /* Prompt 15: seluruh teks branding TOBI ikut bahasa aktif */
+    root.querySelector('#tobiName').textContent = t('tobi.name');
+    root.querySelector('#tobiSub').textContent = t('tobi.sub');
+    statusEl.textContent = t('tobi.status');
+    launcher.setAttribute('aria-label', t('tobi.aria'));
+    panel.setAttribute('aria-label', t('tobi.name') + ' — ' + t('tobi.sub'));
+    input.placeholder = t('tobi.ph');
+    if (open) renderChips();
+    /* balloon yang sedang tampil: teks ikut bahasa baru (greeting pendek),
+       posisi tetap sinkron dengan launcher */
+    if (!balloon.hidden) {
+      greetText().then(txt => { if (!balloon.hidden) balloon.textContent = txt; });
+      placeBalloon();
+    }
+  }
+  document.addEventListener('toba:langchange', refreshLang);
+  refreshLang();
+  loadPos();
+})();
+
+/* =====================================================================
+   TOBI CONVERSATION ENGINE — friendly, contextual, small talk
+   (MASTER PROMPT: mascot interaction, greeting, conversational intel)
+   =====================================================================
+   Catatan bahasa: QA di browser tanpa localStorage 'toba-lang'=id
+   memakai default EN (konsisten dengan seluruh situs, default EN).
+   Greeting pendek memakai TOBI_GREETINGS di i18n.js — mengikuti
+   documentElement.lang, jadi tetap berganti bersama language switch.
+    • SHORT GREETINGS via 'toba:tobiGreet' event (listener di i18n.js,
+     per bahasa, tanpa pengulangan berturut-turut) → balloon mascot pendek.
+   • CONTEXT: riwayat intent + slot (nama topik, minat gabung, pengalaman)
+     → jawaban singkat seperti "iya/belum/mau" tetap nyambung.
+   • SMALL TALK intents: sapaan, kabar, siapa TOBI, terima kasih, oke,
+     rasa takut/pemula/jauh, ketertarikan — dengan variasi jawaban.
+   • FAKTA hanya dari faq.chat.* (biaya, jadwal, lokasi, member, daftar)
+     — tidak pernah mengarang harga/jadwal.
+   ===================================================================== */
+(function tobiConversation(){
+  if (window.__tobiConv) return;           /* anti duplikat listener/engine */
+  window.__tobiConv = true;
+
+  const GREET_EVENT = 'toba:tobiGreet';
+  let lastGreetIdx = null;
+
+  /* ---------- API publik untuk modul TOBI lama ---------- */
+  window.tobiGreeting = function(){
+    return new Promise(resolve => {
+      let done = false;
+      const reply = (text, idx) => { if (!done) { done = true; lastGreetIdx = idx; resolve(text); } };
+      const detail = { last: lastGreetIdx, reply };
+      document.dispatchEvent(new CustomEvent(GREET_EVENT, { detail }));
+      setTimeout(() => { if (!done) { done = true; resolve(null); } }, 250);   /* fallback: tidak ada listener */
+    });
+  };
+
+  /* ---------- konteks percakapan ----------
+     intentLog: urutan intent; slots: info yang sudah diketahui. */
+  window.__tobiCtx = { intents: [], slots: {} };
+  const ctx = window.__tobiCtx;
+
+  const isId = () => document.documentElement.lang !== 'en';
+  const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+
+  /* ---------- intent matchers (ID + EN keywords) ---------- */
+  const INTENTS = [
+    { id: 'greet', re: /^(halo|hallo|hai|hei|hi|hello|hey|woi|^p$|pagi|siang|sore|malam|good\s?(morning|afternoon|evening))\b/i },
+    { id: 'who',   re: /(kamu siapa|siapa kamu|siapa sih kamu|who are you|kamu apa|apa ini|lu siapa)/i },
+    { id: 'howru', re: /(apa kabar|gimana kabar|how are you|kabarmu|kabar kamu)/i },
+    { id: 'thanks',re: /(makasih(ya)?|makasi(h)?|terima kasih|terimakasih|thanks|thank you|thx|sip ya)/i },
+    { id: 'ok',    re: /^(oke|ok|okay|sip|siap|oke deh|udah|done)[\s!.]*$/i },
+    { id: 'never', re: /(belum pernah|nggak pernah|tidak pernah|belum\s?(ikut|main)|never (played|joined)|baru mau mulai)/i },
+    { id: 'beginner', re: /(pemula|masih (belajar|nggak jago|tidak jago)|belum jago|beginner|amateur|baru belajar)/i },
+    { id: 'scared',re: /(takut|canggung|malu|sendirian|sendiri|nervous|shy|afraid)/i },
+    { id: 'far',   re: /(tinggal jauh|jauh dari|daerah lain|luar kota|far (away|from)|rumahku jauh)/i },
+    { id: 'interested', re: /(kayaknya seru|seru banget|menarik|keren|pengen (coba|ikut)|gas ikut|sounds fun)/i },
+    { id: 'interestJoin', re: /(mau ikut|ikut dong|ikut|gas ikut|aku mau ikut|mau gabung|mau join|want to join|join us)/i },
+    { id: 'yes',   re: /^(iya|iyah|yeah|yes|yoi|betul|benar|bener|setuju|boleh|mau|gas)[\s!.]*$/i },
+    { id: 'no',    re: /^(nggak|gak|ngga|tidak|no|nggak dulu|ga dulu)[\s!.]*$/i }
+  ];
+
+  function detectIntent(msg){
+    for (const it of INTENTS) if (it.re.test(msg)) return it.id;
+    return null;
+  }
+
+  /* ---------- balasan small talk (ID + EN), variasi acak ---------- */
+  const SMALLTALK = {
+    greet: {
+      id: ['Halo juga! 👋 Lagi cari info tentang TOBA atau mau ngobrol dulu?','Hai! 👋 Senang kamu mampir. Mau tanya-tanya soal TOBA?','Halo baller! 🐊 Ada yang bisa TOBI bantu?'],
+      en: ['Hey there! 👋 Looking for TOBA info or just chatting?','Hi! 👋 Great to see you. Anything about TOBA?','Hello baller! 🐊 What can I help with?']
+    },
+    who: {
+      id: ['Hai! Aku TOBI 🐊, asisten virtual TOBA Community. Aku bisa bantu kamu cari info kegiatan, jadwal main, biaya, dan cara gabung!'],
+      en: ['Hi! I\'m TOBI 🐊, the virtual assistant of TOBA Community — schedules, fees, and how to join!']
+    },
+    howru: {
+      id: ['Aku baik, siap nemenin kamu ngobrol soal basket! Kamu sendiri gimana?','Kabar aku mantap 🏀 Kamu gimana?'],
+      en: ['Doing great, ready to talk hoops! How about you?','All good here 🏀 You?']
+    },
+    thanks: {
+      id: ['Sama-sama! Senang bisa bantu kamu 🐊',' anytime! Kalau ada lagi, panggil aja ya.','Siap! Semoga makin semangat mainnya 🏀'],
+      en: ['You\'re welcome! Happy to help 🐊','Anytime! Ping me again 🙂','Got it — happy hooping 🏀']
+    },
+    ok: {
+      id: ['Siap! Kalau ada yang mau ditanyain lagi, panggil TOBI aja.','Oke! Sampai jumpa di lapangan 🏀'],
+      en: ['Got it! Ping me anytime.','Cool! See you on the court 🏀']
+    },
+    never: {
+      id: ['Wah, nggak apa-apa! Justru bisa jadi awal yang seru. Kamu tertarik mulai belajar basket dari dasar?','Belum pernah ikut TOBA atau belum pernah main basket sama sekali?'],
+      en: ['No worries! That could be a fun start. Want to learn from the basics?','Never joined TOBA or never played basketball at all?']
+    },
+    beginner: {
+      id: ['Tenang, nggak harus jago dulu kok. Yang penting mau mencoba dan belajar bareng!','Pemula juga welcome banget di TOBA. Banyak yang mulai dari nol kok 🏀'],
+      en: ['Relax, no need to be great first. Trying and learning together is what counts!','Beginners are super welcome at TOBA 🏀']
+    },
+    scared: {
+      id: ['Relate banget! Datang pertama kali memang bisa bikin canggung. Kalau mau, aku bantu jelaskan dulu suasana dan kegiatan TOBA.','Tenang, anak TOBA ramah kok 😊 Kamu bisa datang bareng teman dulu kalau lebih nyaman.'],
+      en: ['Totally relatable! First visits can feel awkward — want me to walk you through the vibe first?','Don\'t worry, TOBA folks are friendly 😊 You can bring a friend too.']
+    },
+    far: {
+      id: ['Oh begitu. Kamu dari daerah mana? Kita bisa coba cek informasi lokasi kegiatan yang tersedia.','Jauh memang tantangan 🤔 Kalau kebetulan lewat Jakarta Timur, sesi Sabtu malam jadi pilihan yang pas.'],
+      en: ['I see. Where are you from? We can check the session locations.','That\'s a trek 🤔 Saturday evening sessions might fit if you pass East Jakarta.']
+    },
+    interested: {
+      id: ['Seru banget kalau bisa main dan kenalan sama teman baru! Mau aku kasih tahu cara ikut kegiatan TOBA?','Wah, asik! 🏀 Kamu sudah pernah ikut kegiatan TOBA sebelumnya atau ini pertama kalinya?'],
+      en: ['So much fun meeting new people on court! Want to know how to join a session?','Nice! 🏀 First time with TOBA or have you joined before?']
+    },
+    interestJoin: {
+      id: ['Wah, asik! 🏀 Kamu sudah pernah ikut kegiatan TOBA sebelumnya atau ini pertama kalinya? Kalau mau langsung daftar, tombol pendaftaran juga tersedia di halaman ini.'],
+      en: ['Nice! 🏀 First time with TOBA or joined before? The signup button on this page works anytime too.']
+    },
+    yes: {
+      id: ['Mantap! 👍 Ada yang spesifik mau ditanyain — jadwal, biaya, atau cara daftar?','Oke! Aku bantu jelaskan dari jadwal dulu ya.'],
+      en: ['Awesome! 👍 Anything specific — schedule, fees, or how to sign up?','Cool! Let me start with the schedule then.']
+    },
+    no: {
+      id: ['Oke, nggak masalah 😊 Kalau nanti berubah pikiran, aku di sini.'],
+      en: ['No problem 😊 I\'m here if you change your mind.']
+    }
+  };
+
+  /* ---------- jawab berbasis konteks + small talk ----------
+     Return null jika bukan small talk → modul TOBI lanjut ke FAQ engine. */
+  window.tobiSmallTalk = function(msg){
+    const intent = detectIntent(msg);
+    const q = msg.toLowerCase().trim();
+    const words = q.split(/\s+/).length;
+
+    if (intent) {
+      ctx.intents.push(intent);
+      if (ctx.intents.length > 12) ctx.intents.shift();
+      /* konteks: "iya/belum" menjawab pertanyaan small talk sebelumnya */
+      if ((intent === 'yes' || intent === 'no') && ctx.slots.pendingQuestion) {
+        const prev = ctx.slots.pendingQuestion;
+        ctx.slots.pendingQuestion = null;
+        if (prev === 'never' && intent === 'yes') {
+          ctx.slots.knowsBasics = true;
+          return pick(SMALLTALK.beginner[isId() ? 'id' : 'en']);
+        }
+      }
+      /* simpan slot konteks penting */
+      if (intent === 'never') ctx.slots.pendingQuestion = 'never';
+      if (intent === 'interested') ctx.slots.wantsJoin = true;
+
+      const bank = SMALLTALK[intent];
+      if (bank) return pick(bank[isId() ? 'id' : 'en']);
+      if (intent === 'interestJoin') {
+        ctx.slots.wantsJoin = true;
+        return pick(SMALLTALK.interestJoin[isId() ? 'id' : 'en']);
+      }
+    }
+
+    /* pernyataan pengalaman singkat tanpa keyword jelas → respon empatik */
+    if (words >= 3 && /(aku|saya|gw|gue|w)\b/.test(q) && /(takut|malu|bingung|canggung|bingun|ragu)/.test(q)) {
+      return pick(SMALLTALK.scared[isId() ? 'id' : 'en']);
+    }
+    return null;
+  };
+})();
+
+
+
