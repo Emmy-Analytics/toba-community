@@ -39,6 +39,8 @@
     </div>`;
   document.body.appendChild(intro);
   document.documentElement.classList.add('intro-lock');
+  /* kontrak intro: satu flag global untuk music/chatbot (dibaca music.js & script.js) */
+  document.documentElement.classList.add('intro-running');
   window.scrollTo(0, 0);
 
   const stage = intro.querySelector('.obi-stage');
@@ -57,6 +59,7 @@
     timers.forEach(clearTimeout);
     intro.classList.add('obi-out');
     document.documentElement.classList.remove('intro-lock');
+    document.documentElement.classList.remove('intro-running');
     document.dispatchEvent(new CustomEvent('toba:introdone'));
     setTimeout(() => intro.remove(), 700);
   }

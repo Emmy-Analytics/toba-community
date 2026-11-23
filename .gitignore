@@ -1,0 +1,17 @@
+# Dependencies (dev QA only — puppeteer)
+node_modules/
+
+# Temporary / QA artifacts
+_qa_*
+_hero_qa*
+_tobi_*
+_rev_*
+qa-*
+*.log
+*.tmp
+*.bak
+~$*
+
+# OS junk
+Thumbs.db
+.DS_Store

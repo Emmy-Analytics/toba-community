@@ -2992,8 +2992,15 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   }
 
   .drawer-brand .brand-mark {
-    width: 28px;
-    height: 28px
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+  }
+
+  .drawer-brand .brand-name.brand-oneline {
+    font-size: 17px;
+    line-height: 1;
+    letter-spacing: -.02em;
   }
 
   .drawer-name {
@@ -3038,12 +3045,34 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   }
 
   .drawer-intro-title {
+    /* croc icon + text as one unit: tight flex row, no extra gap */
+    display: flex;
+    align-items: center;
+    gap: 8px;
     font-family: var(--font-head);
     font-size: 15px;
     font-weight: 700;
     letter-spacing: -.01em;
     color: var(--ink);
-    margin: 0 0 4px
+    margin: 0 0 4px;
+    padding: 0;
+    text-indent: 0;
+    position: static;
+    transform: none;
+    width: 100%;
+  }
+  .drawer-intro-title .drawer-croc {
+    flex: 0 0 auto;
+    width: 22px;
+    height: 22px;
+    object-fit: contain;   /* rasio asli, tidak terdistorsi */
+    margin: 0;
+    padding: 0;
+  }
+  .drawer-intro-title span {
+    flex: 1 1 auto;
+    min-width: 0;          /* teks boleh wrap natural di layar sempit */
+    overflow-wrap: break-word;
   }
 
   .drawer-intro-sub {
@@ -3709,21 +3738,34 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   .hero-cut-img { transition: none; opacity: 1; transform: none; }
 }
 
-/* ---------- DESKTOP (≥761px): center stage di slot kanan hero ---------- */
+/* ---------- DESKTOP (≥761px): center stage di slot kanan hero ----------
+   FIX komposisi: foto grup dipindah ke BAWAH TENGAH sebagai elemen pendukung
+   kecil tersendiri (absolute), di antara kaki pemain dan bar info — tidak
+   lagi menimpa pemain utama maupun pemain individual. */
 @media (min-width: 761px) {
   .hero-cut-desktop {
     position: absolute;
     left: clamp(24px, 4vw, 90px);
     right: clamp(24px, 5vw, 120px);
-    bottom: clamp(150px, 19vh, 220px);
+    bottom: clamp(250px, 32vh, 320px);
     width: auto;
-    height: min(54vh, 540px);
+    height: min(34vh, 340px);
     z-index: 1;
   }
   .hero-cut-desktop .hero-cut-img.tier-main { width: clamp(38%, 44%, 50%); }
   .hero-cut-desktop .hero-cut-img.tier-side { width: clamp(20%, 24%, 28%); max-height: 58%; }
   .hero-cut-desktop .hero-cut-img.cut-ball  { width: clamp(48px, 5.5vw, 76px); right: 4%; bottom: 0; }
-  .hero-group-slideshow { width: min(620px, 92%); }
+  .hero-home .hero-group-slideshow {
+    /* foto grup: bawah tengah, ukuran kecil-sedang, ruang sendiri */
+    position: absolute;
+    bottom: clamp(140px, 18vh, 170px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(190px, 22%);
+    aspect-ratio: 16 / 9;
+    margin: 0;
+    z-index: 0;
+  }
 }
 
 /* ---------- MOBILE (≤760px): carousel dalam alur hero ---------- */
@@ -8203,4 +8245,589 @@ body.tm-panel-open { overflow: '' !important; }
   visibility: visible !important;
   opacity: 1 !important;
   color: #51495D !important;
+}
+
+
+/* =====================================================================
+   PARTNERSHIP — simple premium × cinematic sports
+   Hero (soft gradient + partner logos) → Opportunities (editorial, 4 cats)
+   → Past Collaborations (3x3 August Rush) → Inquiry Form
+   ===================================================================== */
+
+/* ---------- Hero: soft gradient, no dark overlay, no big photo ---------- */
+.hero-p {
+  position: relative;
+  padding: clamp(32px, 4vh, 48px) 0 clamp(48px, 6vh, 64px);
+  background:
+    radial-gradient(1100px 520px at 85% -10%, rgba(90, 142, 105, .18), transparent 60%),
+    radial-gradient(900px 480px at -10% 110%, rgba(49, 90, 59, .14), transparent 55%),
+    linear-gradient(180deg, #FBF9F3 0%, #F0EDE1 100%);
+  overflow: hidden;
+  min-height: 0;
+  box-sizing: border-box;
+}
+.hp-inner h1 {
+  font-size: clamp(2.4rem, 5.6vw, 4.4rem);
+  max-width: 18ch;
+}
+.hp-inner .hero-subtitle {
+  font-size: clamp(15px, 1.5vw, 18px);
+  max-width: 54ch;
+  margin: 20px 0 28px;
+}
+.hp-eyebrow { color: var(--accent); }
+
+.hp-prev {
+  margin-top: clamp(68px, 8vh, 96px);
+  border-top: 1px solid var(--line);
+  padding-top: 26px;
+}
+.hp-prev-label {
+  font-size: 11px; font-weight: 800; letter-spacing: 2.4px;
+  text-transform: uppercase; color: var(--muted); margin: 0 0 18px;
+}
+.hp-logos {
+  display: flex; align-items: center; flex-wrap: wrap;
+  gap: clamp(28px, 6vw, 72px);
+}
+.hp-logos img {
+  height: clamp(40px, 6vw, 64px);
+  width: auto; max-width: min(260px, 42vw);
+  object-fit: contain;
+}
+
+/* reveal for logos (uses existing stepObserver) */
+.hp-logos img { opacity: 0; transform: translateY(14px); transition: opacity .7s var(--ease-out), transform .7s var(--ease-out); }
+.hp-logos.step-in img:first-child { transition-delay: .1s; }
+.hp-logos.step-in img:last-child { transition-delay: .3s; }
+.hp-logos.step-in img { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .hp-logos img { opacity: 1 !important; transform: none !important; transition: none !important; }
+}
+
+/* ---------- Opportunities: interactive court visual + category tabs ---------- */
+.part-opp-wrap { margin-block: clamp(64px, 10vh, 120px); }
+.po-head { max-width: 640px; margin-bottom: 0; position: relative; z-index: 2; }
+.po-court {
+  position: relative;
+  height: clamp(220px, 34vw, 420px);
+  margin-top: calc(-1 * clamp(30px, 5vw, 70px));
+  perspective: 900px;
+  perspective-origin: 50% 30%;
+  overflow: hidden;
+  pointer-events: none;
+}
+.pc-layer { position: absolute; inset: -8% -6%; will-change: transform; }
+.pc-svg { width: 100%; height: 100%; }
+.pc-back { transform: rotateX(26deg) scale(1.15); }
+.pc-mid { transform: rotateX(20deg) scale(1.05) translateZ(30px); }
+.pc-front { transform: rotateX(14deg) scale(.96) translateZ(60px); }
+.po-head h2 { max-width: 14ch; }
+
+/* category tabs */
+.po-tabs { margin-top: clamp(24px, 4vh, 40px); }
+.po-tablist { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: clamp(20px, 3vh, 32px); }
+.po-tab {
+  font-family: var(--font-head);
+  font-size: 12.5px; font-weight: 800; letter-spacing: .4px;
+  text-transform: uppercase;
+  background: transparent; color: var(--ink);
+  border: 1.5px solid var(--line); border-radius: 999px;
+  padding: 10px 20px; cursor: pointer;
+  transition: border-color .2s, color .2s, background .2s;
+}
+.po-tab:hover { border-color: var(--accent); color: var(--accent); }
+.po-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.po-panel {
+  display: none;
+  opacity: 0;
+}
+
+.po-panel.active {
+  display: block;
+  animation: poPanelEnter .45s ease both;
+}
+
+@keyframes poPanelEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.po-panel ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 6px clamp(24px, 4vw, 48px); }
+.po-panel li {
+  position: relative; padding: 6px 0 6px 22px;
+  font-size: 15.5px; color: var(--ink);
+}
+.po-panel li::before {
+  content: ''; position: absolute; left: 4px; top: 15px;
+  width: 7px; height: 7px; border-radius: 50%; background: var(--accent);
+}
+
+
+/* closing lines */
+.po-more {
+  margin-top: clamp(32px, 5vh, 56px);
+  font-family: var(--font-head);
+  font-weight: 800;
+  line-height: 1.15;
+}
+.po-more .pm-1 { font-size: clamp(1.4rem, 2.4vw, 2rem); color: var(--ink); display: inline-block; }
+.po-more .pm-2 { font-size: clamp(1.4rem, 2.4vw, 2rem); color: #E8722A; display: inline-block; }
+
+/* ---------- Past collaborations: 3x3 August Rush ---------- */
+.collab-showcase {
+  margin-block: clamp(64px, 10vh, 120px);
+  background: linear-gradient(180deg, #F1EEE2 0%, #EAE6D6 100%);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: clamp(28px, 5vw, 56px);
+}
+.cs-intro { margin-bottom: clamp(20px, 4vh, 36px); }
+.cs-brands { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; margin-top: 16px; }
+.cs-brands img { height: 34px; width: auto; max-width: 130px; object-fit: contain; opacity: .85; }
+.cs-event {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: 14px;
+  align-items: start;
+}
+.cs-photo { margin: 0; }
+.cs-photo img { width: 100%; height: 100%; object-fit: cover; }
+.cs-a { width: clamp(200px, 26vw, 320px); aspect-ratio: 4/3; }
+.cs-b { width: clamp(200px, 26vw, 320px); aspect-ratio: 4/3; }
+.cs-poster { height: clamp(150px, 20vw, 240px); aspect-ratio: 3/4; }
+.cs-poster img { object-position: top; }
+
+/* ---------- Inquiry ---------- */
+.part-inquiry {
+  margin-block: clamp(64px, 10vh, 120px) clamp(72px, 11vh, 130px);
+  scroll-margin-top: 90px;
+}
+.pi-grid {
+  display: grid;
+  grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+  gap: clamp(28px, 5vw, 64px);
+  align-items: start;
+}
+.pi-copy h2 { margin-bottom: 14px; }
+/* Mobile: naikkan tulisan saja, form tetap */
+@media (max-width: 640px) {
+  .part-inquiry .pi-copy {
+    transform: translateY(-36px);
+  }
+}
+.pi-copy .lede { margin-bottom: 24px; }
+.pi-contact {
+  margin-top: 8px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.pi-contact span { font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
+.pi-contact h3 { font-size: clamp(1.3rem, 2vw, 1.7rem); color: var(--ink); margin-bottom: 6px; }
+.pi-contact a { font-weight: 700; color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+.part-inquiry .form-card { position: sticky; top: calc(var(--header-h) + 20px); }
+
+/* ---------- responsive ---------- */
+@media (max-width: 900px) {
+  .pi-grid { grid-template-columns: 1fr; }
+  .part-inquiry .form-card { position: static; }
+}
+@media (max-width: 640px) {
+  .hero-p { padding-top: 56px; }
+  .hp-logos { gap: 20px 24px; }
+  .hp-logos img { height: 36px; }
+  .po-panel ul { grid-template-columns: 1fr; }
+  .po-court { height: 200px; margin-top: -20px; opacity: .8; }
+  .pc-back, .pc-mid { display: none; }
+  .pc-front { transform: rotateX(10deg) scale(1.05); }
+  .cs-event { grid-template-columns: 1fr 1fr; }
+  .cs-a { width: 100%; aspect-ratio: 4/3; grid-column: 1/-1; }
+  .cs-b { width: 100%; aspect-ratio: 4/3; }
+  .cs-poster { height: auto; width: 100%; aspect-ratio: 3/4; }
+  .form-card { padding: 22px 18px; }
+  .po-tab { font-size: 11.5px; padding: 9px 16px; }
+  /* Partnership mobile — turunkan CTA dan logo partner */
+.hero-p .hero-actions {
+  margin-top: clamp(40px, 15vh, 90px);
+}
+
+.hero-p .hp-prev {
+ margin-top: clamp(76px, 11vh, 88px);
+}
+}
+@media (prefers-reduced-motion: reduce) {
+  .pc-layer { transform: none !important; }
+  .po-court { height: 160px; }
+}
+
+
+/* ==========================================
+   PAST COLLABORATIONS — FULL WIDTH SHOWCASE
+   ========================================== */
+
+#pastCollabs.collab-showcase {
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+
+  box-sizing: border-box;
+  border-radius: 0;
+  padding: clamp(48px, 5vw, 76px)
+           clamp(24px, 5vw, 90px);
+
+  background: #EEEBDD;
+}
+
+/* INTRO */
+#pastCollabs .cs-intro {
+  width: 100%;
+  margin-bottom: 32px;
+}
+
+#pastCollabs .cs-intro h2 {
+  font-size: clamp(38px, 4vw, 58px);
+  line-height: 1.05;
+  margin-bottom: 18px;
+}
+
+/* PARTNER LOGOS */
+#pastCollabs .cs-brands {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+#pastCollabs .cs-brands img {
+  width: auto;
+  max-width: 150px;
+  height: 34px;
+  object-fit: contain;
+}
+
+/* IMAGE GRID */
+#pastCollabs .cs-event {
+  display: grid;
+  grid-template-columns: 1fr 1fr 0.55fr;
+  gap: 16px;
+  width: 100%;
+  align-items: stretch;
+}
+
+#pastCollabs .cs-photo {
+  position: relative;
+  width: 100%;
+  height: clamp(230px, 24vw, 340px);
+  margin: 0;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+#pastCollabs .cs-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+/* POSTER */
+#pastCollabs .cs-poster img {
+  object-fit: contain;
+  background: transparent;
+}
+
+/* MOBILE */
+@media (max-width: 767px) {
+  #pastCollabs.collab-showcase {
+    padding: 42px 20px;
+  }
+
+  #pastCollabs .cs-intro h2 {
+    font-size: clamp(32px, 9vw, 42px);
+  }
+
+  #pastCollabs .cs-brands {
+    gap: 16px;
+  }
+
+  #pastCollabs .cs-brands img {
+    max-width: 125px;
+    height: 28px;
+  }
+
+  #pastCollabs .cs-event {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  #pastCollabs .cs-photo {
+    height: 155px;
+    border-radius: 12px;
+  }
+
+  #pastCollabs .cs-poster {
+    grid-column: 1 / -1;
+    width: min(65%, 220px);
+    height: auto;
+    aspect-ratio: 2 / 3;
+    justify-self: center;
+  }
+}
+
+/* ==========================================
+   PAST COLLABORATIONS — COMPACT SHOWCASE
+   ========================================== */
+
+/* Desktop */
+#pastCollabs.collab-showcase {
+  padding: 48px clamp(24px, 6vw, 100px);
+}
+
+#pastCollabs .cs-intro {
+  margin-bottom: 22px;
+}
+
+#pastCollabs .cs-intro h2 {
+  font-size: clamp(32px, 3vw, 44px);
+  margin-bottom: 14px;
+}
+
+/* Logo brand */
+#pastCollabs .cs-brands {
+  gap: 18px;
+}
+
+#pastCollabs .cs-brands img {
+  max-width: 125px;
+  height: 28px;
+  object-fit: contain;
+}
+
+/* Foto dan poster */
+#pastCollabs .cs-event {
+  display: grid;
+  grid-template-columns: minmax(0, 260px) minmax(0, 260px) 125px;
+  gap: 14px;
+  align-items: center;
+  justify-content: start;
+  margin-top: 22px;
+}
+
+#pastCollabs .cs-photo {
+  width: 100%;
+  height: 175px;
+  border-radius: 12px;
+}
+
+#pastCollabs .cs-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#pastCollabs .cs-poster {
+  height: 175px;
+}
+
+#pastCollabs .cs-poster img {
+  object-fit: contain;
+}
+
+/* ==========================================
+   MOBILE
+   ========================================== */
+
+@media (max-width: 767px) {
+  #pastCollabs.collab-showcase {
+    padding: 32px 20px;
+  }
+
+  #pastCollabs .cs-intro {
+    margin-bottom: 18px;
+  }
+
+  #pastCollabs .cs-intro h2 {
+    font-size: 29px;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+
+  #pastCollabs .cs-brands {
+    gap: 14px;
+  }
+
+  #pastCollabs .cs-brands img {
+    max-width: 108px;
+    height: 24px;
+  }
+
+  #pastCollabs .cs-event {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  #pastCollabs .cs-photo {
+    height: 112px;
+    border-radius: 9px;
+  }
+
+  #pastCollabs .cs-poster {
+    grid-column: auto;
+    width: 100%;
+    height: 112px;
+  }
+
+  #pastCollabs .cs-poster img {
+    object-fit: contain;
+  }
+}
+
+/* PAST COLLABORATIONS — TYPOGRAPHY & LOGO BALANCE */
+
+/* Judul lebih kecil */
+#pastCollabs .cs-intro h2 {
+  font-size: clamp(25px, 2.4vw, 34px);
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  margin-bottom: 16px;
+}
+
+/* Logo partner lebih besar */
+#pastCollabs .cs-brands {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+#pastCollabs .cs-brands img {
+  max-width: 155px;
+  height: 38px;
+  object-fit: contain;
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+  #pastCollabs .cs-intro h2 {
+    font-size: 25px;
+    line-height: 1.12;
+  }
+
+  #pastCollabs .cs-brands {
+    gap: 18px;
+  }
+
+  #pastCollabs .cs-brands img {
+    max-width: 145px;
+    height: 34px;
+  }
+}
+
+/* Partnership headline — warna oranye TOBA solid (identitas, kontras baik,
+   tanpa gradasi bergerak pada teks) */
+.hero-p .accent-orange { color: #E8722A; }
+
+/* Komposisi hero desktop kembali ke alur natural — offset relatif dihapus
+   agar tidak menyisakan ruang kosong di bawah hero. */
+@media (min-width: 641px) {
+  .hero-p .hp-inner { position: static; top: auto; }
+}
+@media (max-width: 640px) {
+  .hero-p { min-height: 0; }
+}
+/* TOBA Partnership — Pink Orange Green Flow */
+.hero-p .accent-orange {
+  background: linear-gradient(
+    90deg,
+    #E98AB5,
+    #F0642B,
+    #2F854D,
+    #E98AB5
+  );
+  background-size: 200% 100%;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: tobaColorFlow 8s ease-in-out infinite;
+}
+
+@keyframes tobaColorFlow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-p .accent-orange {
+    animation: none;
+  }
+}
+
+
+/* =====================================
+   TOBA BRAND STANDARD
+   Header, Mobile Drawer & Footer
+===================================== */
+
+/* Ukuran ikon bola */
+.brand-mark {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+}
+
+/* Ukuran dan karakter tulisan */
+.brand-oneline {
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -.02em;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: baseline;
+}
+
+/* Warna identitas */
+.brand-oneline .bn-toba {
+  color: #2F804B;
+}
+
+.brand-oneline .bn-comm {
+  color: #252923;
+}
+
+/* Hilangkan perbedaan ukuran footer */
+.footer-brand .brand-oneline {
+  font-size: 17px;
+  letter-spacing: -.02em;
+}
+
+/* Drawer mengikuti standar yang sama */
+.drawer-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+@media (max-width: 760px) {
+  .brand-oneline,
+  .footer-brand .brand-oneline,
+  .drawer-brand .brand-oneline {
+    font-size: 15px;
+    letter-spacing: -.01em;
+  }
+
+  .brand-mark,
+  .drawer-brand .brand-mark {
+    width: 36px;
+    height: 36px;
+    flex-basis: 36px;
+  }
 }

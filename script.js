@@ -312,19 +312,135 @@ function galleryPage() {
   <div class="venue-note" style="margin-top:35px">${t('gallery.hero.lede')}</div></div>${infoEditorial()}</section>`
 }
 
-/* ---------- PARTNERSHIP — professional & simple ---------- */
+/* ---------- PARTNERSHIP — simple premium × cinematic sports ---------- */
 function partnershipPage() {
+    const pImg = 'assets/img/partnership/';
     return `
-<section class="hero section-wrap" style="min-height:auto"><div class="hero-copy"><p class="eyebrow">${t('part.hero.eyebrow')}</p><h1>${t('part.hero.h')}</h1><p class="hero-subtitle">${t('part.hero.lede')}</p></div>
-  <div class="page-hero" style="padding:0;grid-template-columns:1fr"><div class="photo-frame img-reveal" data-parallax="0.04"><img src="${photos.court}" alt="${t('ui.illust.court')}"></div></div></section>
-<section class="section-wrap two-col"><div><p class="eyebrow">${t('part.ways')}</p><h2>${t('part.h')}</h2><div class="card-grid part-grid">${[1,2,3,4,5,6,7,8].map(n=>`<div class="info-card"><div class="pad"><h3>${t('part.c'+n)}</h3><p>${t('part.c'+n+'p')}</p></div></div>`).join('')}</div></div>
-<form class="form-card" id="partnerForm"><p class="eyebrow">${t('part.form.eyebrow')}</p><h3>${t('part.form.h')}</h3><div class="form-grid"><div class="field"><label for="name">${t('part.name')}</label><input id="name" name="name" required placeholder="${t('part.name.ph')}"></div><div class="field"><label for="org">${t('part.org')}</label><input id="org" name="org" placeholder="${t('part.org.ph')}"></div><div class="field"><label for="email">${t('part.contact')}</label><input id="email" name="email" required placeholder="${t('part.contact.ph')}"></div><div class="field"><label for="interest">${t('part.interest')}</label><select id="interest" name="interest"><option>${t('part.opt1')}</option><option>${t('part.opt2')}</option><option>${t('part.opt3')}</option><option>${t('part.opt4')}</option><option>${t('part.opt5')}</option></select></div><div class="field full"><label for="message">${t('part.message')}</label><textarea id="message" name="message" placeholder="${t('part.message.ph')}"></textarea></div><div class="field full"><button class="btn" type="submit">${t('part.send')}</button><small style="display:block;margin-top:10px;color:var(--muted)">${t('part.sent')}</small></div></div></form></section>`
+<section class="hero-p">
+  <div class="hp-inner section-wrap">
+    <p class="eyebrow hp-eyebrow">${t('part.hero.eyebrow')}</p>
+    <h1>
+      ${t('part.hero.h1')}
+      <br>
+      <span class="accent-orange">
+        ${currentLang === 'en'
+          ? t('part.hero.h2').replace(' WITH TOBA!', '')
+          : t('part.hero.h2')}
+      </span>
+      ${currentLang === 'en'
+        ? '<br><span class="accent-orange">WITH TOBA!</span>'
+        : ''}
+    </h1>
+    <p class="hero-subtitle">${t('part.hero.lede')}</p>
+    <div class="hero-actions"><a class="pill" href="#partnerForm">${t('part.cta.submit')}</a></div>
+    <div class="hp-prev">
+      <p class="hp-prev-label">${t('part.prev.label')}</p>
+      <div class="hp-logos" data-reveal-step>
+        <img src="${pImg}Logo Decathlon - Blue@2x.png" alt="Decathlon" loading="lazy">
+        <img src="${pImg}SUMMAREON MALL BEKASI LOGO.png" alt="Summarecon Mall Bekasi" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="part-opp-wrap" id="collabOpps">
+  <div class="section-wrap">
+    <div class="po-head" data-reveal-step>
+      <p class="eyebrow">${t('part.ways')}</p>
+      <h2>${t('part.h')}</h2>
+    </div>
+    <div class="po-court" aria-hidden="true" data-reveal-step>
+      <div class="pc-layer pc-back" data-parallax="0.06"><svg class="pc-svg" viewBox="${-HW} ${-HH} ${HW*2} ${HH*2}" fill="none" stroke="#315A3B" stroke-opacity=".28" stroke-width="2.2" preserveAspectRatio="xMidYMid slice">${COURT_MARKINGS}</svg></div>
+      <div class="pc-layer pc-mid" data-parallax="0.1"><svg class="pc-svg" viewBox="${-HW} ${-HH} ${HW*2} ${HH*2}" fill="none" stroke="#E8722A" stroke-opacity=".4" stroke-width="2" preserveAspectRatio="xMidYMid slice">${COURT_MARKINGS}</svg></div>
+      <div class="pc-layer pc-front"><svg class="pc-svg" viewBox="${-HW} ${-HH} ${HW*2} ${HH*2}" fill="none" stroke="#242522" stroke-opacity=".5" stroke-width="1.6" preserveAspectRatio="xMidYMid slice">${COURT_MARKINGS}</svg></div>
+    </div>
+    <div class="po-tabs" data-reveal-step>
+      <div class="po-tablist" role="tablist">${['k1','k2','k3','k4'].map((k,i)=>`<button class="po-tab${i===0?' active':''}" role="tab" data-cat="${k}" aria-selected="${i===0}">${t('part.'+k+'.t')}</button>`).join('')}</div>
+      <div class="po-panels">${['k1','k2','k3','k4'].map((k,i)=>`<div class="po-panel${i===0?' active':''}" data-cat="${k}" role="tabpanel"><ul>${t('part.'+k+'.d').split('|').map(b=>`<li>${b}</li>`).join('')}</ul></div>`).join('')}</div>
+    </div>
+    <p class="po-more" data-reveal-step><span class="pm-1">${t('part.opp.more1')}</span><br><span class="pm-2">${t('part.opp.more2')}</span></p>
+  </div>
+</section>
+
+<section class="section-wrap collab-showcase" id="pastCollabs">
+  <div class="cs-intro" data-reveal-step>
+    <p class="eyebrow">${t('cs.label')}</p>
+    <h2>3X3 AUGUST RUSH</h2>
+    <div class="cs-brands">
+      <img src="${pImg}Logo Decathlon - Blue@2x.png" alt="Decathlon" loading="lazy">
+      <img src="${pImg}SUMMAREON MALL BEKASI LOGO.png" alt="Summarecon Mall Bekasi" loading="lazy">
+    </div>
+  </div>
+  <div class="cs-event" data-reveal-step>
+    <figure class="cs-photo cs-a photo-frame"><img src="${pImg}IMG_4124.JPG" alt="${t('cs.alt')}"></figure>
+    <figure class="cs-photo cs-b photo-frame"><img src="${pImg}IMG_4109.JPG" alt="${t('cs.alt')}" loading="lazy"></figure>
+    <figure class="cs-photo cs-poster photo-frame"><img src="${pImg}fix poster smb.jpeg" alt="${t('cs.poster.alt')}"></figure>
+  </div>
+</section>
+
+<section class="section-wrap part-inquiry" id="partnerForm">
+  <div class="pi-grid">
+    <div class="pi-copy" data-reveal-step>
+      <p class="eyebrow">${t('part.form.eyebrow')}</p>
+      <h2>${t('part.form.h')}</h2>
+      <p class="lede">${t('part.form.lede')}</p>
+      <div class="pi-contact">
+        <a
+          href="https://wa.me/6281285704946?text=Halo%20TOBA%20Community%2C%20saya%20tertarik%20untuk%20membahas%20peluang%20partnership%20atau%20kolaborasi%20bersama%20TOBA.%20Saya%20ingin%20berdiskusi%20lebih%20lanjut%20mengenai%20kemungkinan%20kerja%20sama%20ini.%20Terima%20kasih."
+          target="_blank"
+          rel="noopener noreferrer"
+        >${t('part.contact.h')}</a>
+      </div>
+    </div>
+    <form class="form-card" id="partnerInquiryForm"><div class="form-grid"><div class="field"><label for="name">${t('part.name')}</label><input id="name" name="name" required placeholder="${t('part.name.ph')}"></div><div class="field"><label for="org">${t('part.org')}</label><input id="org" name="org" placeholder="${t('part.org.ph')}"></div><div class="field"><label for="email">${t('part.contact')}</label><input id="email" name="email" required placeholder="${t('part.contact.ph')}"></div><div class="field"><label for="interest">${t('part.interest')}</label><select id="interest" name="interest"><option value="brand_product">${t('part.opt1')}</option><option value="event_tournament">${t('part.opt2')}</option><option value="coaching">${t('part.opt3')}</option><option value="official_crew">${t('part.opt4')}</option></select></div><div class="field"><label for="timing">${t('part.timing')}</label><input id="timing" name="timing" placeholder="${t('part.timing.ph')}"></div><div class="field"><label for="location">${t('part.location')}</label><input id="location" name="location" placeholder="${t('part.location.ph')}"></div><div class="field full"><label for="message">${t('part.message')}</label><textarea id="message" name="message" rows="4" required placeholder="${t('part.message.ph')}"></textarea></div><div class="field full"><button class="btn" type="submit">${t('part.send')}</button></div></div></form>
+  </div>
+</section>`
 }
 
 const page = document.body.dataset.page; const appEl = document.getElementById('app');
 const renderers = { home, tobaladies: () => communityPage('tobaladies'), tobadeli: () => communityPage('tobadeli'), events: eventsPage, merchandise: merchPage, gallery: galleryPage, partnership: partnershipPage };
 if (page !== 'game') { appEl.innerHTML = (renderers[page] || home)(); }
 document.querySelector(`[data-nav="${page}"]`)?.classList.add('active'); document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ---------- partnership: interactive categories (one-time binding) ----------
+   Bind via delegation so it survives language re-renders. */
+document.addEventListener('click', e => {
+  const tab = e.target.closest('.po-tab');
+  if (!tab) return;
+  const scope = tab.closest('.po-tabs');
+  if (!scope) return;
+  scope.querySelectorAll('.po-tab').forEach(b => { b.classList.toggle('active', b === tab); b.setAttribute('aria-selected', b === tab ? 'true' : 'false'); });
+  scope.querySelectorAll('.po-panel').forEach(p => p.classList.toggle('active', p.dataset.cat === tab.dataset.cat));
+});
+
+/* ---------- partnership: automatic tab rotation ---------- */
+(() => {
+  const ROTATION_DELAY = 4000;
+
+  setInterval(() => {
+    const scope = document.querySelector('.po-tabs');
+
+    if (!scope || !scope.getClientRects().length) return;
+
+    // Jangan berpindah ketika pengunjung sedang berinteraksi
+    if (
+      scope.matches(':hover') ||
+      scope.contains(document.activeElement)
+    ) return;
+
+    const tabs = [...scope.querySelectorAll('.po-tab')];
+
+    if (tabs.length < 2) return;
+
+    const activeIndex = tabs.findIndex(tab =>
+      tab.classList.contains('active')
+    );
+
+    const nextIndex = (activeIndex + 1) % tabs.length;
+
+    tabs[nextIndex].click();
+  }, ROTATION_DELAY);
+})();
 
 /* ---------- nav: mega menu (desktop) + accordion drawer (mobile) ---------- */
 (function () {
@@ -466,7 +582,45 @@ document.getElementById('toggleCart')?.addEventListener('click', () => {
   const box = document.getElementById('cartBox');
   if (box) box.hidden = !box.hidden;
 });
-document.getElementById('partnerForm')?.addEventListener('submit', e => { e.preventDefault(); toast(t('part.sent')); e.target.reset() });
+document.getElementById('partnerForm')?.addEventListener('submit', e => { e.preventDefault(); toast(t('part.sent')); e.target.reset() });document.getElementById('partnerInquiryForm')?.addEventListener('submit', e => {
+  e.preventDefault();
+
+  const form = e.target;
+  const data = new FormData(form);
+
+  const nama = data.get('name')?.trim() || '-';
+  const organisasi = data.get('org')?.trim() || '-';
+  const kontak = data.get('email')?.trim() || '-';
+  const minat = data.get('interest')?.trim() || '-';
+  const waktu = data.get('timing')?.trim() || '-';
+  const lokasi = data.get('location')?.trim() || '-';
+  const pesan = data.get('message')?.trim() || '-';
+
+  const message = `Halo Tim TOBA Community!
+
+Saya ingin mengajukan permintaan kolaborasi / partnership bersama TOBA Community.
+
+Berikut detail pengajuan saya:
+
+Nama: ${nama}
+Organisasi / Brand: ${organisasi}
+Email / WhatsApp: ${kontak}
+Jenis Kolaborasi: ${minat}
+Rencana Waktu: ${waktu}
+Lokasi: ${lokasi}
+
+Detail Kebutuhan:
+${pesan}
+
+Saya berharap kita bisa berdiskusi lebih lanjut mengenai peluang kerja sama ini.
+
+Terima kasih!
+`;
+
+  const waUrl = 'https://wa.me/6281285704946?text=' + encodeURIComponent(message);
+
+  window.open(waUrl, '_blank', 'noopener');
+});
 /* Prompt 9/21: "Kembali ke atas" dihapus dari semua halaman — guard agar error tidak muncul jika markup sisa */
 document.getElementById('backTop')?.addEventListener('click', e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }) });
 
@@ -524,7 +678,7 @@ initReveal();
 /* ---------- Prompt 40: staged reveal untuk editorial storytelling ---------- */
 const stepObserver = ('IntersectionObserver' in window) ? new IntersectionObserver(es => {
   es.forEach(en => { if (en.isIntersecting) { en.target.classList.add('step-in'); stepObserver.unobserve(en.target) } })
-}, { threshold: .2 }) : null;
+}, { threshold: .08 }) : null;
 function initStorySteps() {
   document.querySelectorAll('[data-reveal-step]').forEach(el => {
     if (el.dataset.stepBound) return;
@@ -895,8 +1049,7 @@ initMerchTilt();
   }
 
   /* fallback aset lokal (dipakai bila API gagal/kosong) */
-  const PLAN = [
-    { file: 'grup dina.svg', cls: 'cut-p1', type: 'group' },
+  const PLAYER_PLAN = [
     { file: 'fuzisal.svg', cls: 'cut-p2' },
     { file: 'bola basket.svg', cls: 'cut-p3', ball: true },
     { file: 'vina.svg', cls: 'cut-p4' },
@@ -904,11 +1057,15 @@ initMerchTilt();
     { file: 'mandy.svg', cls: 'cut-p6' },
     { file: 'dw nai.svg', cls: 'cut-p7' },
     { file: 'zia.svg', cls: 'cut-p8' },
-    { file: 'grup lastri.svg', cls: 'cut-p9', type: 'group' },
     { file: 'yuiii.svg', cls: 'cut-p10' },
     { file: 'dw.svg', cls: 'cut-p11' },
     { file: 'anon.svg', cls: 'cut-p12' }
   ];
+  const GROUP_PLAN = [
+    { file: 'grup dina.svg', cls: 'cut-p1', type: 'group' },
+    { file: 'grup lastri.svg', cls: 'cut-p9', type: 'group' }
+  ];
+  const PLAN = PLAYER_PLAN.concat(GROUP_PLAN);
 
   /* preload semua aset sekali */
   const cache = {};
@@ -1099,12 +1256,30 @@ initMerchTilt();
       .filter(p => p.type === 'group')
       .map(p => ({ img: cache[p.file], alt: 'Foto kegiatan TOBA Community' }))
       .filter(p => okImg(p.img));
-    if (!localPlayers.length) {
+    if (!localPlayers.length || !localGroups.length) {
       if (buildLocal.tries === undefined) buildLocal.tries = 0;
       if (++buildLocal.tries < 40) { setTimeout(buildLocal, 250); return; }
       console.warn('[TOBA Hero] aset lokal belum siap — tampilkan apa adanya');
     }
     buildLocal.tries = 0;
+    /* FIX bug "gambar grup baru muncul setelah refresh": kalau grup lokal
+       masih belum siap tapi pemain sudah, render yang ada dulu — lalu pantau
+       image yang belum selesai dan render ulang begitu grup siap. Tanpa ini,
+       group slideshow dirender kosong dan hanya pulih setelah API (bisa 15s+
+       atau gagal) — refresh manual jadi satu-satunya jalan keluar. */
+    if (!localGroups.length && localPlayers.length) {
+      const pending = PLAN.filter(p => p.type === 'group')
+        .map(p => cache[p.file]).filter(i => i && !okImg(i));
+      if (pending.length) {
+        pending.forEach(i => { i.onload = i.onerror = () => { buildLocal.tries = 99; }; });
+        const recheck = setInterval(() => {
+          const ready = PLAN.filter(p => p.type === 'group')
+            .map(p => cache[p.file]).filter(okImg);
+          if (ready.length) { clearInterval(recheck); buildLocal(); }
+        }, 400);
+        setTimeout(() => clearInterval(recheck), 15000);
+      }
+    }
     playerSources = localPlayers;
     currentList = localPlayers.concat(localGroups);
     renderGroupSlideshow(localGroups);
@@ -2091,7 +2266,15 @@ initMerchTilt();
         </button>
       </form>
     </section>`;
-  document.body.appendChild(root);
+  /* intro gate: launcher chatbot hanya di-append SETELAH intro selesai
+     (home / Tobaladies / Tobadeli). Inisialisasi internal tetap berjalan
+     normal; hanya kehadiran DOM-nya yang ditunda supaya intro tidak
+     tertutup launcher. Kontrak yang sama dipakai music.js. */
+  const showRoot = () => document.body.appendChild(root);
+  if (document.documentElement.classList.contains('intro-running')) {
+   document.addEventListener('toba:introdone', showRoot, { once: true });
+   setTimeout(() => { if (!root.isConnected) showRoot(); }, 9000);
+  } else showRoot();
 
   const launcher = root.querySelector('#tobiLauncher');
   const balloon = root.querySelector('#tobiBalloon');

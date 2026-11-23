@@ -49,6 +49,7 @@
   const copy = intro.querySelector('.tld-copy');
   const skip = intro.querySelector('.tld-skip');
   document.documentElement.classList.add('intro-lock');
+  document.documentElement.classList.add('intro-running');
 
   const D = small
     ? { ball: 400, mascot: 1100, copy: 1800, out: 2800 }
@@ -61,6 +62,8 @@
     timers.forEach(clearTimeout);
     intro.classList.add('tld-out');
     document.documentElement.classList.remove('intro-lock');
+    document.documentElement.classList.remove('intro-running');
+    document.dispatchEvent(new CustomEvent('toba:introdone'));
     setTimeout(() => intro.remove(), 750);
   }
   skip.addEventListener('click', finish);

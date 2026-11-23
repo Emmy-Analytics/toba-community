@@ -236,6 +236,17 @@
       setPlayIcon(false);
     });
     audio.addEventListener('waiting', function () { showStatus('Buffering\u2026'); });
+    /* status ikon SELALU mengikuti kondisi audio asli — tidak bisa salah
+       tampil walau autoplay ditolak browser atau tab pindah/aktif kembali */
+    audio.addEventListener('play', function () { setPlayIcon(true); showStatus('\u25B6 ' + (tracks[cur] ? tracks[cur].title : '')); });
+    audio.addEventListener('pause', function () { setPlayIcon(false); });
+    /* iOS/Android Safari dapat mem-pause audio saat tab pindah; ikutkan state */
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden && audio && wantPlay && audio.paused && audio.src) {
+        var p = audio.play();
+        if (p && p.catch) p.catch(function () { });
+      }
+    });
   }
 
   /* ---- RESOLUSI SUMBER AUDIO (hasil audit nyata, Chromium) ----
@@ -364,10 +375,24 @@
   window.addEventListener('pagehide', saveState);
   setInterval(saveState, 5000);
 
+  /* ---------- intro gate ----------
+     Saat intro (home/Tobaladies/Tobadeli) berjalan, UI musik ditahan agar
+     tidak muncul di atas animasi intro. Kontrak: html.intro-running
+     ditambah intro.js, dan event 'toba:introdone' dikirim saat intro selesai. */
+  function introDone(cb) {
+    if (!document.documentElement.classList.contains('intro-running')) { cb(); return; }
+    document.addEventListener('toba:introdone', cb, { once: true });
+    /* safety net: jika event tidak pernah datang (script intro gagal),
+       tampilkan setelah jeda maksimal — halaman tidak boleh kosong */
+    setTimeout(cb, 9000);
+  }
+
   /* ---------- init ---------- */
   function init() {
-    buildUI();
-    loadTracks();
+    introDone(function () {
+      buildUI();
+      loadTracks();
+    });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();

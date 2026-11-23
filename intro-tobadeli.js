@@ -45,6 +45,7 @@
   const skip = intro.querySelector('.tdl-skip');
   document.body.appendChild(intro);
   document.documentElement.classList.add('intro-lock');
+  document.documentElement.classList.add('intro-running');
 
   const D = small
     ? { ball: 350, copy: 1700, out: 2900 }
@@ -57,6 +58,8 @@
     timers.forEach(clearTimeout);
     intro.classList.add('tdl-out');
     document.documentElement.classList.remove('intro-lock');
+    document.documentElement.classList.remove('intro-running');
+    document.dispatchEvent(new CustomEvent('toba:introdone'));
     setTimeout(() => intro.remove(), 700);
   }
   skip.addEventListener('click', finish);
