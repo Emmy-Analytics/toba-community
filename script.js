@@ -1,4 +1,4 @@
-﻿/* TOBA COMMUNITY — premium editorial content & interactions (bilingual via i18n.js)
+/* TOBA COMMUNITY – premium editorial content & interactions (bilingual via i18n.js)
    Preserved: events filtering, merchandise filtering + demo cart, partnership form,
    toasts, gallery API glue, language re-render, reveal system.
    Added: editorial page compositions, parallax engine, croc-eye interaction. */
@@ -26,7 +26,7 @@ const photos = {
   ladies3: IMG + 'toba-056.jpg'     /* Tobaladies Game 05 */
 };
 const events = [
-    { date: 'SAB', month: 'weekly', year: '', title: 'TOBA Weekly Fun Game', type: 'Open Run', community: 'All Community', place: 'Brickhouse The East, Duren Sawit — Jakarta Timur', time: '18.00 – 20.00 WIB', img: photos.arena, memberOnly: true },
+    { date: 'SAB', month: 'weekly', year: '', title: 'TOBA Weekly Fun Game', type: 'Open Run', community: 'All Community', place: 'Brickhouse The East, Duren Sawit – Jakarta Timur', time: '18.00 – 20.00 WIB', img: photos.arena, memberOnly: true },
     { date: '06', month: 'DEC', year: '2026', title: 'Tobaladies Friendly Game', type: 'Friendly Game', community: 'Tobaladies', place: 'tbc', time: '15.00 – 17.00 WIB', img: photos.women },
     { date: '13', month: 'DEC', year: '2026', title: 'Tobadeli Sparring', type: 'Open Run', community: 'Tobadeli', place: 'tbc', time: '18.00 – 20.00 WIB', img: photos.men },
     { date: '18', month: 'JAN', year: '2027', title: 'TOBA 3x3 Day', type: 'Tournament', community: 'All Community', place: 'tbc', time: '08.00 – selesai', img: photos.court },
@@ -45,10 +45,10 @@ const products = [
 ];
 const money = n => 'Rp ' + n.toLocaleString('id-ID');
 const eventCard = e => { const place = e.place === 'tbc' ? t('events.venue.tbc') : e.place; const month = e.month === 'weekly' ? t('events.weekly') : e.month;
-    return `<article class="event-card" data-category="${e.type} ${e.community}"><img src="${e.img}" alt="${t('ui.illust.basket')} — ${e.title}" loading="lazy"><div class="date-badge">${e.date}<small>${month} ${e.year}</small></div><div class="pad"><span class="tag">${e.type}</span><h3>${e.title}</h3><p>${place}<br>${e.time}</p><div class="meta"><span>${e.community}</span></div><button class="pill event-interest" data-event="${e.title}">${t('ui.interest')}</button></div></article>`; };
+    return `<article class="event-card" data-category="${e.type} ${e.community}"><img src="${e.img}" alt="${t('ui.illust.basket')} – ${e.title}" loading="lazy"><div class="date-badge">${e.date}<small>${month} ${e.year}</small></div><div class="pad"><span class="tag">${e.type}</span><h3>${e.title}</h3><p>${place}<br>${e.time}</p><div class="meta"><span>${e.community}</span></div><button class="pill event-interest" data-event="${e.title}">${t('ui.interest')}</button></div></article>`; };
 const eventScroller = cards => `<div class="event-scroll-wrap"><div class="event-grid events-scroll">${cards}</div></div>`;
 
-/* editorial facts block under the gallery — replaces flat info columns */
+/* editorial facts block under the gallery – replaces flat info columns */
 const infoEditorial = () => `<aside class="info-editorial"><div class="ie-lead"><p class="eyebrow">${t('info.eyebrow')}</p><h2>${t('info.h')}</h2><p>${t('info.p')}</p><a class="text-link" href="events.html">${t('info.link')}</a></div><dl class="ie-facts">
   <div class="ie-fact"><dt>${t('info.f1')}</dt><dd>${t('info.f1v')}</dd><small>${t('info.f1s')}</small></div>
   <div class="ie-fact"><dt>${t('info.f2')}</dt><dd>${t('info.f2v')}</dd><small>${t('info.f2s')}</small></div>
@@ -56,7 +56,7 @@ const infoEditorial = () => `<aside class="info-editorial"><div class="ie-lead">
 </dl></aside>`;
 const productCard = (p, i) => `<article class="product-card" data-category="${p.cat}"><div class="product-art ${p.tone}"><span class="product-word">${p.name.split(' ').slice(-1)[0].toUpperCase()}</span></div><div class="pad"><div class="product-name">${p.name}</div><div class="price-row"><span class="price">${money(p.price)}</span><button class="add-cart" data-product="${i}" aria-label="${t('merch.aria')} ${p.name}">+</button></div></div></article>`;
 
-/* ---------- HOME — cinematic scroll journey ---------- */
+/* ---------- HOME – cinematic scroll journey ---------- */
 /* Bagian 3: master geometry lapangan dipindah ke court-geometry.js
    (satu sumber untuk Intro, Home, Tobaladies, Tobadeli).
    PX, HH, HW, COURT_MARKINGS, courtSVG tetap tersedia sebagai const global. */
@@ -66,14 +66,14 @@ function home() {
 <section class="hero hero-home kinetic">
   <div class="hero-gradient-shift" aria-hidden="true"></div>  <!-- Prompt 36: pergantian warna perlahan -->
   <div class="hero-atmosphere" aria-hidden="true" data-pointer-depth="7"></div>
-  <!-- Prompt 54: cinematic photo collage — dokumentasi asli TOBA, layered editorial -->
+  <!-- Prompt 54: cinematic photo collage – dokumentasi asli TOBA, layered editorial -->
   <div class="hero-collage" aria-hidden="true">
     <figure class="hc-photo hc-a" data-cine-h="0.22"><img src="${photos.training}" alt="" loading="eager"></figure>
     <figure class="hc-photo hc-b" data-cine-h="0.38"><img src="${photos.women}" alt="" loading="lazy"></figure>
     <figure class="hc-photo hc-c" data-cine-h="0.55"><img src="${photos.men}" alt="" loading="lazy"></figure>
     <figure class="hc-photo hc-d" data-cine-h="0.7"><img src="${photos.arena}" alt="" loading="lazy"></figure>
   </div>
-  <!-- Prompt 37-38: multiple SVG cutout composition — di dalam kolom head/body flow -->
+  <!-- Prompt 37-38: multiple SVG cutout composition – di dalam kolom head/body flow -->
   <div class="hero-cut-slideshow" id="heroCutShow" aria-hidden="true"></div>
   <div class="hero-group-slideshow" id="heroGroupShow" aria-hidden="true"></div>
   <div class="hero-head"><p class="hero-identity brand-wordmark" translate="no"><span class="id-toba">TOBA</span><span class="id-comm">COMMUNITY</span></p><small class="hero-sub-identity">${t('hero.identity.sub')}</small></div>
@@ -140,7 +140,7 @@ function home() {
 <section class="cine-reviews" id="cineReviews" aria-label="${t('cine.reviews.aria')}">
   <div class="cine-rbg" aria-hidden="true">
     ${cinePhotos.map((p,i)=>`<div class="cine-rbg-img${i===0?' active':''}" style="background-image:url('${p}')"></div>`).join('')}
-    <!-- Prompt 57: starfield canvas — partikel berlapis depth, twinkle halus -->
+    <!-- Prompt 57: starfield canvas – partikel berlapis depth, twinkle halus -->
     <div class="starfield-layer"><canvas id="tobaStars"></canvas></div>
   </div>
   <div class="cine-rbg-overlay" aria-hidden="true"></div>
@@ -152,11 +152,11 @@ function home() {
   <div class="cine-rcards" aria-live="polite"></div>
 </section>
 
-<!-- Prompt 69: section hijau "LANGSUNG DARI LAPANGAN" dihapus —
+<!-- Prompt 69: section hijau "LANGSUNG DARI LAPANGAN" dihapus –
      dokumentasinya sudah tampil di galeri bergerak di bawah -->
 
 <section class="section-wrap agenda-section"><div class="section-heading"><div><p class="eyebrow">${t('home.events.eyebrow')}</p><h2>${t('home.events.h')}</h2></div><a class="text-link" href="events.html">${t('home.events.link')}</a></div>
-  <!-- Prompt 9: filter kategori agenda — sistem & label sama dengan halaman Events -->
+  <!-- Prompt 9: filter kategori agenda – sistem & label sama dengan halaman Events -->
   <div class="filters agenda-filters" id="agendaFilters">${t('events.filters').split('|').map((x, i) => `<button class="filter-btn ${i === 0 ? 'active' : ''}" data-filter="${x}">${x}</button>`).join('')}</div>
   <div class="event-grid" id="agendaGrid">${events.map(eventCard).join('')}</div>
 </section>
@@ -180,29 +180,29 @@ function home() {
 `
 }
 
-/* ---------- PROMPT 1-10 · CINEMATIC MODULE (namespace .cine-) ---------- */
+/* ---------- PROMPT 1-10 – CINEMATIC MODULE (namespace .cine-) ---------- */
 const cinePhotos = [photos.women, photos.men, photos.training, photos.women2, photos.arena, photos.game2];
 const cineRow1 = [photos.game2, photos.men, photos.women, photos.men2, photos.women3, photos.arena, photos.training, photos.women2];
 const cineRow2 = [photos.team, photos.women3, photos.hoop, photos.training, photos.ladies3, photos.men2, photos.ball, photos.floor, photos.women, photos.men, photos.game2];   /* Prompt 57: +3 foto agar kelompok cukup lebar untuk viewport */
 const cineRow3 = [photos.hoop, photos.ladies3, photos.ball, photos.floor, photos.men2, photos.team, photos.women, photos.game2];
-const cineReviews = []; /* isi dengan review asli berizin: {name:'…', text:'…'} — kosong = kartu disembunyikan, tidak ada data fiktif */
+const cineReviews = []; /* isi dengan review asli berizin: {name:'–', text:'–'} – kosong = kartu disembunyikan, tidak ada data fiktif */
 function cineRow(arr){
   const card = (src,i)=>`<figure class="cine-g-card"><img src="${src}" alt="${t('cine.gallery.alt')}" loading="lazy" onerror="this.parentElement.classList.add('cine-g-dead')"></figure>`;
   const seq = arr.map(card).join('');
-  /* Prompt 30/42: spacer penutup di DALAM tiap seq — jarak antar-seq identik
+  /* Prompt 30/42: spacer penutup di DALAM tiap seq – jarak antar-seq identik
      dengan jarak antar-card, sehingga wrap modulo tidak menyisakan celah kosong.
-     Prompt 42: tiap baris diberi 3 kelompok identik — satu kelompok terlalu
+     Prompt 42: tiap baris diberi 3 kelompok identik – satu kelompok terlalu
      pendek utk viewport lebar membuat sisi kanan kosong saat animasi berjalan;
      engine memakai kelompok pertama sebagai satuan loop (half). */
-  /* Prompt 57: 4 kelompok identik per baris — kelompok foto pendek (row2
+  /* Prompt 57: 4 kelompok identik per baris – kelompok foto pendek (row2
      memakai foto landscape/kecil, lebar total < viewport) membuat sisi kanan
-     kosong; menambah kelompok menjamin track total selalu > 2× viewport.
-     Semua kelompok urutan/lebar/gap identik → wrap modulo tetap seamless. */
+     kosong; menambah kelompok menjamin track total selalu > 2– viewport.
+     Semua kelompok urutan/lebar/gap identik ? wrap modulo tetap seamless. */
   const grp = `<div class="cine-g-seq">${seq}</div>`;
   return grp + `<div class="cine-g-seq" aria-hidden="true">${seq}</div><div class="cine-g-seq" aria-hidden="true">${seq}</div><div class="cine-g-seq" aria-hidden="true">${seq}</div>`;
 }
 
-/* ---------- COMMUNITY PAGES — distinct editorial rhythm ---------- */
+/* ---------- COMMUNITY PAGES – distinct editorial rhythm ---------- */
 function communityPage(which) {
     const women = which === 'tobaladies';
     const name = women ? 'TOBALADIES' : 'TOBADELI', tone = women ? 'pink' : 'orange';
@@ -248,7 +248,7 @@ function communityPage(which) {
 <section class="section-wrap"><div class="callout"><div><p class="eyebrow">${t('comm.join.eyebrow')}</p><h3>${t('comm.join.h')}</h3><p class="lede">${t('comm.pill.d')}</p></div><a class="pill" href="partnership.html">${ctaJoin}</a></div></section>`
 }
 
-/* ---------- P25: FAQ — percakapan TOBA Assistant dipindah ke chatbot global
+/* ---------- P25: FAQ – percakapan TOBA Assistant dipindah ke chatbot global
    (script.js, modul TOBI). Yang tersisa di halaman Events: kartu info
    Weekly Fun Game. Tanpa bubble percakapan statis lagi. ---------- */
 function faqSection() {
@@ -277,7 +277,7 @@ function ladiesStory() {
 </div></section>`
 }
 
-/* ---------- EVENTS — editorial timeline + preserved filters ---------- */
+/* ---------- EVENTS – editorial timeline + preserved filters ---------- */
 function eventsPage() {
     const labels = t('events.filters').split('|');
     return `
@@ -288,21 +288,21 @@ function eventsPage() {
   <div class="venue-note" style="margin-top:28px"><strong>${t('events.note.strong')}</strong> ${t('events.note')}<a class="venue-link" href="https://www.gelora.id/v/brickhouse" target="_blank" rel="noreferrer">Brickhouse The East, Duren Sawit</a>${t('events.note2')}</div></section>${faqSection()}`
 }
 
-/* ---------- MERCH — product focus, preserved filters + cart ---------- */
+/* ---------- MERCH – product focus, preserved filters + cart ---------- */
 function merchPage() {
     const labels = t('merch.filters').split('|');
     return `
 <section class="hero section-wrap" style="min-height:auto"><div class="hero-copy"><p class="eyebrow">${t('home.merch.eyebrow')}</p><h1>TOBA<br><span class="accent-orange">MERCH.</span></h1><p class="hero-subtitle">${t('merch.hero.lede')}</p></div></section>
 <section class="section-wrap merch-page-wrap"><div class="filters" id="productFilters">${labels.map((x, i) => `<button class="filter-btn ${i === 0 ? 'active' : ''}" data-filter="${x}">${x}</button>`).join('')}<button class="pill cart-toggle" id="toggleCart" type="button" aria-expanded="false">${t('merch.bag')} <span id="cartCount">0</span></button></div>
   <div class="product-grid" id="productGrid">${products.map(productCard).join('')}</div>
-  <!-- Prompt 22: isi keranjang (qty ±, hapus, total otomatis) -->
+  <!-- Prompt 22: isi keranjang (qty –, hapus, total otomatis) -->
   <div class="cart-box" id="cartBox" hidden aria-live="polite"></div>
-  <!-- Prompt 23: order card — terpisah proporsional dari produk terakhir -->
+  <!-- Prompt 23: order card – terpisah proporsional dari produk terakhir -->
   <div class="order-card"><div class="order-copy"><p class="eyebrow accent-orange">${t('merch.order.eyebrow')}</p><h3>${t('merch.order.h')}</h3><p class="lede">${t('merch.order.d')}</p><p class="order-note"><small>${t('merch.hero.lede')}</small></p></div><div class="order-actions"><button class="pill order-cta" id="checkoutWA" type="button">${t('merch.order.cta')}</button><button class="pill secondary" id="orderScrollTop" type="button" onclick="document.getElementById('productGrid').scrollIntoView({behavior:'smooth'})">${t('merch.order.cta2')}</button></div></div>
 </section>`
 }
 
-/* ---------- GALLERY — editorial, live API ---------- */
+/* ---------- GALLERY – editorial, live API ---------- */
 function galleryPage() {
     const labels = t('gallery.filters').split('|');
     return `
@@ -312,7 +312,7 @@ function galleryPage() {
   <div class="venue-note" style="margin-top:35px">${t('gallery.hero.lede')}</div></div>${infoEditorial()}</section>`
 }
 
-/* ---------- PARTNERSHIP — simple premium × cinematic sports ---------- */
+/* ---------- PARTNERSHIP – simple premium – cinematic sports ---------- */
 function partnershipPage() {
     const pImg = 'assets/img/partnership/';
     return `
@@ -461,7 +461,7 @@ document.addEventListener('click', e => {
 const menuToggle = document.getElementById('menuToggle'), nav = document.getElementById('mainNav');
 const backdrop = document.createElement('div');
 backdrop.className = 'nav-backdrop';
-/* the scrollable middle of the drawer — head + footer stay fixed */
+/* the scrollable middle of the drawer – head + footer stay fixed */
 nav.querySelector('.mega')?.classList.add('drawer-scroll');
 document.body.appendChild(backdrop);
 
@@ -491,7 +491,7 @@ menuToggle.addEventListener('click', () => {
   document.body.style.overflow = open ? 'hidden' : '';
   backdrop.classList.toggle('show', open);
   if (open) {
-    /* the mega markup renders as the drawer accordion — always visible */
+    /* the mega markup renders as the drawer accordion – always visible */
     const megaMenu = document.getElementById('megaMenu');
     if (megaMenu) megaMenu.hidden = false;
     nav.querySelector('.drawer-close')?.focus();
@@ -523,19 +523,28 @@ nav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeNav));
 /* Escape also closes the drawer */
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && nav.classList.contains('open')) { closeNav(); menuToggle.focus() } });
 
+/* PROMPT 2 Mobile Flip: orientasi berubah saat drawer terbuka – nav-scroll
+   menyesuaikan ulang lewat resize; tidak ada yang tertutup header/CTA. */
+window.addEventListener('orientationchange', () => {
+  if (nav.classList.contains('open')) {
+    nav.style.height = '100dvh';
+    setTimeout(() => { nav.style.height = ''; }, 120);
+  }
+});
+
 /* ---------- toast ---------- */
 let toastTimer; function toast(msg) { const el = document.getElementById('toast'); el.textContent = msg; el.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), 2600) }
 
 /* ---------- filters (preserved behavior) ---------- */
 function setFilter(container, selector, filter) { container.querySelectorAll('[data-filter]').forEach(b => b.classList.toggle('active', b.dataset.filter === filter)); document.querySelectorAll(selector).forEach(card => { const category = card.dataset.category || ''; card.style.display = (filter === 'All' || filter === 'All Events' || category === filter || category.includes(filter) || card.textContent.includes(filter)) ? '' : 'none' }); }
 document.getElementById('eventFilters')?.addEventListener('click', e => { const b = e.target.closest('[data-filter]'); if (!b) return; setFilter(document.getElementById('eventFilters'), '.event-card', b.dataset.filter); if (b.dataset.filter === 'All Events') document.querySelectorAll('.event-card').forEach(c => c.style.display = '') });
-/* Prompt 9: filter agenda di homepage — pakai setFilter yang sama (compat dengan Events) */
+/* Prompt 9: filter agenda di homepage – pakai setFilter yang sama (compat dengan Events) */
 document.getElementById('agendaFilters')?.addEventListener('click', e => { const b = e.target.closest('[data-filter]'); if (!b) return; setFilter(document.getElementById('agendaFilters'), '#agendaGrid .event-card', b.dataset.filter); if (b.dataset.filter === 'All Events' || b.dataset.filter === 'Semua Event') document.querySelectorAll('#agendaGrid .event-card').forEach(c => c.style.display = '') });
 document.getElementById('productFilters')?.addEventListener('click', e => { const b = e.target.closest('[data-filter]'); if (!b) return; setFilter(document.getElementById('productFilters'), '.product-card', b.dataset.filter === 'All' ? 'All' : b.dataset.filter) });
 
 /* ---------- P22: keranjang belanja + checkout WhatsApp ----------
    Nomor WA resmi TOBA yang sudah ada di konfigurasi (footer): 6281285704946.
-   Tidak ada klaim pembayaran/pesanan — hanya template pesan rapi ke admin. */
+   Tidak ada klaim pembayaran/pesanan – hanya template pesan rapi ke admin. */
 const TOBA_WA = '6281285704946';
 let cart = [];   /* {p: product, qty: n} */
 const cartTotal = () => cart.reduce((s, l) => s + l.p.price * l.qty, 0);
@@ -547,12 +556,12 @@ function renderCartUI() {
   if (!cart.length) { box.innerHTML = `<p class="cart-empty">${t('merch.empty')}</p>`; return; }
   box.innerHTML = cart.map((l, i) => `
     <div class="cart-line">
-      <div class="cart-info"><strong>${l.p.name}</strong><span>${money(l.p.price)} × ${l.qty} = <b>${money(l.p.price * l.qty)}</b></span></div>
+      <div class="cart-info"><strong>${l.p.name}</strong><span>${money(l.p.price)} – ${l.qty} = <b>${money(l.p.price * l.qty)}</b></span></div>
       <div class="cart-qty">
-        <button type="button" class="cart-step" data-cart-step="-1" data-cart-line="${i}" aria-label="−">−</button>
+        <button type="button" class="cart-step" data-cart-step="-1" data-cart-line="${i}" aria-label="-">-</button>
         <span>${l.qty}</span>
         <button type="button" class="cart-step" data-cart-step="1" data-cart-line="${i}" aria-label="+">+</button>
-        <button type="button" class="cart-del" data-cart-del="${i}" aria-label="Hapus">✕</button>
+        <button type="button" class="cart-del" data-cart-del="${i}" aria-label="Hapus">?</button>
       </div>
     </div>`).join('') + `<div class="cart-total"><span>${t('merch.total')}</span><b>${money(cartTotal())}</b></div>`;
 }
@@ -621,7 +630,7 @@ Terima kasih!
 
   window.open(waUrl, '_blank', 'noopener');
 });
-/* Prompt 9/21: "Kembali ke atas" dihapus dari semua halaman — guard agar error tidak muncul jika markup sisa */
+/* Prompt 9/21: "Kembali ke atas" dihapus dari semua halaman – guard agar error tidak muncul jika markup sisa */
 document.getElementById('backTop')?.addEventListener('click', e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }) });
 
 /* ---------- live gallery: fetch after render (preserved) ---------- */
@@ -728,7 +737,7 @@ window.addEventListener('resize', () => { if (!pTick && !reduceMotion) { pTick =
 initParallax();
 
 /* ---------- kinetic typography: per-line reveal (scoped by .kinetic parent) ----------
-   Splits only the hero H1s into masked lines — headings stay semantic (H1/H2). */
+   Splits only the hero H1s into masked lines – headings stay semantic (H1/H2). */
 function initKinetic() {
     if (reduceMotion) return;
     document.querySelectorAll('.kinetic h1, .kinetic .hero-subtitle').forEach(node => {
@@ -783,7 +792,7 @@ initPointerScene();
 initFaq();
 
 /* =====================================================================
-   PROMPT 54-55 · CINEMATIC SCROLL ENGINE — hero collage drifts RIGHT
+   PROMPT 54-55 – CINEMATIC SCROLL ENGINE – hero collage drifts RIGHT
    as the user scrolls (no hijack: pure rAF + scrollY). Layer speeds come
    from data-cine-h (0=still, 1=fast). Reduced-motion skips everything.
    ===================================================================== */
@@ -835,7 +844,7 @@ initMerchTilt();
 
 
 /* =====================================================================
-   PROMPT 57 · STARFIELD ENGINE — cinematic depth particles (canvas)
+   PROMPT 57 – STARFIELD ENGINE – cinematic depth particles (canvas)
    ===================================================================== */
 (function starfield(){
   if (document.body.dataset.page !== 'home') return;
@@ -906,20 +915,20 @@ initMerchTilt();
 })();
 
 /* =====================================================================
-   HERO SVG CUTOUT â€” CENTER STAGE PLAYER CAROUSEL (redesign 2026-11)
+   HERO SVG CUTOUT — CENTER STAGE PLAYER CAROUSEL (redesign 2026-11)
    =====================================================================
    Konsep visual baru: PLAYER CUTOUT CENTER STAGE.
-     â€¢ SATU pemain utama besar di tengah (main), dua pemain preview lebih
+     • SATU pemain utama besar di tengah (main), dua pemain preview lebih
        kecil (~50%) di kiri & kanan sebagai depth/preview.
-     â€¢ Satu sistem index + satu timer autoplay (~4.5s), looping tanpa jeda.
-     â€¢ Swipe (mobile) & drag (desktop) mengganti pemain; interaksi manual
+     • Satu sistem index + satu timer autoplay (~4.5s), looping tanpa jeda.
+     • Swipe (mobile) & drag (desktop) mengganti pemain; interaksi manual
        mereset timer autoplay.
-     â€¢ GROUP PHOTO slideshow landscape terpisah â€” timer sendiri (7s).
-     â€¢ BOLA BASKET tetap elemen persisten + modul fisika interaktif lama
+     • GROUP PHOTO slideshow landscape terpisah — timer sendiri (7s).
+     • BOLA BASKET tetap elemen persisten + modul fisika interaktif lama
        (.hero-cut-img.cut-ball) tidak disentuh.
    Arsitektur:
      - renderPlayerCarousel()  : 1 sumber DOM (stage.tier-main/left/right)
-     - applyCarousel()         : transform/opacity by tier â€” smooth, loop
+     - applyCarousel()         : transform/opacity by tier — smooth, loop
      - startPlayerAuto/stopPlayerAuto : SATU timer autoplay pemain
      - groupTimer              : SATU timer slideshow grup (7s)
      - restartHeroCut()        : kompatibel event 'toba:langchange'
@@ -934,7 +943,7 @@ initMerchTilt();
   if (!box) return;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ---- GOOGLE SHEETS API (api=hero, JSONP) â€” TIDAK DIUBAH ---- */
+  /* ---- GOOGLE SHEETS API (api=hero, JSONP) — TIDAK DIUBAH ---- */
   const HERO_API = 'https://script.google.com/macros/s/AKfycbxgx0kHXRa7uR3PuADKiEgvs_sLHp0U9UbxHsxkPwWl9kjlCZnQWa6iZBa1NW9tjrcLvg/exec';
   const HERO_CACHE_KEY = 'tobaHeroCache.v4';
   const HERO_CACHE_TTL = 5 * 60 * 1000;
@@ -1025,7 +1034,7 @@ initMerchTilt();
 
   let heroApiDone = null;
 
-  /* preload + validasi gambar; gagal load â†’ dibuang */
+  /* preload + validasi gambar; gagal load → dibuang */
   function validatePhotos(list, cb) {
     if (!list || !list.length) { cb([]); return; }
     let left = list.length;
@@ -1151,7 +1160,7 @@ initMerchTilt();
     ball = null;
 
     /* stage + ball layer PERSISTEN: dibuat sekali per BOX. Listener gesture
-       menempel di box → tidak pernah ter-drop saat re-render pemain. */
+       menempel di box ? tidak pernah ter-drop saat re-render pemain. */
     let stage = box.querySelector('.cut-stage');
     if (!stage) {
       box.innerHTML = '';
@@ -1189,7 +1198,7 @@ initMerchTilt();
     ];
     const showAll = n >= 3;
     tiers.forEach((t, pos) => {
-      if (!showAll && pos !== 1) return;           /* <3 foto â†’ hanya main */
+      if (!showAll && pos !== 1) return;           /* <3 foto → hanya main */
       const el = makePlayerNode(t.src);
       el.classList.add(...t.cls.split(' '));
       if (t.cls === 'tier-main') el.classList.add('cut-on');
@@ -1245,7 +1254,7 @@ initMerchTilt();
 
   /* ---------- DATA SOURCES: lokal dulu, API Sheets menyusul ---------- */
   function buildLocal() {
-    /* preload SVG lokal bisa belum selesai di first paint — retry sampai
+    /* preload SVG lokal bisa belum selesai di first paint – retry sampai
        aset siap (biasanya <1s, aset sudah dipreload oleh cache[]) */
     const okImg = i => i && i.complete && i.naturalWidth > 0;
     const localPlayers = PLAN
@@ -1259,14 +1268,14 @@ initMerchTilt();
     if (!localPlayers.length || !localGroups.length) {
       if (buildLocal.tries === undefined) buildLocal.tries = 0;
       if (++buildLocal.tries < 40) { setTimeout(buildLocal, 250); return; }
-      console.warn('[TOBA Hero] aset lokal belum siap — tampilkan apa adanya');
+      console.warn('[TOBA Hero] aset lokal belum siap – tampilkan apa adanya');
     }
     buildLocal.tries = 0;
     /* FIX bug "gambar grup baru muncul setelah refresh": kalau grup lokal
-       masih belum siap tapi pemain sudah, render yang ada dulu — lalu pantau
+       masih belum siap tapi pemain sudah, render yang ada dulu – lalu pantau
        image yang belum selesai dan render ulang begitu grup siap. Tanpa ini,
        group slideshow dirender kosong dan hanya pulih setelah API (bisa 15s+
-       atau gagal) — refresh manual jadi satu-satunya jalan keluar. */
+       atau gagal) – refresh manual jadi satu-satunya jalan keluar. */
     if (!localGroups.length && localPlayers.length) {
       const pending = PLAN.filter(p => p.type === 'group')
         .map(p => cache[p.file]).filter(i => i && !okImg(i));
@@ -1303,7 +1312,7 @@ initMerchTilt();
       resetPlayerAuto();
       console.info('[TOBA Hero] carousel memuat', players.length, 'pemain dari Google Sheets');
     } else if (list.some(p => p.type === 'BALL')) {
-      /* hanya bola baru dari API â†’ refresh bola saja */
+      /* hanya bola baru dari API → refresh bola saja */
       renderPlayerCarousel();
     }
   }
@@ -1316,16 +1325,16 @@ initMerchTilt();
       if (list && list.length) {
         validatePhotos(list, ok => {
           if (ok.length) prepareApiPhotos(ok);
-          else console.warn('[TOBA Hero] gambar API gagal dimuat â€” tetap pakai aset lokal');
+          else console.warn('[TOBA Hero] gambar API gagal dimuat — tetap pakai aset lokal');
         });
       } else {
-        console.warn('[TOBA Hero] API tidak merespons â€” tetap pakai aset lokal');
+        console.warn('[TOBA Hero] API tidak merespons — tetap pakai aset lokal');
       }
     });
   }
 
   /* ---- kompatibilitas pergantian bahasa ('toba:langchange') ----
-     re-render bahasa membangun ulang DOM home â†’ elemen lama hilang.
+     re-render bahasa membangun ulang DOM home → elemen lama hilang.
      restartHeroCut(): stop semua timer, ambil elemen BARU, render ulang.
      Timer listener dipasang SEKALI di luar (tidak bertambah). */
   function restartHeroCut() {
@@ -1359,7 +1368,7 @@ initMerchTilt();
 
   startComposition();
 
-  /* hemat resource: tab tersembunyi â†’ timer berhenti; kembali â†’ lanjut */
+  /* hemat resource: tab tersembunyi → timer berhenti; kembali → lanjut */
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) { stopPlayerAuto(); clearTimeout(groupTimer); groupTimer = 0; }
     else {
@@ -1398,7 +1407,7 @@ initMerchTilt();
   }
 })();
 
-/* ---------- P11/P12: marquee TOBA APPAREL — kalimat seamless, warna orange.
+/* ---------- P11/P12: marquee TOBA APPAREL – kalimat seamless, warna orange.
    Dibangun di sini (bukan inline HTML) supaya tiap item identik: loop modulo
    tanpa celah, teks tidak pernah terpotong di tengah kalimat. ---------- */
 (function marqueeApparel(){
@@ -1428,7 +1437,7 @@ initMerchTilt();
 })();
 
 /* =====================================================================
-   PROMPT 1-10 · CINEMATIC ENGINE — namespace .cine-, lifecycle-controlled
+   PROMPT 1-10 – CINEMATIC ENGINE – namespace .cine-, lifecycle-controlled
    All loops are IntersectionObserver-gated, rAF-driven, and cleaned up.
    Marquee/gallery never mutate DOM; position accumulates continuously so
    a pause/resume never causes a jump. Reduced-motion disables everything.
@@ -1443,7 +1452,7 @@ initMerchTilt();
   const cineRev = sec('.cine-reviews');
 
   /* ---------- SHARED STATE ---------- */
-  const tracks = [];       /* {el, dir, speed, pos, half} — marquee + gallery rows */
+  const tracks = [];       /* {el, dir, speed, pos, half} – marquee + gallery rows */
   const vis   = new Map(); /* section element -> visible flag */
   let lastT = 0, rafId = 0;
   const clamp = (v,a,b)=>Math.min(b,Math.max(a,v));
@@ -1455,7 +1464,7 @@ initMerchTilt();
     const seq = tr.el.querySelector('.cine-g-seq, .cine-m-item');
     if (!seq) return;
     /* Prompt 42/43: ukur pitch penuh satu kelompok (lebar + gap antar-seq),
-       bukan hanya scrollWidth — scrollWidth bisa meleset bila font belum
+       bukan hanya scrollWidth – scrollWidth bisa meleset bila font belum
        siap / gambar belum render, dan itulah penyebab celah kosong di
        baris kedua & pada titik pergantian kelompok marquee. */
     
@@ -1488,21 +1497,21 @@ initMerchTilt();
     tracks.forEach(tr => {
       if (!tr.half) measureTrack(tr);
       if (!tr.half || tr.paused) return;
-      /* Prompt 42/43: re-measure ketika viewport/font berubah — half yang
+      /* Prompt 42/43: re-measure ketika viewport/font berubah – half yang
          basi membuat wrap melompat atau menyisakan celah kosong */
       /* re-measure sekali setelah window 'load' (font & gambar siap) dan
-         saat lebar viewport berubah — half basi membuat wrap menyisakan celah */
+         saat lebar viewport berubah – half basi membuat wrap menyisakan celah */
       if (!cineEngine._measured || tr._remW !== window.innerWidth) {
         tr._remW = window.innerWidth; measureTrack(tr);
       }
       if (!(vis.get(tr.section))) return;                    /* hanya saat section terlihat */
       any = true;
-      /* pos selalu naik (akumulator unsigned) — tanda arah hanya di transform,
+      /* pos selalu naik (akumulator unsigned) – tanda arah hanya di transform,
          sehingga wrap modulo tetap seamless untuk kedua arah */
       tr.pos += (tr.speed * dt) * (tr.speedMul || 1) * (1 + Math.abs(scrollBoost) * (tr.isMarquee ? .5 : .15));
-      /* wrap around half-width → seamless, tanpa lompatan */
+      /* wrap around half-width ? seamless, tanpa lompatan */
       tr.pos = ((tr.pos % tr.half) + tr.half) % tr.half;
-      /* dir=1 (ltr) → bergerak ke kanan (+x); dir=-1 (rtl) → bergerak ke kiri (-x) */
+      /* dir=1 (ltr) ? bergerak ke kanan (+x); dir=-1 (rtl) ? bergerak ke kiri (-x) */
       const offset = tr.dir === 1
         ? tr.pos - tr.half
         : -tr.pos;
@@ -1547,7 +1556,7 @@ initMerchTilt();
   }
 
   /* ================================================================
-     PROMPT 7 · CINEMATIC FADE BG + FLOATING REVIEWS
+     PROMPT 7 – CINEMATIC FADE BG + FLOATING REVIEWS
      Crossfade timer gagal-aman: foto gagal diload dilewati, rotasi tak
      pernah berhenti permanen, tanpa rekur antar pergantian.
      ================================================================ */
@@ -1561,7 +1570,7 @@ initMerchTilt();
     const cardsBox = cineRev.querySelector('.cine-rcards');
     const valid = (cineReviews||[]).filter(r => r && r.name && r.text);
 
-    /* review cards: hanya dirender jika ada data asli — tanpa placeholder palsu */
+    /* review cards: hanya dirender jika ada data asli – tanpa placeholder palsu */
     let cards = [];
     if (valid.length && cardsBox) {
       cardsBox.innerHTML = valid.map((r,i) =>
@@ -1606,24 +1615,24 @@ initMerchTilt();
   }
 
   /* ================================================================
-     REVIEWS FRONTEND — Google Sheets (endpoint deployment yang sama
+     REVIEWS FRONTEND – Google Sheets (endpoint deployment yang sama
      dengan Hero/Gallery). Published: JSONP GET api=reviews (callback
      tobaReviewsCallback, shape terverifikasi: success/total/reviews[]
      dengan displayName, group, reviewText, rating, publishedAt).
      Submit: POST api=submitReview (name, group, rating, reviewText,
-     consent) → tersimpan PENDING, tidak langsung ditampilkan.
+     consent) ? tersimpan PENDING, tidak langsung ditampilkan.
      ================================================================ */
   function initReviewsApi(){
     const REV_API = 'https://script.google.com/macros/s/AKfycbxgx0kHXRa7uR3PuADKiEgvs_sLHp0U9UbxHsxkPwWl9kjlCZnQWa6iZBa1NW9tjrcLvg/exec';
     const sec = document.getElementById('cineReviews');
     if (!sec) return;
 
-    /* modal review — dibuat sekali, dirender ke body (di luar section) */
+    /* modal review – dibuat sekali, dirender ke body (di luar section) */
     if (!document.getElementById('reviewModalWrap')) {
       document.body.insertAdjacentHTML('beforeend', `
       <div id="reviewModalWrap" hidden>
         <div class="rev-modal" role="dialog" aria-modal="true" aria-label="${t('reviews.modal.aria')}">
-          <button class="rev-close" type="button" aria-label="Close">✕</button>
+          <button class="rev-close" type="button" aria-label="Close">?</button>
           <h3>${t('reviews.modal.title')}</h3>
           <form id="reviewForm" novalidate>
             <label>${t('reviews.name')}<input id="revName" type="text" maxlength="40" autocomplete="name"></label>
@@ -1635,7 +1644,7 @@ initMerchTilt();
               <option value="Lainnya">Lainnya</option>
             </select></label>
             <div class="rev-stars" role="radiogroup" aria-label="${t('reviews.rating')}">
-              ${[1,2,3,4,5].map(i=>`<span class="rev-star" role="radio" aria-checked="false" tabindex="0" data-v="${i}">★</span>`).join('')}
+              ${[1,2,3,4,5].map(i=>`<span class="rev-star" role="radio" aria-checked="false" tabindex="0" data-v="${i}">?</span>`).join('')}
             </div>
             <label>${t('reviews.text')}<textarea id="revText" rows="4" maxlength="500"></textarea><span class="rev-count" id="revCount">0/500</span></label>
             <label class="rev-consent"><input id="revConsent" type="checkbox"> ${t('reviews.consent')}</label>
@@ -1685,7 +1694,7 @@ initMerchTilt();
         card.querySelector('blockquote').textContent = review.text;
 
         card.querySelector('figcaption').textContent =
-          review.name + (review.group ? ' · ' + review.group : '');
+          review.name + (review.group ? ' – ' + review.group : '');
       }
 
       // Animasi independen untuk setiap posisi
@@ -1708,16 +1717,16 @@ initMerchTilt();
             showReview();
 
             setTimeout(rotateReview, 6500 + slotIndex * 500);
-          }, 350);
+          }, 1300);   /* PROMPT 6: durasi fade-in 1.2s + buffer */
         }
 
         setTimeout(() => {
           showReview();
 
           if (queue.length > 1) {
-            setTimeout(rotateReview, 6500 + slotIndex * 500);
+            setTimeout(rotateReview, 6500 + slotIndex * 650);
           }
-        }, slotIndex * 650);
+        }, 600 + slotIndex * 700);   /* PROMPT 6: jeda antar-bubble 0.5–0.8s */
       });
 
 
@@ -1817,7 +1826,7 @@ initMerchTilt();
   function measureTracksAll(){ tracks.forEach(measureTrack); wake(); }
 
   /* ================================================================
-     PROMPT 56 · GALLERY INTERAKSI — drag/swipe + image preview lightbox
+     PROMPT 56 – GALLERY INTERAKSI – drag/swipe + image preview lightbox
      Drag menggeser track (pointer events), auto-motion lanjut setelah
      lepas. Klik foto membuka lightbox premium (close: X, backdrop, Esc,
      navigasi prev/next + arrow keys). Touch swipe tidak mengganggu
@@ -1858,7 +1867,7 @@ initMerchTilt();
         if (!dragging) return;
         dragging = false;
         track.classList.remove('dragging');
-        /* auto-motion continues naturally on next rAF — pos already synced */
+        /* auto-motion continues naturally on next rAF – pos already synced */
       };
       track.addEventListener('mousedown', down);
       window.addEventListener('mousemove', move, { passive: true });
@@ -1866,7 +1875,7 @@ initMerchTilt();
       track.addEventListener('touchstart', down, { passive: true });
       track.addEventListener('touchmove', move, { passive: false });
       track.addEventListener('touchend', up, { passive: true });
-      /* klik foto — buka preview (kecuali itu adalah drag) */
+      /* klik foto – buka preview (kecuali itu adalah drag) */
       track.addEventListener('click', e => {
         if (moved) { moved = false; return; }
         const card = e.target.closest('.cine-g-card');
@@ -1950,14 +1959,14 @@ initMerchTilt();
 })();
 
 /* =====================================================================
-   PROMPT — INTERACTIVE BASKETBALL (easter egg physics)
+   PROMPT – INTERACTIVE BASKETBALL (easter egg physics)
    Bola basket cutout (.hero-cut-img.cut-ball) di Hero menjadi objek
    fisika ringan: tap = bounce, drag = ikut pointer, lepas = lempar
    (velocity gesture), gravity + bounce + friction natural, rotasi
-   mengikuti momentum. Tanpa canvas, tanpa library — DOM + rAF saja.
+   mengikuti momentum. Tanpa canvas, tanpa library – DOM + rAF saja.
    Area gerak DIBATASI ke stage foto (.hero-cut-slideshow) sehingga
    bola tidak mungkin menutupi CTA, navbar, teks, atau Music Player.
-   prefers-reduced-motion → bola tetap statis (modul tidak aktif).
+   prefers-reduced-motion ? bola tetap statis (modul tidak aktif).
    ===================================================================== */
 (function interactiveBall(){
   const box = document.querySelector('.hero-home .hero-cut-slideshow');
@@ -1967,8 +1976,8 @@ initMerchTilt();
   const BALL_SEL = '.hero-cut-img.cut-ball';
   let ballEl = null;
 
-  /* bola dirender asinkron oleh modul komposisi → poll sampai ada.
-     Node bola bisa DIGANTI saat API Sheets mengadopsi foto — re-bind bila
+  /* bola dirender asinkron oleh modul komposisi ? poll sampai ada.
+     Node bola bisa DIGANTI saat API Sheets mengadopsi foto – re-bind bila
      node aktif tidak lagi terhubung ke dokumen. */
   let tries = 0;
   const find = setInterval(() => {
@@ -2009,7 +2018,7 @@ initMerchTilt();
     const apply = () => {
       if (!ballEl.isConnected) { running = false; cancelAnimationFrame(rafId); return; }
       /* CSS menempatkan bola via right/bottom; transform harus RELATIF
-         dari posisi layout itu — offsetLeft/Top mengabaikan transform */
+         dari posisi layout itu – offsetLeft/Top mengabaikan transform */
       const baseX = ballEl.offsetLeft + ballEl.offsetWidth / 2;
       const baseY = ballEl.offsetTop + ballEl.offsetHeight / 2;
       ballEl.style.setProperty('--bx', (x - baseX) + 'px');
@@ -2041,7 +2050,7 @@ initMerchTilt();
         if (y >= floor - 0.5) vx *= FRICTION;
         vrot *= 0.985;
 
-        /* IDLE: kalau hampir diam, drift/bounce kecil berkala —
+        /* IDLE: kalau hampir diam, drift/bounce kecil berkala –
            bola tidak pernah "stuck" di satu posisi */
         if (Math.abs(vx) < MIN_IDLE_V && Math.abs(vy) < MIN_IDLE_V && y >= floor - 2) {
           idleTimer++;
@@ -2142,7 +2151,7 @@ initMerchTilt();
 
 
 /* =====================================================================
-   TOBA AI ASSISTANT (TOBI) — GLOBAL FLOATING CHATBOT
+   TOBA AI ASSISTANT (TOBI) – GLOBAL FLOATING CHATBOT
    Satu instance global untuk semua halaman (di-inject via JS, bukan HTML).
    - Launcher: maskot buaya setengah badan mengintip dari tepi kanan
      (aset existing: assets/crocodile-head-trans.png), peek-a-boo anim,
@@ -2165,7 +2174,7 @@ initMerchTilt();
   const REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ---------- FAQ knowledge base: matcher kata kunci vs faq.chat.* ----------
-     Semua jawaban HANYA dari string resmi i18n.js — tidak ada info tambahan. */
+     Semua jawaban HANYA dari string resmi i18n.js – tidak ada info tambahan. */
   const FAQ_KEYS = [
     ['faq.chat.a1', ['belum pernah','baru pertama','pemula','langsung join','first time','never joined','show up','newbie','start']],
     ['faq.chat.a2', ['biaya','harga','rp','rupiah','berapa','cost','price','fee','bayar','tarif','50','30']],
@@ -2187,15 +2196,15 @@ initMerchTilt();
     return null;
   }
 
-  /* ---------- improvement 4+: konteks FAQ — ingat topik & jawaban singkat ----------
+  /* ---------- improvement 4+: konteks FAQ – ingat topik & jawaban singkat ----------
      "iya/boleh/mau" setelah jawaban FAQ melanjutkan topik yang sama;
-     "belum" setelah pertanyaan pengalaman → arahkan ke FAQ pertama. */
+     "belum" setelah pertanyaan pengalaman ? arahkan ke FAQ pertama. */
   let faqPendingQuestion = null;   /* faq.chat.qN terakhir yang dijawab */
 
   /* ---------- improvement 4: contextual engine + navigasi halaman ----------
      - ingat topik terakhir: jawaban pendek ("di mana?", "kalau gitu biayanya?")
        memakai konteks topik sebelumnya.
-     - deteksi halaman tujuan → arahkan ke halaman terkait. */
+     - deteksi halaman tujuan ? arahkan ke halaman terkait. */
   const PAGE_HINTS = [
     ['events.html', ['event','jadwal','weekly fun','fun game','agenda','kegiatan']],
     ['gallery.html', ['gallery','galeri','foto','photo']],
@@ -2208,7 +2217,7 @@ initMerchTilt();
   let lastTopic = null;   /* index FAQ 1–7 yang terakhir dijawab */
   function tobiReply(msg){
     const q = msg.toLowerCase().trim();
-    /* FAQ knowledge base dulu — pertanyaan FAQ harus dijawab, bukan diarahkan */
+    /* FAQ knowledge base dulu – pertanyaan FAQ harus dijawab, bukan diarahkan */
     let hit = tobiAnswer(q);
     /* navigasi halaman hanya jika bukan pertanyaan FAQ */
     if (!hit) for (const [page, words] of PAGE_HINTS) {
@@ -2219,7 +2228,7 @@ initMerchTilt();
         return { answer: base + page.replace('.html','').toUpperCase() + tail, pageLink: page };
       }
     }
-  /* konteks: pertanyaan lanjutan yang pendek/tidak jelas → pakai topik terakhir.
+  /* konteks: pertanyaan lanjutan yang pendek/tidak jelas ? pakai topik terakhir.
      Jawaban SANGAT pendek (iya/belum/mau/nggak/boleh) juga diarahkan ke
      topik FAQ terakhir supaya percakapan tetap nyambung. */
     if (!hit && lastTopic && q.split(/\s+/).length <= 4) {
@@ -2227,7 +2236,7 @@ initMerchTilt();
       if (!shortAck || faqPendingQuestion === lastTopic) {
         hit = { answer: t('faq.chat.a' + lastTopic), qKey: 'faq.chat.q' + lastTopic };
       } else if (lastTopic === 1) {
-        /* konteks pengalaman: "belum" → jawaban FAQ pemula */
+        /* konteks pengalaman: "belum" ? jawaban FAQ pemula */
         hit = { answer: t('faq.chat.a1'), qKey: 'faq.chat.q1' };
       }
     }
@@ -2243,7 +2252,7 @@ initMerchTilt();
   const root = document.createElement('div');
   root.id = 'tobiRoot';
   root.innerHTML = `
-    <button class="tobi-launcher" id="tobiLauncher" type="button" aria-label="TOBI — buka chat" aria-expanded="false">
+    <button class="tobi-launcher" id="tobiLauncher" type="button" aria-label="TOBI – buka chat" aria-expanded="false">
       <span class="tobi-peek"><img src="${AVATAR}" alt="" draggable="false"></span>
     </button>
     <div class="tobi-balloon" id="tobiBalloon" hidden role="status"></div>
@@ -2286,7 +2295,7 @@ initMerchTilt();
   const statusEl = root.querySelector('#tobiStatus');
   let open = false, peekIdleTimer = 0;
 
-  /* ---------- Prompt 12: variasi template — pilih acak, tidak berulang dua kali ---------- */
+  /* ---------- Prompt 12: variasi template – pilih acak, tidak berulang dua kali ---------- */
   const lastPick = {};
   function pickVar(cat, keys){
     const opts = keys.map(k => { try { return t(k); } catch(_) { return ''; } }).filter(Boolean);
@@ -2299,7 +2308,7 @@ initMerchTilt();
 
   /* ---------- posisi launcher: drag bebas (Prompt 11) ----------
      posY/posX px; null = posisi default CSS (menempel tepi kanan).
-     userPlaced = pengguna pernah memindahkan → mode User-Placed (Prompt 14):
+     userPlaced = pengguna pernah memindahkan ? mode User-Placed (Prompt 14):
      posisi disimpan di localStorage dan animasi keluar-masuk tepi dimatikan. */
   let posY = null, posX = null, userPlaced = false;
   function defaultY(){ return Math.round(window.innerHeight * 0.38); }
@@ -2370,7 +2379,7 @@ initMerchTilt();
     panel.style.left = left + 'px';
   }
 
-  /* drag launcher — pointer events (mouse + touch), 2 axis; klik vs drag dibedakan */
+  /* drag launcher – pointer events (mouse + touch), 2 axis; klik vs drag dibedakan */
   let drag = null;
   launcher.addEventListener('pointerdown', e => {
     if (e.button !== undefined && e.button !== 0) return;
@@ -2396,18 +2405,18 @@ initMerchTilt();
     }
   });
   /* klik mascot = toggle (buka kalau tertutup, tutup kalau terbuka).
-     endDrag membedakan klik vs drag → tidak ada double toggle. */
+     endDrag membedakan klik vs drag ? tidak ada double toggle. */
   function endDrag(e){
     if (!drag) return;
     const wasDrag = drag.moved;
     drag = null;
     launcher.classList.remove('dragging');
     if (wasDrag) { userPlaced = true; savePos(); }   /* Prompt 14: mode User-Placed */
-    else toggleChat();                               /* klik tanpa drag → toggle */
+    else toggleChat();                               /* klik tanpa drag ? toggle */
   }
   launcher.addEventListener('pointerup', endDrag);
   launcher.addEventListener('pointercancel', () => { if (drag) { drag = null; launcher.classList.remove('dragging'); } });
-  /* touch: hanya drag — halaman tetap bisa discroll karena touch-action pada CSS */
+  /* touch: hanya drag – halaman tetap bisa discroll karena touch-action pada CSS */
   launcher.addEventListener('click', e => { if (drag && drag.moved) e.preventDefault(); });
 
   window.addEventListener('resize', () => {
@@ -2430,7 +2439,7 @@ initMerchTilt();
       const short = await window.tobiGreeting();
       if (short) return short;
     }
-    return isId2() ? 'Halo baller! 🐊' : 'Hey baller! 🐊';
+    return isId2() ? 'Halo baller! ??' : 'Hey baller! ??';
   }
   const isId2 = () => document.documentElement.lang !== 'en';
   function showBalloon(){
@@ -2493,7 +2502,31 @@ initMerchTilt();
     typing(true);
     setTimeout(() => {
       typing(false);
-      /* 1) small talk & konteks dulu — jawaban friendly, bukan FAQ mentah */
+      /* 0) PERSONA ENGINE (Prompt 7) – nama pengunjung, typo/slang, jadwal
+         resmi Tobadeli & Tobaladies, partnership, percakapan santai.
+         Menangani dulu; jika null ? small talk lama & FAQ engine tetap jalan. */
+      const persona = (window.tobiPersona && window.tobiPersona.handle(msg)) || null;
+      if (persona) {
+        const elP = addMsg(persona, 'bot');
+        /* Prompt 7: jawaban JOIN → link klik-langsung ke Form Gabung TOBA
+           (modal #joinModal di homepage, tombol #joinCtaBtn di halaman lain). */
+        if (window.tobiPersona.lastIntent === 'join') {
+          const link = document.createElement('a');
+          const onHome = document.body.dataset.page === 'home';
+          link.href = onHome ? '#joinCtaBtn' : 'index.html';
+          link.className = 'tobi-page-link';
+          link.textContent = 'Isi Form Gabung TOBA';
+          if (onHome) link.addEventListener('click', e => {
+            e.preventDefault();
+            const btn = document.getElementById('joinCtaBtn');
+            if (btn) { btn.click(); closeNav?.(); toggleChat(false); }
+          });
+          elP.querySelector('.tobi-bubble').appendChild(document.createElement('br'));
+          elP.querySelector('.tobi-bubble').appendChild(link);
+        }
+        return;
+      }
+      /* 1) small talk & konteks dulu – jawaban friendly, bukan FAQ mentah */
       const small = (typeof window.tobiSmallTalk === 'function') ? window.tobiSmallTalk(msg) : null;
       if (small) { addMsg(small, 'bot'); return; }
       /* 2) FAQ / navigasi / fallback engine lama */
@@ -2510,7 +2543,7 @@ initMerchTilt();
         }
         return;
       }
-      /* 3) fallback ramah — variasi, tidak template kaku */
+      /* 3) fallback ramah – variasi, tidak template kaku */
       const q0 = msg.toLowerCase();
       if (/\bbasket(ball)?\b/.test(q0)) {
         addMsg(t('tobi.basket.1'), 'bot');
@@ -2524,18 +2557,19 @@ initMerchTilt();
 
   form.addEventListener('submit', e => { e.preventDefault(); send(input.value); });
 
-  /* suggested questions: teks resmi faq.chat.q1–q7 */
-  const CHIP_KEYS = [1,2,3,5,6,7];
+  /* suggested questions (Prompt 7): contextual chips dari persona engine –
+     bervariasi per konteks; klik chip = kirim pertanyaan lewat pipeline normal
+     (persona ? small talk ? FAQ) supaya jadwal & partnership juga terjawab. */
   function renderChips(){
-    chips.innerHTML = CHIP_KEYS.map(n => `<button class="tobi-chip" type="button" data-q="${n}">${esc(t('faq.chat.q' + n))}</button>`).join('');
+    let list = null;
+    try { list = (window.tobiPersona && window.tobiPersona.chips()) || null; } catch(_){ list = null; }
+    if (!list || !list.length) { chips.innerHTML = ''; return; }
+    chips.innerHTML = list.map(c => `<button class="tobi-chip" type="button" data-send="${esc(c.q)}">${esc(c.q)}</button>`).join('');
   }
-    chips.addEventListener('click', e => { const b = e.target.closest('.tobi-chip'); if (!b) return; const n = parseInt(b.dataset.q,10); lastTopic = n; addMsg(t('faq.chat.q' + n), 'user');
-    typing(true);
-    setTimeout(() => { typing(false); addMsg(t('faq.chat.a' + n), 'bot'); }, REDUCE ? 80 : 600);
-  });
+    chips.addEventListener('click', e => { const b = e.target.closest('.tobi-chip'); if (!b) return; send(b.dataset.send); });
 
   /* ---------- open / close panel ----------
-     Riwayat chat TIDAK dibersihkan saat panel ditutup — percakapan tetap
+     Riwayat chat TIDAK dibersihkan saat panel ditutup – percakapan tetap
      utuh saat dibuka lagi, dan welcome TIDAK dikirim ulang. */
   function toggleChat(force){
     open = force !== undefined ? force : !open;
@@ -2546,9 +2580,11 @@ initMerchTilt();
     if (open) {
       positionPanel();
       if (!log.childElementCount) {
-      /* welcome kontekstual hanya saat log masih kosong; bahasa mengikuti
-         bahasa aktif — welcome TIDAK dikirim ulang saat dibuka kembali */
-        addMsg(pickVar('welcome', ['tobi.welcome.1', 'tobi.welcome.2', 'tobi.welcome.3']), 'bot');
+      /* Prompt 7: first chat – TOBI kenalan & tanya nama dulu (persona engine).
+         Jika persona belum siap, fallback ke welcome lama. Welcome hanya
+         sekali; tidak dikirim ulang saat panel dibuka kembali. */
+        if (window.tobiPersona) window.tobiPersona.welcome(addMsg, t);
+        else addMsg(pickVar('welcome', ['tobi.welcome.1', 'tobi.welcome.2', 'tobi.welcome.3']), 'bot');
       }
       renderChips();
       setTimeout(() => input.focus(), 120);
@@ -2579,7 +2615,7 @@ initMerchTilt();
     root.querySelector('#tobiSub').textContent = t('tobi.sub');
     statusEl.textContent = t('tobi.status');
     launcher.setAttribute('aria-label', t('tobi.aria'));
-    panel.setAttribute('aria-label', t('tobi.name') + ' — ' + t('tobi.sub'));
+    panel.setAttribute('aria-label', t('tobi.name') + ' – ' + t('tobi.sub'));
     input.placeholder = t('tobi.ph');
     if (open) renderChips();
     /* balloon yang sedang tampil: teks ikut bahasa baru (greeting pendek),
@@ -2595,21 +2631,21 @@ initMerchTilt();
 })();
 
 /* =====================================================================
-   TOBI CONVERSATION ENGINE — friendly, contextual, small talk
+   TOBI CONVERSATION ENGINE – friendly, contextual, small talk
    (MASTER PROMPT: mascot interaction, greeting, conversational intel)
    =====================================================================
    Catatan bahasa: QA di browser tanpa localStorage 'toba-lang'=id
    memakai default EN (konsisten dengan seluruh situs, default EN).
-   Greeting pendek memakai TOBI_GREETINGS di i18n.js — mengikuti
+   Greeting pendek memakai TOBI_GREETINGS di i18n.js – mengikuti
    documentElement.lang, jadi tetap berganti bersama language switch.
-    • SHORT GREETINGS via 'toba:tobiGreet' event (listener di i18n.js,
-     per bahasa, tanpa pengulangan berturut-turut) → balloon mascot pendek.
-   • CONTEXT: riwayat intent + slot (nama topik, minat gabung, pengalaman)
-     → jawaban singkat seperti "iya/belum/mau" tetap nyambung.
-   • SMALL TALK intents: sapaan, kabar, siapa TOBI, terima kasih, oke,
-     rasa takut/pemula/jauh, ketertarikan — dengan variasi jawaban.
-   • FAKTA hanya dari faq.chat.* (biaya, jadwal, lokasi, member, daftar)
-     — tidak pernah mengarang harga/jadwal.
+    – SHORT GREETINGS via 'toba:tobiGreet' event (listener di i18n.js,
+     per bahasa, tanpa pengulangan berturut-turut) ? balloon mascot pendek.
+   – CONTEXT: riwayat intent + slot (nama topik, minat gabung, pengalaman)
+     ? jawaban singkat seperti "iya/belum/mau" tetap nyambung.
+   – SMALL TALK intents: sapaan, kabar, siapa TOBI, terima kasih, oke,
+     rasa takut/pemula/jauh, ketertarikan – dengan variasi jawaban.
+   – FAKTA hanya dari faq.chat.* (biaya, jadwal, lokasi, member, daftar)
+     – tidak pernah mengarang harga/jadwal.
    ===================================================================== */
 (function tobiConversation(){
   if (window.__tobiConv) return;           /* anti duplikat listener/engine */
@@ -2662,61 +2698,61 @@ initMerchTilt();
   /* ---------- balasan small talk (ID + EN), variasi acak ---------- */
   const SMALLTALK = {
     greet: {
-      id: ['Halo juga! 👋 Lagi cari info tentang TOBA atau mau ngobrol dulu?','Hai! 👋 Senang kamu mampir. Mau tanya-tanya soal TOBA?','Halo baller! 🐊 Ada yang bisa TOBI bantu?'],
-      en: ['Hey there! 👋 Looking for TOBA info or just chatting?','Hi! 👋 Great to see you. Anything about TOBA?','Hello baller! 🐊 What can I help with?']
+      id: ['Halo juga! ?? Lagi cari info tentang TOBA atau mau ngobrol dulu?','Hai! ?? Senang kamu mampir. Mau tanya-tanya soal TOBA?','Halo baller! ?? Ada yang bisa TOBI bantu?'],
+      en: ['Hey there! ?? Looking for TOBA info or just chatting?','Hi! ?? Great to see you. Anything about TOBA?','Hello baller! ?? What can I help with?']
     },
     who: {
-      id: ['Hai! Aku TOBI 🐊, asisten virtual TOBA Community. Aku bisa bantu kamu cari info kegiatan, jadwal main, biaya, dan cara gabung!'],
-      en: ['Hi! I\'m TOBI 🐊, the virtual assistant of TOBA Community — schedules, fees, and how to join!']
+      id: ['Hai! Aku TOBI ??, asisten virtual TOBA Community. Aku bisa bantu kamu cari info kegiatan, jadwal main, biaya, dan cara gabung!'],
+      en: ['Hi! I\'m TOBI ??, the virtual assistant of TOBA Community – schedules, fees, and how to join!']
     },
     howru: {
-      id: ['Aku baik, siap nemenin kamu ngobrol soal basket! Kamu sendiri gimana?','Kabar aku mantap 🏀 Kamu gimana?'],
-      en: ['Doing great, ready to talk hoops! How about you?','All good here 🏀 You?']
+      id: ['Aku baik, siap nemenin kamu ngobrol soal basket! Kamu sendiri gimana?','Kabar aku mantap ?? Kamu gimana?'],
+      en: ['Doing great, ready to talk hoops! How about you?','All good here ?? You?']
     },
     thanks: {
-      id: ['Sama-sama! Senang bisa bantu kamu 🐊',' anytime! Kalau ada lagi, panggil aja ya.','Siap! Semoga makin semangat mainnya 🏀'],
-      en: ['You\'re welcome! Happy to help 🐊','Anytime! Ping me again 🙂','Got it — happy hooping 🏀']
+      id: ['Sama-sama! Senang bisa bantu kamu ??',' anytime! Kalau ada lagi, panggil aja ya.','Siap! Semoga makin semangat mainnya ??'],
+      en: ['You\'re welcome! Happy to help ??','Anytime! Ping me again ??','Got it – happy hooping ??']
     },
     ok: {
-      id: ['Siap! Kalau ada yang mau ditanyain lagi, panggil TOBI aja.','Oke! Sampai jumpa di lapangan 🏀'],
-      en: ['Got it! Ping me anytime.','Cool! See you on the court 🏀']
+      id: ['Siap! Kalau ada yang mau ditanyain lagi, panggil TOBI aja.','Oke! Sampai jumpa di lapangan ??'],
+      en: ['Got it! Ping me anytime.','Cool! See you on the court ??']
     },
     never: {
       id: ['Wah, nggak apa-apa! Justru bisa jadi awal yang seru. Kamu tertarik mulai belajar basket dari dasar?','Belum pernah ikut TOBA atau belum pernah main basket sama sekali?'],
       en: ['No worries! That could be a fun start. Want to learn from the basics?','Never joined TOBA or never played basketball at all?']
     },
     beginner: {
-      id: ['Tenang, nggak harus jago dulu kok. Yang penting mau mencoba dan belajar bareng!','Pemula juga welcome banget di TOBA. Banyak yang mulai dari nol kok 🏀'],
-      en: ['Relax, no need to be great first. Trying and learning together is what counts!','Beginners are super welcome at TOBA 🏀']
+      id: ['Tenang, nggak harus jago dulu kok. Yang penting mau mencoba dan belajar bareng!','Pemula juga welcome banget di TOBA. Banyak yang mulai dari nol kok ??'],
+      en: ['Relax, no need to be great first. Trying and learning together is what counts!','Beginners are super welcome at TOBA ??']
     },
     scared: {
-      id: ['Relate banget! Datang pertama kali memang bisa bikin canggung. Kalau mau, aku bantu jelaskan dulu suasana dan kegiatan TOBA.','Tenang, anak TOBA ramah kok 😊 Kamu bisa datang bareng teman dulu kalau lebih nyaman.'],
-      en: ['Totally relatable! First visits can feel awkward — want me to walk you through the vibe first?','Don\'t worry, TOBA folks are friendly 😊 You can bring a friend too.']
+      id: ['Relate banget! Datang pertama kali memang bisa bikin canggung. Kalau mau, aku bantu jelaskan dulu suasana dan kegiatan TOBA.','Tenang, anak TOBA ramah kok ?? Kamu bisa datang bareng teman dulu kalau lebih nyaman.'],
+      en: ['Totally relatable! First visits can feel awkward – want me to walk you through the vibe first?','Don\'t worry, TOBA folks are friendly ?? You can bring a friend too.']
     },
     far: {
-      id: ['Oh begitu. Kamu dari daerah mana? Kita bisa coba cek informasi lokasi kegiatan yang tersedia.','Jauh memang tantangan 🤔 Kalau kebetulan lewat Jakarta Timur, sesi Sabtu malam jadi pilihan yang pas.'],
-      en: ['I see. Where are you from? We can check the session locations.','That\'s a trek 🤔 Saturday evening sessions might fit if you pass East Jakarta.']
+      id: ['Oh begitu. Kamu dari daerah mana? Kita bisa coba cek informasi lokasi kegiatan yang tersedia.','Jauh memang tantangan ?? Kalau kebetulan lewat Jakarta Timur, sesi Sabtu malam jadi pilihan yang pas.'],
+      en: ['I see. Where are you from? We can check the session locations.','That\'s a trek ?? Saturday evening sessions might fit if you pass East Jakarta.']
     },
     interested: {
-      id: ['Seru banget kalau bisa main dan kenalan sama teman baru! Mau aku kasih tahu cara ikut kegiatan TOBA?','Wah, asik! 🏀 Kamu sudah pernah ikut kegiatan TOBA sebelumnya atau ini pertama kalinya?'],
-      en: ['So much fun meeting new people on court! Want to know how to join a session?','Nice! 🏀 First time with TOBA or have you joined before?']
+      id: ['Seru banget kalau bisa main dan kenalan sama teman baru! Mau aku kasih tahu cara ikut kegiatan TOBA?','Wah, asik! ?? Kamu sudah pernah ikut kegiatan TOBA sebelumnya atau ini pertama kalinya?'],
+      en: ['So much fun meeting new people on court! Want to know how to join a session?','Nice! ?? First time with TOBA or have you joined before?']
     },
     interestJoin: {
-      id: ['Wah, asik! 🏀 Kamu sudah pernah ikut kegiatan TOBA sebelumnya atau ini pertama kalinya? Kalau mau langsung daftar, tombol pendaftaran juga tersedia di halaman ini.'],
-      en: ['Nice! 🏀 First time with TOBA or joined before? The signup button on this page works anytime too.']
+      id: ['Wah, asik! ?? Kamu sudah pernah ikut kegiatan TOBA sebelumnya atau ini pertama kalinya? Kalau mau langsung daftar, tombol pendaftaran juga tersedia di halaman ini.'],
+      en: ['Nice! ?? First time with TOBA or joined before? The signup button on this page works anytime too.']
     },
     yes: {
-      id: ['Mantap! 👍 Ada yang spesifik mau ditanyain — jadwal, biaya, atau cara daftar?','Oke! Aku bantu jelaskan dari jadwal dulu ya.'],
-      en: ['Awesome! 👍 Anything specific — schedule, fees, or how to sign up?','Cool! Let me start with the schedule then.']
+      id: ['Mantap! ?? Ada yang spesifik mau ditanyain – jadwal, biaya, atau cara daftar?','Oke! Aku bantu jelaskan dari jadwal dulu ya.'],
+      en: ['Awesome! ?? Anything specific – schedule, fees, or how to sign up?','Cool! Let me start with the schedule then.']
     },
     no: {
-      id: ['Oke, nggak masalah 😊 Kalau nanti berubah pikiran, aku di sini.'],
-      en: ['No problem 😊 I\'m here if you change your mind.']
+      id: ['Oke, nggak masalah ?? Kalau nanti berubah pikiran, aku di sini.'],
+      en: ['No problem ?? I\'m here if you change your mind.']
     }
   };
 
   /* ---------- jawab berbasis konteks + small talk ----------
-     Return null jika bukan small talk → modul TOBI lanjut ke FAQ engine. */
+     Return null jika bukan small talk ? modul TOBI lanjut ke FAQ engine. */
   window.tobiSmallTalk = function(msg){
     const intent = detectIntent(msg);
     const q = msg.toLowerCase().trim();
@@ -2746,7 +2782,7 @@ initMerchTilt();
       }
     }
 
-    /* pernyataan pengalaman singkat tanpa keyword jelas → respon empatik */
+    /* pernyataan pengalaman singkat tanpa keyword jelas ? respon empatik */
     if (words >= 3 && /(aku|saya|gw|gue|w)\b/.test(q) && /(takut|malu|bingung|canggung|bingun|ragu)/.test(q)) {
       return pick(SMALLTALK.scared[isId() ? 'id' : 'en']);
     }
@@ -2756,3 +2792,1204 @@ initMerchTilt();
 
 
 
+
+
+
+/* =====================================================================
+   TOBI PERSONA ENGINE v2 — REVISI PROMPT 7
+   (perkenalan singkat, prioritas intent — identity paling atas,
+   anti-repetisi, gaya Gen Z natural, session name memory)
+
+   JADWAL RESMI (KOREKSI):
+     Tobadeli   = Kamis, 20.00–22.00 WIB
+     Tobaladies = SABTU, 18.00–20.00 WIB   (bukan Minggu lagi)
+   ===================================================================== */
+(function tobiPersonaEngineV2(){
+  if (window.__tobiPersonaLoaded) return;
+  window.__tobiPersonaLoaded = true;
+
+  const isId = () => document.documentElement.lang !== 'en';
+  const NAME_KEY = 'tobi.name';
+  const DELI = 'Tobadeli', LADIES = 'Tobaladies';
+  const JAM_DELI = '20.00–22.00 WIB', JAM_LADIES = '18.00–20.00 WIB';
+  const HARI_DELI = 'Kamis', HARI_LADIES = 'Sabtu';
+
+  /* ---------- session context ---------- */
+  const ctx = { name: null, topics: [], lastSchedule: null, askedName: false,
+                lastAnswers: [], newbie: null, wantsJoin: null };
+  try { ctx.name = sessionStorage.getItem(NAME_KEY) || null; } catch(_){}
+
+  /* ---------- variasi tanpa berulang (global: tidak sama dengan 6 jawaban terakhir) ----------
+     Ditambah TONE MODE (Adaptive Persona): gaya bahasa TOBI mengikuti gaya
+     pengunjung — formal / santai / playful — dari riwayat pesan terakhir. */
+  let tone = 'casual';   /* 'formal' | 'casual' | 'playful' */
+  function detectTone(q, raw){
+    const s = q.trim();
+    /* formal: kata baku/sopan/proses/komersial — cek SEBELUM playful */
+    if (/(selamat (pagi|siang|sore|malam)|saya (ingin|mau|ingin mengetahui|mohon)|apakah|informasi mengenai|mohon|prosedur|terima kasih atas|dapatkah|bisakah|mengenai|kesempatan kerja sama|terbuka untuk|dengan hormat|kegiatan komunitas|latihan( yang)?|jika berkenan|ingin mengetahui)/i.test(s)){
+      return 'formal';
+    }
+    /* playful: tawa/ngakak/emoji bercanda */
+    if (/wkwk|haha|ngakak|lol|lmao|🤣|😭/i.test(s)) return 'playful';
+    return 'casual';
+  }
+  function pick(cat, arr){
+    if (!arr || !arr.length) return '';
+    /* jika ada varian formal utk kategori ini & tone formal → pakai itu */
+    if (tone === 'formal' && arr._formal && arr._formal.length){
+      let s2 = Math.floor(Math.random() * arr._formal.length);
+      for (let k2 = 0; k2 < 6; k2++){
+        if (!ctx.lastAnswers.includes(arr._formal[s2])) break;
+        s2 = (s2 + 1) % arr._formal.length;
+      }
+      ctx.lastAnswers.push(arr._formal[s2]);
+      if (ctx.lastAnswers.length > 6) ctx.lastAnswers.shift();
+      return arr._formal[s2];
+    }
+    let s = Math.floor(Math.random() * arr.length);
+    for (let k = 0; k < 6; k++){
+      if (!ctx.lastAnswers.includes(arr[s])) break;
+      s = (s + 1) % arr.length;
+    }
+    ctx.lastAnswers.push(arr[s]);
+    if (ctx.lastAnswers.length > 6) ctx.lastAnswers.shift();
+    return arr[s];
+  }
+  const nama = () => ctx.name || '';
+  const sapa = () => nama() ? nama() : 'kamu';   /* sisipan natural */
+
+  /* ---------- normalisasi: slang, singkatan, typo ---------- */
+  const SLANG = [
+    [/\bgmn\b/gi,'gimana'],[/\bgimane\b/gi,'gimana'],[/\bgmana\b/gi,'gimana'],[/\bgmn2\b/gi,'gimana'],
+    [/\bjm\b/gi,'jam'],[/\bjadwl\b/gi,'jadwal'],[/\bhr\b/gi,'hari'],[/\bcwe\b/gi,'cewek'],[/\bcwo\b/gi,'cowok'],
+    [/\bgmna\b/gi,'gimana'],[/\bgmna2\b/gi,'gimana'],[/\bikt\b/gi,'ikut'],[/\bga\?/gi,'tidak'],
+    [/\bbrp\b/gi,'berapa'],[/\bbrapa\b/gi,'berapa'],
+    [/\bdmna\b/gi,'dimana'],[/\bdmana\b/gi,'dimana'],[/\bdmn\b/gi,'dimana'],
+    [/\bklo\b/gi,'kalau'],[/\bkalo\b/gi,'kalau'],[/\bklu\b/gi,'kalau'],
+    [/\budh\b/gi,'sudah'],[/\bblm\b/gi,'belum'],[/\bbsk\b/gi,'besok'],
+    [/\bskrg\b/gi,'sekarang'],[/\bgpp\b/gi,'gapapa'],[/\bgpp2\b/gi,'gapapa'],
+    [/\bbgt\b/gi,'banget'],[/\bbsa\b/gi,'bisa'],[/\bpngen\b/gi,'pengen'],[/\bpngin\b/gi,'pengen'],
+    [/\bjoin\b/gi,'gabung'],[/\bikutan\b/gi,'ikut'],
+    [/\bnggak\b/gi,'tidak'],[/\bngga\b/gi,'tidak'],[/\bgak\b/gi,'tidak'],[/\bgk\b/gi,'tidak'],[/\btdk\b/gi,'tidak'],[/\bga\b/gi,'tidak'],
+    [/\bsndiri\b/gi,'sendiri'],[/\btemen\b/gi,'teman'],[/\btemen2\b/gi,'teman-teman'],
+    [/\bdr\b/gi,'dari'],[/\bdgn\b/gi,'dengan'],[/\bsy\b/gi,'saya'],
+    [/\baku\b/gi,'saya'],[/\bgw\b/gi,'saya'],[/\bgue\b/gi,'saya'],
+    [/\bnih\b/gi,'ini'],[/\btuh\b/gi,'itu'],[/\bnhi\b/gi,'ini'],
+    [/\bmsh\b/gi,'masih'],[/\bjd\b/gi,'jadwal'],[/\bjdl\b/gi,'jadwal'],
+    [/\bbyr\b/gi,'bayar'],[/\bbya\b/gi,'biaya'],
+    [/\bkolaborasi\b/gi,'kolaborasi'],[/\bpartnership\b/gi,'partnership']
+  ];
+  const TEAM_FIX = [
+    [/tobadel[il1]y?\b/gi,'tobadeli'],[/tobadli\b/gi,'tobadeli'],[/tobadely\b/gi,'tobadeli'],
+    [/tobaladis\b/gi,'tobaladies'],[/tobaladi\b/gi,'tobaladies'],[/tobaladie\b/gi,'tobaladies'],
+    [/tobalady\b/gi,'tobaladies'],[/tobaladieis\b/gi,'tobaladies']
+  ];
+  function normalize(msg){
+    let q = ' ' + msg.toLowerCase().trim() + ' ';
+    SLANG.forEach(([re, rep]) => { q = q.replace(re, rep); });
+    TEAM_FIX.forEach(([re, rep]) => { q = q.replace(re, rep); });
+    return q.replace(/\s+/g, ' ').trim();
+  }
+  function looksLike(word, target){
+    if (Math.abs(word.length - target.length) > 2) return false;
+    let diff = 0;
+    for (let i = 0; i < Math.max(word.length, target.length); i++)
+      if (word[i] !== target[i]) diff++;
+    return diff <= 2;
+  }
+
+  /* ---------- INTENT — urutan array = prioritas (identity paling atas) ---------- */
+  const INTENTS = [
+    /* 1. IDENTITY — harus paling atas, tidak boleh tertimpa keyword lain */
+    { id:'whoami',    re:/^(kamu siapa|siapa kamu|kamu apa|ini siapa|siapa sih kamu|lu siapa|kamu ini siapa|kamu orang|kamu bot|kamu ai|kamu robot)[\s?!.]*$/i },
+    { id:'whoami',    re:/^(siapa|apa) (kamu|ini|tobi)\b[\s?!.]*$/i },
+    { id:'whoami',    re:/^(kamu siapa|siapa kamu|who are you)[\s?!.]*$/i },
+    { id:'aboutAdmin',re:/^(kamu admin|kamu adminnya|admin ya|ini bot ya|kamu manusia|kamu asisten|adminnya)[\s?!.]*$/i },
+    { id:'aboutAdmin',re:/(bisa dihubungin admin|kasih kontak admin|kontak admin|hubungin ke admin)/i },
+    { id:'aboutToba', re:/(informasi mengenai|bertanya mengenai|tentang kegiatan|kegiatan toba|tentang komunitas|informasi.*(toba|komunitas))/i, need:/(toba|komunitas|kegiatan)/i },
+    { id:'aboutToba', re:/^(toba itu apa|toba apa|apa itu toba|toba itu komunitas apa|kenalan sama toba|ceritain toba|toba community itu|komunitas toba itu apa)/i },
+    { id:'aboutToba', re:/^(apa|apaan) (itu )?toba[\s?!.]*$/i },
+    /* quick reply "Mau kenalan sama TOBA!" → pengenalan komunitas, BUKAN ngobrol santai */
+    { id:'aboutToba', re:/(mau kenalan sama toba|kenalan sama toba|mau kenal toba|mau kenalan sama komunitas)/i },
+
+    /* 2. GREETING */
+    { id:'greet', re:/^(halo+|hai+|heii+|hei|hi|hey|woi|woy|hallo|haloo|assalamualaikum|pagi|siang|sore|malam|good (morning|afternoon|evening))(\s+(lagi|bro|gan|kak|cuy|bre|om|min|tobi))?\b[\s!?.]*$/i },
+    { id:'makan', re:/(udah makan belum\?|sudah makan belum\?|udah makan|sudah makan|belum makan|belum lapar|masih kenyang|baru makan|udah makan belum hari ini)/i },
+    { id:'makanBalik', re:/^(kamu udah\??|kamu udah makan\??|kamu makan\??|kamu lapar\??|kamu ya\?|aku nanya ke kamu)[\s!.?]*$/i },
+
+    /* 3. VISITOR INTRODUCTION (nama) */
+    { id:'nameIntro', re:/(namaku|nama saya|nama aku|saya dipanggil|aku dipanggil|panggil aku|panggil saya|boleh dipanggil|call me|kenalin dulu|kenalkan)\b/i },
+
+    /* 4. CASUAL + FUN MODE */
+    { id:'wkwk',     re:/^(wkw*k+|wk(wk)+k*|ha*ha+|he+he+|lol+|lmao+|xixi+|awokawok+|asuu+|anjir|anjrit|bjir|wihh+|woww?|buset|buset\!|gokil|kocak|ngakak|receh banget|ada-ada aja|ada ada aja|yaelah|yaelah\.|lahh|lah kok|waduh)[\s!.]*$/i },
+    { id:'wkwk',     re:/(anjir bisa aja|bisa aja|anjir|ngakak|kocak banget|lucu banget|ngakak banget)/i, need:/^(?!.*(jadwal|biaya|daftar|gabung|lokasi|partnership|sponsor))/i },
+    { id:'gameAsk',  re:/(tebak[- ]tebakan|tebak dong|tebakan|main tebak|jokes dong|pantun dong|minta pantun|kasih jokes|tebak emoji|main game|main dong|buat joke|garing dong)/i },
+    { id:'sad',      re:/(sedih|nangis|kecewa|patah hati|hilang semangat|nggak semangat|ga semangat|putus asa|down banget|galau)/i },
+    { id:'confirmOhh', re:/^(ohh?\s*\w+\s*ya\??|ohh?\s*ya\??|oh iya|ohh iya|gitu ya|betul ya|ya betul|sama ya|jadwalnya sama|sama\?|sama bukan|sama nggak)[\s!.?]*$/i },
+    { id:'confused2', re:/^(hah\??|hah\s+serius\??|serius\??|masa sih\??|kok bisa\??|maksudnya gimana\??|terus gimana\??|lahh?|loh|lah kok|ohh pantes|oh pantes|oalahh?)[\s!.?]*$/i },
+    { id:'agree2', re:/^(gas|gaskeun|gasskeun|sabi|kuy|hayuk|boleh juga|setuju|aman|ok deh|sip banget)[\s!.]*$/i },
+    { id:'decline2', re:/^(males ah|males|ogah|gak pengen|nggak pengen|mikir dulu|lihat nanti|nanti lagi|ga dulu nggak jadi|skip dulu)[\s!.]*$/i },
+    { id:'gabut',    re:/(gabut|nganggur|gak ada kerjaan|bosan|bosen|bingung mau ngapain)/i },
+    { id:'capek',    re:/(capek|cape|lelah|penat|burnout|stres|stress|kerjaan berat|padat banget)/i },
+    { id:'lagiApa',  re:/(lagi apa|lagi ngapain|ngapain kamu|kamu lagi ngapain|what are you doing)/i },
+    { id:'pindah',   re:/(baru pindah|pindah ke jakarta|baru di jakarta|pindahan|new to jakarta)/i },
+    { id:'sukaBasket', re:/(suka basket|penggemar basket|basket dari kecil|hobi basket|nonton basket)/i },
+
+    /* 5. SCHEDULE — kontekstual, kata "jadwal/kapan/main" wajib kecuali follow-up */
+    { id:'schedBoth', re:/(jadwal latihan|jadwal main|jadwal basket|jadwal.*(toba|komunitas)|latihan( yang)?|jadwalnya|schedule)/i },
+    { id:'schedLadies', re:/(tobaladies|cewek|cwe|ceweknya|perempuan|women|ladies|female)/i, need:/(jadwal|kapan|jam|hari|main|latihan|sesi|waktu|schedule|when|kpan|dlm|weekend)/i },
+    { id:'schedDeli',   re:/(tobadeli|cowok|cwo|cowoknya|laki|pria|men|male|deli)/i,       need:/(jadwal|kapan|jam|hari|main|latihan|sesi|waktu|schedule|when|kpan|dlm)/i },
+    { id:'schedThisWeek', re:/(minggu ini|week ini|this week|ada main|besok main|weekend ada main)/i },
+    { id:'schedFollowUp', re:/^(kalau cowok|kalau cewek|cowok|cewek|yang cowok|yang cewek|cowoknya|ceweknya|kalau laki|kalau perempuan|yang deli|yang ladies|laki[\s!.?]*|perempuan[\s!.?]*)[\s?!.]*$/i },
+
+    /* 6–9. JOIN (Form Gabung TOBA, bukan Partnership!) / Pricing / Location / Membership */
+    { id:'join',      re:/(cara daftar|gimana daftar|cara gabung|gimana gabung|mau daftar|mau gabung|mau masuk|bisa gabung|bisa ikut|ikut dong|mau ikut|cara ikut|mau masuk komunitas|bergabung|how to join|cara masuk|mau jadi member|mau ikut fun game|ikut fun game|daftar tobaladies|daftar tobadeli|daftar anggota|ikut latihan|ikut basket|ikut main)/i },
+    { id:'pricing',   re:/(biaya|harga|berapa|bayar|bayarnya|cost|price|fee|tarif|rupiah|rp|gratis|free|menanyakan biaya|biaya kegiatan)/i },
+    { id:'location',  re:/(lokasi|dimana|di mana|alamat|venue|tempat main|tempat latihan|tempatnya|brickhouse|duren sawit)/i },
+    { id:'membership',re:/(harus jadi member|harus member|jadi member dulu|wajib member|keanggotaan|membership)/i },
+
+    /* 10. BEGINNER SUPPORT */
+    { id:'alone',     re:/(malu|canggung|sendiri|sendirian|gapunya teman|tidak punya teman|nggak punya teman|takut nggak ada teman|takut ga ada temen|alone|shy)/i },
+    { id:'beginner',  re:/(belum jago|nggak jago|tidak jago|pemula|masih belajar|baru belajar|dribble|belum bisa main|nggak bisa main|nggak bisa basket|tidak bisa basket|amateur|beginner|belum pernah main)/i },
+    { id:'confidence',re:/(takut|ragu|gugup|nervous|afraid|kurang percaya diri|percaya diri)/i },
+
+    /* 11. PARTNERSHIP — kolaborasi, sparing, event, sponsor (BEDA dari join) */
+    { id:'partnership', re:/(kolaborasi|collab|kerja sama|kerjasama|partnership|sponsor|sponsorship|mitra|proposal|brand|apparel|clothing|event bareng|bikin event|media partner|support toba|dukung toba|kerja bareng|sparring|sparing|friendly match|event crew|table official|wasit|butuh wasit|butuh crew|butuh table|komunitas lain|punya komunitas)/i },
+
+    /* 12. EVENT & activities */
+    { id:'funGame',  re:/(fun game|fungame|weekly fun|open run)/i },
+    { id:'event',    re:/(event|tournament|turnamen|kompetisi|competition|3x3|sparring|friendly game|agenda|kegiatan minggu|dokumentasi|foto kegiatan)/i },
+    { id:'activities', re:/(kegiatan apa|kegiatan apa aja|aktivitas|ngapain aja|apa aja kegiatannya|aktivitas apa)/i },
+    { id:'vibe',     re:/(suasana|seru nggak|asik nggak|vibe|atmosphere|worth it)/i },
+
+    /* 13. Trial / age / difference / misc */
+    { id:'trial', re:/(trial|coba dulu|sekali dulu|coba ikut|try out|coba lihat dulu)/i },
+    { id:'age',   re:/(umur|usia|batas usia|age limit)/i },
+    { id:'difference', re:/(bedanya|beda apa|beda tobaladies|beda tobadeli|difference)/i },
+
+    /* 14. OUT OF TOPIC */
+    { id:'jagoNonton', re:/(jago nonton|jago basket tapi|jago kok|jago nonton aja|cuma jago nonton)/i },
+    { id:'cariGebetan', re:/(cari gebetan|nyari gebetan|buat cari pacar|cari chemistry)/i },
+    { id:'outOfTopic', re:/(resep|masakan|makanan|berita|politik|matematika|cuaca|hotel|tiket|film|movie|lagu|musik.*(bukan|selain)|sekolah|rumah sakit|bpjs|ktp|pajak)/i }
+  ];
+
+  /* fuzzy fallback untuk kata penting yang salah eja */
+  function fuzzyIntent(q){
+    const w = q.replace(/[^\w\s]/g,' ').split(/\s+/).filter(Boolean);
+    const map = [
+      ['jadwal','schedule', q => q.includes('kapan') || q.includes('main') || q.includes('tobadeli') || q.includes('tobaladies')],
+      ['lokasi','location', q => q.includes('main') || q.includes('latihan')],
+      ['biaya','pricing',   () => true],
+      ['daftar','join',     () => true],
+      ['gabung','join',     () => true],
+      ['sponsor','partnership', () => true],
+      ['kolaborasi','partnership', () => true]
+    ];
+    for (const [word, intent, need] of map){
+      if (w.some(x => looksLike(x, word)) && need(q)) return intent;
+    }
+    return null;
+  }
+
+  /* ---------- JAWABAN (ID) — gaya Gen Z natural, singkat dulu ---------- */
+  const A = {
+    whoami: [
+      'Aku TOBI! 🐊 Teman ngobrol dari TOBA. Soal komunitas, jadwal main, atau cara gabung, tanya aja yaa!',
+      'Aku TOBI, asisten virtual TOBA 🐊 Bukan manusia beneran, tapi bisa bantu kamu kenal TOBA lebih dalam.',
+      'TOBI nih, teman ngobrol dari TOBA! Ada yang pengen kamu tanyain?',
+      { _formal: [
+        'Selamat datang! Saya TOBI, asisten virtual TOBA Community. Silakan tanyakan informasi seputar komunitas, jadwal, atau cara bergabung.',
+        'Saya TOBI 🐊, asisten virtual dari TOBA. Dengan senang hati saya bantu informasi seputar komunitas kami.'
+      ] }
+    ],
+    aboutAdmin: [
+      'Aku asisten virtual TOBA nih, bukan admin manusia langsung hehe. Tapi aku bisa arahin kamu ke admin kalau perlu.',
+      'Bukan admin sungguhan nih, aku cuma TOBI 🐊 Tapi informasi komunitas tanya aku aja dulu!',
+      { _formal: [
+        'Saya TOBI, asisten virtual TOBA, bukan admin secara langsung. Namun saya dengan senang hati membantu informasi komunitas dan dapat mengarahkan Anda ke admin bila diperlukan.'
+      ] }
+    ],
+    aboutToba: [
+      'Wihh, boleh banget! 🐊 Jadi, TOBA itu komunitas basket yang mempertemukan orang-orang yang suka basket, mau belajar, atau sekadar pengen punya teman main baru. Kita punya Tobaladies dan Tobadeli juga. Mau aku ceritain kegiatan kita?',
+      'TOBA itu komunitas basket di Jakarta Timur! Tempat cari teman main, latihan, dan ikut kegiatan bareng.',
+      'TOBA itu tongkrongan basket di Duren Sawit sekitarnya. Ada dua kelompok, ' + LADIES + ' dan ' + DELI + '.',
+      'Komunitas basket Jakarta Timur! Kegiatannya dari Weekly Fun Game sampai latihan skill rutin.',
+      /* variasi saat quick reply sama dipilih lagi — informasi lanjutan, bukan jawaban sama */
+      'HAHAHA, masih penasaran yaa 😆 Oke, aku ceritain lebih banyak. Di TOBA ada kegiatan basket untuk Tobaladies dan Tobadeli. Kamu juga bisa ikut kegiatan komunitas dan berkenalan dengan teman-teman baru.',
+      { _formal: [
+        'TOBA merupakan komunitas basket yang terbuka untuk orang-orang yang ingin bermain, berkembang, dan membangun koneksi melalui basket. Ada dua kelompok: ' + LADIES + ' dan ' + DELI + '.',
+        'TOBA adalah komunitas basket di Jakarta Timur dengan kegiatan rutin seperti Weekly Fun Game, latihan skill, dan event bersama.'
+      ] }
+    ],
+    greet: [
+      'Haii! 👋 Ada yang bisa dibantu soal TOBA?',
+      'Heii! Seneng kamu mampir 🐊 Mau tanya apa hari ini?',
+      'Halo! 🐊 Lagi cari info TOBA atau sekadar mampir?',
+      { _formal: [
+        'Selamat datang! 😊 Ada informasi mengenai TOBA yang bisa saya bantu?',
+        'Senang sekali Anda mampir. Silakan, ada yang ingin ditanyakan mengenai komunitas kami?'
+      ] }
+    ],
+    nameIntroGot: [
+      'Hai {name}! 👋 Senang kenalan! Lagi penasaran tentang TOBA atau mau ngobrol santai?',
+      'Salam kenal, {name}! 😄 Welcome di TOBA. Ada yang mau ditanyain?',
+      'Haii {name}! Seru nih kenalan. Btw, kamu udah pernah denger TOBA dari mana?'
+    ],
+    nameIntroAsk: [
+      'BTW, kamu biasa dipanggil siapa nih?',
+      'Btw, panggilan kamu apa ya? Biar nggak kaku hehe.'
+    ],
+    nameSkip: [
+      'Gapapa kok! Kita lanjut ngobrol aja 😄',
+      'Oke santai aja. Jadi, mau tanya apa hari ini?'
+    ],
+    nameChange: [
+      'Siap! Mulai sekarang aku panggil kamu {name} ya 😄',
+      'Oke, noted! {name} ya. Btw, tadi mau tanya apa?'
+    ],
+    wkwk: [
+      'Hahaha, ada-ada aja 😂',
+      'HAHAHA masa baru tahu sekarang 😭🐊 Tenang, aku bisa diajak ngobrol juga kok!',
+      'WKWKWK jangan sampai ketawa sendirian, nanti dikira lagi chat sama buaya beneran 😭',
+      'LAHHH, aku cuma menjalankan tugas sebagai buaya penghibur WKWKWK',
+      'Wkwk, seru banget kayanya obrolannya.',
+      /* apresiasi candaan — anjir bisa aja / buset / gokil / kocak / ngakak */
+      'WKWKWK, sesekali harus mengeluarkan jokes berkualitas 😭',
+      'HAHAHA, kepikiran aja kan 😭',
+      'Lahh, baru tahu aku punya bakat tersembunyi jadi pelawak 🐊',
+      'HAHAHA, yang penting berhasil bikin kamu ketawa 😄',
+      'HAHAHA, berarti misi menghibur berhasil hari ini!',
+      'NAHH, akhirnya ada yang mengapresiasi buaya satu ini 🐊',
+      'HAHAHA, kenapa lagi nih? Ada yang mau dikomentarin? 😭',
+      'WKWK, jangan overthinking dulu, kita santuy aja 😄'
+    ],
+    gabut: [
+      'Wkwk, lagi nggak ada kerjaan nih? Biasanya kalau gabut kamu ngapain?',
+      'Gabut mode on ya 😄 Mau sekalian cari kegiatan seru?'
+    ],
+    capek: [
+      'Wah, semangat yaa. Hari ini berat banget kayaknya. Istirahat dulu juga nggak apa-apa.',
+      'Kadang emang gitu, recharge pelan-pelan ya. Kalau nanti pengen lepas penat lewat basket, aku kasih tau jadwalnya 😄'
+    ],
+    lagiApa: [
+      'Standby doang nih, nunggu kamu chat 😄 Kamu sendiri gimana?',
+      'Lagi nunggu jadwal main berikutnya hehe. Kamu lagi ngapain?'
+    ],
+    pindah: [
+      'Ohh, welcome ke Jakarta! Lagi cari teman baru juga?',
+      'Welcome to Jakarta! Sini aja kenalan sama kita, pindahan biasanya butuh lingkaran baru 😄'
+    ],
+    sukaBasket: [
+      'Wihh, berarti udah lama dekat sama basket! Sekarang masih sering main?',
+      'Serius? Asik juga! Kamu biasanya main di posisi apa?'
+    ],
+    schedLadies: [
+      LADIES + ' main tiap ' + HARI_LADIES + ', jam ' + JAM_LADIES + '. ' + HARI_LADIES + ' sore waktunya basket bareng nih!',
+      LADIES + '? Tiap ' + HARI_LADIES + ' jam ' + JAM_LADIES + '. Catat ya!',
+      'Jadwal ' + LADIES + ' tiap ' + HARI_LADIES + ' sore, ' + JAM_LADIES + '.',
+      { _formal: [
+        LADIES + ' memiliki jadwal latihan setiap ' + HARI_LADIES + ', pukul ' + JAM_LADIES + '.',
+        'Baik, untuk ' + LADIES + ' jadwal latihannya setiap ' + HARI_LADIES + ' pukul ' + JAM_LADIES + '.'
+      ] }
+    ],
+    schedDeli: [
+      'Kalau ' + DELI + ' tiap ' + HARI_DELI + ', jam ' + JAM_DELI + '.',
+      DELI + ' latihan tiap ' + HARI_DELI + ' malam, jam ' + JAM_DELI + '.',
+      'Jadwal ' + DELI + ': ' + HARI_DELI + ', ' + JAM_DELI + '.',
+      { _formal: [
+        DELI + ' memiliki jadwal latihan setiap ' + HARI_DELI + ', pukul ' + JAM_DELI + '.',
+        'Baik, untuk ' + DELI + ' jadwal latihannya setiap ' + HARI_DELI + ' pukul ' + JAM_DELI + '.'
+      ] }
+    ],
+    schedThisWeek: [
+      'Jadwal rutinnya ' + LADIES + ' ' + HARI_LADIES + ' dan ' + DELI + ' ' + HARI_DELI + '. Sesi minggu ini sebaiknya dicek pengumuman TOBA ya, biar nggak salah info.',
+      LADIES + ' ' + HARI_LADIES + ' sore, ' + DELI + ' ' + HARI_DELI + ' malam. Kalau ada perubahan pasti diumumkan di kanal resmi TOBA.'
+    ],
+    schedFollowUp: [
+      'Bedanya ' + DELI + ' ' + HARI_DELI + ' malam (' + JAM_DELI + '), ' + LADIES + ' ' + HARI_LADIES + ' sore (' + JAM_LADIES + ').',
+      LADIES + ' ' + HARI_LADIES + ' sore, ' + DELI + ' ' + HARI_DELI + ' malam. Beda hari, satu komunitas!'
+    ],
+    join: [
+      'Gampang kok! 😆 Klik tombol "Yuk, gabung TOBA!" di halaman utama, nanti kamu bisa isi Form Gabung di sana.',
+      'Wihh, gaskeun! 🏀 Klik tombol Gabung di halaman utama TOBA yaa, terus isi form pendaftarannya.',
+      'Boleh banget! Kamu bisa mulai dari tombol "Yuk, gabung TOBA!" di halaman utama. Nanti ikuti petunjuk di Form Gabung yaa.',
+      'Santaiii, boleh banget mulai dari sekarang. Klik tombol Gabung di halaman utama, isi Form Gabungnya, nanti pengurus yang follow up.',
+      'Gaskeun! Tombol "Yuk, gabung TOBA!" di halaman utama jalurnya. Isi formnya, nanti lanjut ke admin 😄',
+      { _formal: [
+        'Tentu! Anda dapat mengisi Form Gabung melalui tombol "Yuk, gabung TOBA!" di halaman utama website. Prosesnya mudah, dan tim pengurus akan membantu proses selanjutnya.',
+        'Baik, prosedurnya sederhana: silakan klik tombol Gabung di halaman utama, lalu lengkapi Form Gabung yang tersedia. Setelah itu tim pengurus akan menindaklanjuti.'
+      ] }
+    ],
+    joinShort: [
+      'Wihh, mau gabung TOBA? Gaskeun! 🏀😆 Kamu bisa langsung isi form pendaftarannya lewat sini yaa!',
+      'Gas! Isi Form Gabung TOBA lewat tombol ini yaa 🏀'
+    ],
+    pricing: [
+      'Peserta baru Rp50.000 per sesi. Kalau udah pernah ikut, jadi Rp30.000 per sesi.',
+      'Rp50.000 buat pertama kali, setelah itu Rp30.000 per sesi. Berdasarkan catatan kehadiran yang diverifikasi admin.',
+      { _formal: [
+        'Untuk peserta pertama kali, biayanya Rp50.000 per sesi. Untuk sesi berikutnya, biayanya menjadi Rp30.000 per sesi berdasarkan catatan kehadiran yang diverifikasi admin.',
+        'Baik, informasi biaya: peserta baru Rp50.000 per sesi, dan setelah itu Rp30.000 per sesi. Konfirmasi lebih lanjut dapat dilakukan melalui pengurus.'
+      ] }
+    ],
+    location: [
+      'Lokasi rutinnya di Brickhouse The East, Duren Sawit, Jakarta Timur.',
+      'Brickhouse The East, Duren Sawit! Alamat lengkapnya ada di halaman Events.'
+    ],
+    membership: [
+      'Nggak harus member dulu kok, bisa mulai dari ikut Fun Game aja.',
+      'Boleh langsung ikut tanpa jadi member dulu.'
+    ],
+    alone: [
+      'Wajar kok kalau masih malu. Datang sendiri juga nggak masalah, nanti bisa kenalan sama yang lain pelan-pelan.',
+      'Gapapa banget! Datang sendiri itu wajar. Anak-anak TOBA ramah kok, banyak yang pertama kali juga datang sendiri.',
+      'Datang sendiri bukan masalah 😄 Nanti bisa kenalan sama teman-teman pelan-pelan.'
+    ],
+    beginner: [
+      'Gapapa banget! Nggak harus jago dulu kok. Yang penting mau belajar dan seru-seruan bareng.',
+      'Nggak masalah! Banyak yang mulai dari nol di TOBA. Yang penting datang dan enjoy 😄',
+      'Santai aja, TOBA terbuka buat semua level. Pelan-pelan belajar bareng.'
+    ],
+    confidence: [
+      'Ragu itu wajar kok. Kalau mau, aku ceritain dulu suasana kegiatan TOBA biar kamu kebayang.',
+      'Relate banget! Yang penting berani datang, sisanya berjalan pelan-pelan.'
+    ],
+    partnership: [
+      'Wihh, boleh banget dibahas! 😆 Bisa kolaborasi, sparing, atau event bareng? Ajukan lewat halaman Partnership TOBA ya.',
+      'Wah, seru tuh! TOBA terbuka buat ide kolaborasi. Ceritain konsepnya lewat halaman Partnership TOBA ya.',
+      'Asik! Siapa tahu bisa bikin kegiatan bareng. Kalau mau ngajak kolaborasi atau sparing, langsung cek halaman Partnership TOBA ya.',
+      'Wah, terima kasih sudah tertarik support TOBA! Sampaikan penawarannya lewat halaman Partnership yaa.',
+      'Bisa banget dibahas! Untuk sparing, event bareng, atau sponsorship, halaman Partnership TOBA jalurnya yaa.',
+      { _formal: [
+        'Apakah TOBA membuka kesempatan kerja sama? Sangat terbuka. Silakan ajukan rencana kolaborasi, sparing, atau sponsorship melalui halaman Partnership TOBA.',
+        'Baik, untuk kerja sama, kolaborasi event, atau penawaran sponsorship, Anda dapat menyampaikannya melalui halaman Partnership TOBA. Tim pengurus akan meninjau lebih lanjut.'
+      ] }
+    ],
+    partnershipEvent: [
+      'Bisa kita obrolin nih! Kamu lagi butuh bantuan crew, table official, atau wasit?',
+      'Okeee! Boleh ceritain tanggal dan lokasi event-nya? Nanti bisa diteruskan ke pengurus TOBA buat dicek.',
+      'Boleh diajukan juga! Nanti perlu dicek dulu ketersediaannya yaa. Detail event-nya lewat halaman Partnership TOBA ya.'
+    ],
+    partnershipFollow: [
+      'Seru tuh! Ceritain konsep event-nya ya, atau kirim aja lewat form di halaman Partnership.',
+      'Asik juga! Kalau serius mau kerja sama, halaman Partnership adalah jalurnya. Ada form inquiry di situ.'
+    ],
+    funGame: [
+      'Weekly Fun Game itu sesi main rutin TOBA di Brickhouse The East, Duren Sawit. Banyak anggota mulai dari sini.',
+      'Itu kegiatan inti TOBA, game mingguan buat ketemu dan main bareng 😄'
+    ],
+    event: [
+      'Agenda terdekat ada di halaman Events ya, dari friendly game sampai tournament.',
+      'Di halaman Events ada semua event TOBA. Mau cari yang kapan?'
+    ],
+    activities: [
+      'Di TOBA ada Weekly Fun Game, latihan skill, friendly game, dan event seperti tournament.',
+      'Kegiatannya variatif, mulai dari game rutin sampai sparring. Cek halaman Events buat detailnya.'
+    ],
+    vibe: [
+      'Seru banget! Suasananya friendly, main sambil kenalan.',
+      'Asik kok! Santai tapi tetap kompetitif kalau mau serius 😄'
+    ],
+    trial: [
+      'Bisa banget ikut sekali dulu, nggak wajib komit.',
+      'Boleh kok coba dulu. Bisa mulai dari Weekly Fun Game.'
+    ],
+    age: [
+      'Batas usia aku belum punya info pastinya. Mending tanya langsung ke admin TOBA ya biar jawabannya bener.',
+      'Info batas usia nggak tersedia di data aku. Tanya admin TOBA langsung ya.'
+    ],
+    difference: [
+      LADIES + ' itu kelompok perempuan (' + HARI_LADIES + ' sore), ' + DELI + ' kelompok laki-laki (' + HARI_DELI + ' malam). Satu komunitas TOBA.',
+      'Dua kelompok, satu komunitas! ' + LADIES + ' buat cewek, ' + DELI + ' buat cowok.'
+    ],
+    outOfTopic: [
+      'Hmm, itu di luar wilayah basket ya 😅 Tapi kalau soal TOBA, aku siap banget jawab!',
+      'Wah, itu bukan wilayah aku nih. Kalau soal komunitas basket TOBA, gas — tanya apa aja!',
+      'Aku nggak mau ngarang jawaban buat yang itu 😄 Tapi soal TOBA aku bisa bantu!'
+    ],
+    fallback: [
+      'Hehe, yang mana nih? Jadwal main, cara gabung, atau soal kolaborasi? Biar aku nggak salah kasih info.',
+      'Hmm, aku belum nangkep maksudnya 😅 Ceritain lebih detail dikit ya?',
+      'Menarik nih, tapi aku belum paham maksudnya. Kamu lagi cari info TOBA atau sekadar ngobrol?'
+    ],
+    sad: [
+      'Aduh, semoga harimu segera membaik yaa. Istirahat dulu, jangan dipaksain.',
+      'Eh, jangan langsung mikir begitu dong. Kenalan dulu aja pelan-pelan, nggak perlu jadi orang lain buat bisa berteman.',
+      'Ngerti banget maksudmu. Kadang emang ada hari yang berat ya. Aku di sini kalau mau cerita.',
+      'Relate banget! Nggak apa-apa kok ngerasa gitu. Pelan-pelan aja ya 😊'
+    ],
+    greetProactive: [
+      'Halooo, baller! 🐊🏀 Aku TOBI! Senang kenalan sama kamu. Udah makan belum hari ini? Jangan sampai semangat basketnya tinggi, tapi perutnya kosong WKWK 😆',
+      'Heyy! Aku TOBI 🐊 Lagi cari info TOBA atau mau ngobrol santai nih?',
+      'Woii, welcome! Mau kenalan sama TOBA, minta pantun, atau ada rencana bikin event bareng?',
+      'Halo halo! Lagi butuh info komunitas atau mau aku hibur pakai tebak-tebakan garing? 😭',
+      { _formal: [
+        'Selamat datang! Saya TOBI 🐊 dari TOBA Community. Ada informasi seputar komunitas, jadwal latihan, atau kerja sama yang bisa saya bantu?'
+      ] }
+    ],
+    makan: {
+      ask: [
+        'Udah makan belum hari ini?',
+        'Hari ini udah isi tenaga belum?',
+        'Jangan-jangan lagi lapar sambil scroll website TOBA nih WKWK.'
+      ],
+      sudah: [
+        'Nahh, itu baru calon baller beneran 😆 Udah full tenaga nih ya!',
+        'Sipp, aman! Perut kenyang, basket pun lancar 🏀',
+        'Mantap, itu modal utama biar nggak drop di quarter kedua WKWK 😄'
+      ],
+      belum: [
+        'Waduhh, basket boleh semangat, tapi makan jangan dilupakan yaa 😭',
+        'Yaelah, isi dulu tenaganya! Setiap baller butuh bahan bakar kok WKWK 😄'
+      ],
+      belumLapar: [
+        'Oalahh, berarti masih tahan ya WKWK. Kalau nanti udah mulai bunyi, jangan tahan-tahan 😄',
+        'Santuy aja, tapi jangan sampai kebingungan cari tenaga pas butuh 🏀'
+      ],
+      balikTanya: [
+        'Aku mah buaya, makan macam apa lagi 😂 Kalau kamu gimana, udah makan?',
+        'WKWK aku sih AI, makan udah lewat nyalain server doang 😭 Kamu sendiri udah makan belum?',
+        'Aku mah nggak bisa makan, cuma bisa nambah chat WKWK 😄 Kamu gimana?'
+      ]
+    },
+    gameOffer: [
+      'Eh, mau tebak-tebakan nggak? Tapi jangan protes kalau receh ya WKWK 😂',
+      'Emm, aku punya tebak-tebakan nih. Siap-siap yaa!',
+      'Mau main tebak emoji yuk? Jangan-jangan kamu jago nih WKWK 😂'
+    ],
+    gameCorrect: [
+      'WKWKWK BETULLL! Dapat nilai 100 dari TOBI 😂',
+      'Nahhh, bener banget! Wihh, ternyata nggak gampang dikelabui ya!',
+      'YESSS! Akhirnya ketemu juga jawabannya WKWK 🥳',
+      'Buset, cepet banget nebaknya! 🔥',
+      'NAHHH bener! Satu poin buat kamu 🏀'
+    ],
+    gameWrong: [
+      'WKWK dikit lagi!',
+      'HAHAHA kok kepikiran ke situ 😭 Coba pikirin lagi deh.',
+      'Yahh, belum tepat nih. Mau petunjuk?',
+      'WKWKWK jawabanmu ada-ada aja 😂'
+    ],
+    gameAbsurd: [
+      'WADUHHH kok bisa kepikiran ke situ 😭 WKWKWK. Tapi bukan itu jawabannya!',
+      'HAHAHAHA kok malah ke situ 😂 Kreatif juga sih, tapi belum tepat!',
+      'WKWK jawabanmu ada-ada aja. Gua nggak sanggup 😭'
+    ],
+    gameGiveUp: [
+      'WKWKWK okeee, aku kasih jawabannya yaa. Nggak ada nilai merah di sini 😄',
+      'Yaudah, aku bocorin deh WKWK. Yang penting seru!'
+    ],
+    gameAfterInvite: [
+      'WKWKWK daripada cuma tebak-tebakan, kapan-kapan kita main basket beneran yuk! 🏀',
+      'Sesen main bareng kan lebih seru dari tebak-tebakan WKWK. Mau kenalan sama TOBA?',
+      'Oke, ini malah bikin tambah penasaran sama basket nih WKWK',
+      'Hehe, seru juga kan? Bayangin kalau yang dimainin bola beneran 🏀'
+    ],
+    pantun: [
+      'Ke lapangan membawa bola,\nPulangnya mampir beli ketan.\nDaripada bengong sendirian,\nGimana kalau cari teman main barengan? 😆',
+      'Jalan-jalan ke Kota Tua,\nJangan lupa beli es kelapa.\nNggak harus jago dari awal juga,\nYang penting berani coba! 🏀',
+      'Ke lapangan membawa sepatu,\nMain basket sampai sore hari.\nKalau mau cari teman baru,\nYuk kenalan sama TOBA Community! 😆',
+      'Jalan-jalan membeli ketan,\nPulangnya mampir membeli jamu.\nKalau kamu cari teman,\nTOBA siap kenalan sama kamu! WKWK 🐊'
+    ],
+    jokes: [
+      'WKWKWK nahh, posisi paling aman itu 😂 Yang penting dukungannya full.',
+      'Waduhhh, misi utamanya basket apa cari chemistry nih? WKWK.',
+      'HAHAHA ambisius juga. Yaudah, semoga dapat teman main sekaligus teman cerita.',
+      'Akhirnya ada yang mengakui bakat terpendamku 😎 WKWK.',
+      'Santaiii, nggak ada tes masuk jadi Stephen Curry kok WKWK.',
+      'Buset, ngakak! 😂 Kamu ini receh level dewa ya.',
+      'HAHAHA feeling-ku kuat ternyata 😂'
+    ],
+    confirmYes: [
+      'Iyaa, betul! ' + HARI_LADIES + ' sore. Bisa jadi kegiatan weekend kamu nih hehe.',
+      'Yup, betul banget!',
+      'Iya betul 😄 Gidap? Eh maksudku, gitu aja hehe.'
+    ],
+    confirmNo: [
+      'Oke, mungkin maksudnya beda ya. Kamu mau tanya apa persisnya?',
+      'Hmm, berarti aku salah tangkap. Bisa diulang dikit?'
+    ],
+    confused2: [
+      'Oalahh, jadi maksudnya begitu ya? Ceritain lebih detail dikit ya 😄',
+      'Ehh, aku jelasin ulang deh. Kamu mau tahu soal apa persisnya?',
+      'Hehe, biar nggak salah tangkap — kamu lagi nanya soal TOBA atau sekadar respon obrolan tadi?',
+      'Nahh, aku jawab sesuai konteks ya. Kalau maksudmu beda, bilang aja 😄'
+    ],
+    agree2: [
+      'Nahh, gitu dong! 😄',
+      'Nahh, ini baru menarik!',
+      'Oke, kita coba! 😆',
+      'Wihh, boleh banget!',
+      'Gaskeun! 🏀'
+    ],
+    decline2: [
+      'Oke, nggak masalah kok 😄 Kalau nanti berubah pikiran, aku di sini.',
+      'Santuy aja, nggak semua hal harus sekarang WKWK 😄',
+      'Aman, nggak dipaksa kok 😄 Ada yang lain yang mau dibahas?'
+    ],
+    /* FUN MODE data: tebak emoji & tebakan */
+    emojiGames: [
+      { emojis: '🐊🏀', answers: ['buaya main basket','toba','maskot toba','buaya basket'], hint: 'Ini maskot komunitas kita nih 🐊' },
+      { emojis: '🍜🤤', answers: ['laper','laper banget','mie','mie ayam','makan','bakso','laper maut'], hint: 'Ini makanan favorit begoro WKWK 😭' },
+      { emojis: '🛏️😴', answers: ['ngantuk','mager','tidur','susah bangun','reban'], hint: 'Biasanya bikin kita susah bangun pagi 😭' },
+      { emojis: '💔🎧😭', answers: ['galau','sedih','patah hati','mantan','lagu galau'], hint: 'Biasanya muncul pas denger lagu sad WKWK' },
+      { emojis: '🏀🧡', answers: ['basket','cinta basket','basket banget','suka basket'], hint: 'Sport favorit kita nih WKWK' },
+      { emojis: '🏀🤝🏀', answers: ['sparring','main bareng','basket bareng','sparing'], hint: 'Istilahnya pas dua tim main santai 😏' },
+      { emojis: '📱🛏️', answers: ['scroll hp tiduran','scroll hp sambil tiduran','mager produktif','rebahan sambil scroll'], hint: 'Kegiatan malam paling populer WKWK 😭' },
+      { emojis: '⛹️🔥', answers: ['pemain basket hebat','jago basket','on fire','steve curry','stephen curry'], hint: 'Saat pemain lagi hoki terus WKWK' }
+    ],
+    riddleGames: [
+      { q: 'Apa yang paling sering dibawa pemain basket tapi nggak pernah diajak ngobrol?', answers: ['bola','bola basket'], hint: 'Bulatan oranye, sering dipantulin WKWK' },
+      { q: 'Kenapa pemain basket jarang kesepian?', answers: ['rebound','karena selalu ada yang rebound'], hint: 'Istilahnya pas bola nggak masuk ring WKWK' },
+      { q: 'Kalau bola basket jatuh cinta, namanya apa?', answers: ['jatuh ke ring','jatuh ke ring seseorang','falling in the ring'], hint: 'Nyambung ke ring basket WKWK' },
+      { q: 'Apa yang makin dikejar malah makin jauh?', answers: ['masa lalu','waktu'], hint: 'Sesuatu yang nggak bisa diulang 😅' },
+      { q: 'Kenapa kalender suka stres?', answers: ['tanggal tua','banyak tanggal tua'], hint: 'Berhubungan sama uang WKWK' },
+      { q: 'Kenapa ikan nggak pernah telat?', answers: ['berenang tepat waktu','selalu berenang tepat waktu','karena selalu berenang'], hint: 'Mereka selalu tepat waktu WKWK' }
+    ]
+  };
+  const A_EN = {
+    whoami: ['I\'m TOBI! 🐊 Your TOBA Community chat buddy. Ask me anything about the community!'],
+    greet: ['Hey! 👋 Anything I can help with about TOBA?'],
+    schedLadies: [LADIES + ' plays every ' + HARI_LADIES + ', ' + JAM_LADIES + '.'],
+    schedDeli: [DELI + ' plays every ' + HARI_DELI + ', ' + JAM_DELI + '.'],
+    pricing: ['First-timers Rp50,000 per session, then Rp30,000. Verified by admins.'],
+    location: ['Brickhouse The East, Duren Sawit, East Jakarta.'],
+    partnership: ['Sure! Send your brand details via the Partnership page 🐊'],
+    outOfTopic: ['That\'s outside my court 😅 But anything about TOBA, ask away!'],
+    fallback: ['Not sure I follow — schedule, joining, or collaboration?']
+  };
+
+  /* ---------- FAQ resmi dari i18n (biaya/daftar/member tidak diubah) ---------- */
+  function faq(idx){
+    try { return t('faq.chat.a' + idx); } catch(_) { return null; }
+  }
+  const FAQ_MAP = { pricing:2, register:7, membership:5 };
+
+  /* ---------- QUICK REPLY kontekstual ----------
+     Awal percakapan: 7 pilihan greeting (maks 4 tampil, dirotasi antar bubble).
+     Setelah topik aktif: chips mengikuti konteks. */
+  function chips(){
+    const id = isId();
+    const last = ctx.topics[ctx.topics.length - 1] || '';
+    let sets;
+    if (ctx.topics.length === 0){
+      const greetingSets = [
+        ['Mau kenalan sama TOBA! 👋', 'Tebak-tebakan dong 😆', 'Pantun dong! 🎤', 'Udah makan belum? 🍜'],
+        ['Jadwal basket kapan?', 'Cara gabung TOBA? 🏀', 'Mau ajak kolaborasi!', 'Tebak-tebakan dong 😆'],
+        ['Mau kenalan sama TOBA! 👋', 'Jadwal basket kapan?', 'Pantun dong! 🎤', 'Cara gabung TOBA? 🏀']
+      ];
+      /* rotasi: pengunjung tidak selalu melihat set yang sama */
+      const turn = (ctx.chipTurn = (ctx.chipTurn || 0) + 1);
+      sets = greetingSets[(turn - 1) % greetingSets.length];
+      if (!id) sets = ['Tell me about TOBA! 👋', 'Tell me a joke! 😆', 'Give me a pantun! 🎤', 'When\'s game time?'];
+    } else if (last.startsWith('sched')){
+      sets = id ? [
+        'Cara gabung?',
+        'Lokasinya di mana?',
+        'Mau tahu kegiatan lainnya!',
+        'Kalau masih pemula boleh?'
+      ] : ['How to join?', 'Where do you play?', 'More activities!', 'Beginners okay?'];
+    } else if (last === 'aboutToba'){
+      sets = id ? [
+        'Kegiatan TOBA apa aja?',
+        'Jadwal basket kapan?',
+        'Cara gabung TOBA?',
+        'Ada kegiatan untuk pemula?'
+      ] : ['What activities?', 'When\'s game time?', 'How to join?', 'Beginners okay?'];
+    } else if (last === 'partnership'){
+      sets = id ? [
+        'Info partnership lebih detail?',
+        'Cara sponsorship gimana?',
+        'Mau ajak kolaborasi dong',
+        'Aku mau gabung komunitas!'
+      ] : ['More on partnership?', 'How to sponsor?', 'Let\'s collaborate!', 'I want to join!'];
+    } else if (last === 'pricing' || last === 'join' || last === 'membership' || last === 'trial'){
+      sets = id ? [
+        'Aku mau gabung!',
+        'Jadwal ' + DELI + ' kapan?',
+        'Jadwal ' + LADIES + ' kapan?',
+        'Harus jadi member dulu?'
+      ] : ['I want to join!', 'When does ' + DELI + ' play?', 'When does ' + LADIES + ' play?', 'Member required?'];
+    } else if (last === 'alone' || last === 'beginner' || last === 'confidence'){
+      sets = id ? [
+        'Bisa datang sendiri nggak?',
+        'Aku mau gabung!',
+        'Jadwal ' + LADIES + ' kapan?',
+        'Weekly Fun Game itu apa?'
+      ] : ['Can I come alone?', 'I want to join!', 'When does ' + LADIES + ' play?', 'What\'s the Fun Game?'];
+    } else if (last === 'gameAsk' || last === 'gameRound'){
+      sets = id ? [
+        'Tebak-tebakan lagi!',
+        'Pantun dong!',
+        'Udah, ngobrol aja.',
+        'Aku nyerah WKWK.'
+      ] : ['Another one!', 'Give me a pantun!', 'Let\'s just chat.', 'I give up lol.'];
+    } else if (last === 'makan'){
+      sets = id ? [
+        'Udah dong, aku kenyang 😄',
+        'Belum, laper nih!',
+        'Btw, jadwal basket kapan?',
+        'Cara gabung TOBA?'
+      ] : ['Already eaten!', 'Not yet!', 'When\'s game time?', 'How to join?'];
+    } else if (last === 'sad'){
+      sets = id ? [
+        'Cerita dikit dong',
+        'Mau pantun receh buat semangat!',
+        'Mau tebak-tebakan garing?',
+        'Btw, mau kenalan sama TOBA?'
+      ] : ['Let me vent', 'Cheer me up!', 'Tell a joke', 'Tell me about TOBA'];
+    } else {
+      sets = id ? [
+        'Aku mau gabung!',
+        'Ada kegiatan minggu ini?',
+        'Mau ajak TOBA kolaborasi!',
+        'Lokasi mainnya di mana?'
+      ] : ['I want to join!', 'Any session this week?', 'Let\'s collaborate!', 'Where do you play?'];
+    }
+    return sets.slice(0, 4).map(q => ({ q }));
+  }
+
+  /* ---------- greeting interaktif + chips greeting ---------- */
+  function welcome(addMsg){
+    if (ctx.name){
+      addMsg('Hai lagi, ' + ctx.name + '! 🐊 Ada yang bisa dibantu?', 'bot');
+      ctx.askedName = false;
+      return;
+    }
+    ctx.askedName = true;
+    addMsg(pickF('gp', A.greetProactive), 'bot');
+  }
+
+  /* ---------- FUN MODE state ----------
+     game = null | { type:'emoji'|'riddle', item, tries, revealed } */
+  let game = null;
+  function startGame(kind){
+    const bank = kind === 'emoji' ? A.emojiGames : A.riddleGames;
+    let s;
+    const lastItem = game ? game.item : null;
+    do { s = Math.floor(Math.random() * bank.length); } while (bank.length > 1 && lastItem && bank[s] === lastItem);
+    game = { type: kind, item: bank[s], tries: 0, revealed: false };
+    ctx.topics.push('gameRound');
+    if (ctx.topics.length > 8) ctx.topics.shift();
+    ctx.lastGameItem = game.item;
+    return kind === 'emoji'
+      ? 'Okeee! Coba tebak ini dong WKWK 😂\n' + game.item.emojis
+      : game.item.q + ' 😏';
+  }
+  function handleGameAnswer(raw){
+    if (!game) return null;
+    const q = normalize(raw).toLowerCase();
+    /* variasi cara membuka jawaban — tidak selalu "Jawabannya: ..." */
+    const reveal = a => pick('rv', [
+      'Ternyata jawabannya ' + a + ' WKWK.',
+      'Okeee, aku spill jawabannya yaa: ' + a + '!',
+      'Jadiii, jawabannya adalah ' + a + ' 😭',
+      'Plot twist! Ternyata ' + a + ' WKWK',
+      'Yahh, jawabannya ' + a + ' 😭',
+      'Nah, akhirnya misterinya terbongkar juga: ' + a + ' 😆'
+    ]);
+    /* variasi penutup game — CTA TOBA hanya 1 dari 5 pilihan */
+    const ending = () => pick('end', [
+      'HAHAHA, tepat sasaran! Ini baru pemanasan seru 😭',
+      'Baiklah, sesi tebak-tebakan hari ini resmi ditutup WKWK.',
+      'Masih berani ambil satu ronde lagi atau cukup sampai di sini? 😈',
+      'Ngomong-ngomong, kamu memang suka tebak-tebakan begini atau lagi gabut aja? WKWK',
+      'Kalau tebak-tebakan aja sudah seru, kebayang nggak kalau main basket bareng? 😆'
+    ]);
+    if (/^(nyerah|nyerah deh|aku nyerah|susah deh|gak tahu|nggak tahu|no idea|skip)/i.test(q)){
+      const a = game.item.answers[0];
+      game = null;
+      return pick('giveup', A.gameGiveUp) + '\n' + reveal(a) + '\n' + ending();
+    }
+    if (/^(hint|petunjuk|kasih petunjuk|beri petunjuk|bocorin)/i.test(q)){
+      return 'Petunjuknya: ' + game.item.hint;
+    }
+    if (/^(udah ah|capek mikir|stop|udahan|cukup|stop dulu|udah dulu|nggak jadi|ga jadi|enggak dulu)/i.test(q)){
+      const a = game.item.answers[0];
+      game = null;
+      return pick('stop', [
+        'WKWK, kita ambil istirahat sebentar yaa. Boleh, kita ngobrol biasa aja.',
+        'Okeee, kita pensiun dulu dari dunia tebak-tebakan WKWK.',
+        'Baiklah, kita rehat dulu 😭 Jawabannya ' + a + ' ternyata.',
+        'Siapp, sekarang bebas mau ngobrolin apa 😄'
+      ]);
+    }
+    if (/^(ulang|lagi|tebak lagi|main lagi|one more|again|lanjut)/i.test(q)){
+      const kind = game.type;
+      /* jangan ulang item yang sama persis */
+      const bank = kind === 'emoji' ? A.emojiGames : A.riddleGames;
+      let s;
+      do { s = Math.floor(Math.random() * bank.length); } while (bank.length > 1 && bank[s] === game.item);
+      game = { type: kind, item: bank[s], tries: 0, revealed: false };
+      ctx.topics.push('gameRound');
+      if (ctx.topics.length > 8) ctx.topics.shift();
+      return kind === 'emoji'
+        ? 'SIAP! Kali ini aku kasih yang sedikit menjebak 😈\n' + game.item.emojis
+        : 'Okeee, yang ini lebih menantang: ' + game.item.q + ' 😏';
+    }
+    game.tries++;
+    const item = game.item;
+    const correct = item.answers.some(a => q.includes(a));
+    const near = game.type === 'emoji'
+      ? /ngantuk|laper|mager|galau|basket|buaya|tidur|makan|scroll/.test(q)
+      : /bola|ring|rebound|masa lalu|tanggal tua|ikan/.test(q);
+    if (correct){
+      game = null;
+      return pick('gc', A.gameCorrect) + '\n' + ending();
+    }
+    if (near){
+      if (game.tries >= 2){
+        const a = item.answers[0];
+        game = null;
+        return 'Deket banget! ' + reveal(a) + '\n' + ending();
+      }
+      return pick('nr', [
+        'Hampirrr! Dikit lagi koneksinya nyambung WKWK 😭 ' + item.hint,
+        'Waduhh, tinggal satu langkah lagi! ' + item.hint,
+        'Dikit lagi ketemu jawabannya! ' + item.hint,
+        'WKWK, clue-nya hampir berhasil kamu pecahkan. ' + item.hint,
+        'Yahh, belum berjodoh sama jawabannya kali ini WKWK. ' + item.hint
+      ]);
+    }
+    if (game.tries >= 2){
+      const a = item.answers[0];
+      game = null;
+      return pick('gl', [
+        'Oke, kesempatan terakhir udah habis WKWK. ' + reveal(a),
+        'WKWK ternyata jebakannya berhasil. ' + reveal(a),
+        'HAHAHA, kali ini aku menang satu poin! ' + reveal(a)
+      ]) + '\n' + ending();
+    }
+    if (/mantan|gebetan|dosen|gaji|politik|pacar/i.test(q)) return pick('ga', A.gameAbsurd);
+    return pick('gw', [
+      'Waduhh, tinggal satu langkah lagi! Coba sekali lagi.',
+      'HAHAHA, jawabannya masih muter sedikit. Gas lagi!',
+      'WKWK dikit lagi! Mau petunjuk?',
+      'Yahh, belum tepat nih. Mau petunjuk?',
+      'Hampir tepat! Coba sekali lagi 😄'
+    ]);
+  }
+  /* perintah game yang jatuh ke persona meski ronde belum aktif */
+  function wantsGame(raw){
+    return /tebak lagi|tebak lagi dong|main lagi|lagi dong|tebak dong|jokes dong|pantun dong|minta pantun|tebak emoji|kasih jokes|tebak[- ]tebakan|kasih yang gampang|yang tentang basket/i.test(normalize(raw));
+  }
+
+  /* ---------- deteksi nama ---------- */
+  function extractName(msg){
+    const q = normalize(msg);
+    /* jangan ekstrak nama dari pesan formal/slang yang jelas bukan perkenalan */
+    if (/informasi mengenai|bertanya mengenai|mengenai kegiatan|wkwk|haha|lucu|parah/i.test(q)) return null;
+    let m = q.match(/(?:namaku|nama saya|nama aku|saya dipanggil|aku dipanggil|panggil aku|panggil saya|call me)\s+([a-z\u00C0-\u024F][\w\u00C0-\u024F'-]{1,20})/i);
+    if (!m){
+      /* pesan pendek saat menunggu nama → kata terakhir dianggap nama */
+      if (ctx.askedName && msg.split(/\s+/).length <= 2){
+        const w = msg.replace(/[^\w\u00C0-\u024F'-]/g, ' ').trim().split(/\s+/).filter(Boolean);
+        if (w.length && !/^(tidak|nggak|enggak|gak|gapapa|gpp|skip|rahasia|nanti|males|ga\s?mau|nggak usah|ahh?|ah|deh|dong|kok|aja|banget|dulu|yaudah|okee?|sip|wkwk+|haha+|gas|kuy|sabi|iseng|laper|mager|gabut|capek|sedih|galau|udah|belum|sudah|kenyang|lapar|anjir|buset|gokil|kocak|ngakak|yaelah|tv|nonton)$/i.test(w[w.length-1])){
+          const last = w[w.length - 1];
+          return last.charAt(0).toUpperCase() + last.slice(1);
+        }
+      }
+      return null;
+    }
+    const bad = ['belum','mau','cari','pengen','ingin','pernah','tidak','juga','baru','lagi','suka','bisa','males','butuh','gabut','capek'];
+    if (bad.includes(m[1].toLowerCase())) return null;
+    return m[1].charAt(0).toUpperCase() + m[1].slice(1);
+  }
+  function isNameDecline(msg){
+    const q = normalize(msg);
+    if (q.split(/\s+/).length > 4) return false;
+    return /^(tidak|nggak|gapapa|gpp|nggak usah|skip|rahasia|nanti deh|nggak mau|lanjut aja|gapapa kok)/i.test(q);
+  }
+  function isConfirmShort(q){
+    return /^(iya|iyah|yeah|yes|yoi|betul|bener|benar|ohh|ohh?|oh ya|ohh ya|oalah|gitu ya|oke deh|sip)[\s!.?]*$/.test(q)
+      || /^(ohh [a-z]+|oh [a-z]+)[\s!.?]*$/i.test(q)   /* "ohh sabtu ya", "oh minggu" */
+      || /^(iyaa|ohh iya|oh iya|ya betul|betul banget)[\s!.?]*$/.test(q);
+  }
+
+  /* ADAPTIVE PERSONA helper: unwrap varian formal jika tone formal */
+  function pickF(cat, arr){
+    const out = pick(cat, arr);
+    if (out && typeof out === 'object' && out._formal) return pick(cat + 'F', out._formal);
+    return out;
+  }
+
+  /* ---------- handler utama ---------- */
+  window.tobiPersona = {
+    handle(msg){
+      const raw0 = (msg || '').trim();
+      if (!raw0) return null;
+      /* FUN MODE: ronde game aktif → jawaban pengunjung diproses dulu (SEBELUM
+         deteksi nama, supaya jawaban game tidak salah dianggap nama). */
+      if (game && !/namaku|nama saya|panggil/i.test(raw0)){
+        /* ekspresi tawa/apresiasi/persetujuan saat ronde game = reaksi, bukan jawaban */
+        if (/^(wkw*k+|wk(wk)+k*|ha*ha+|he+he+|lol+|lmao+|ngakak)[\s!.]*$/i.test(raw0)
+            || /(anjir|bisa aja|buset|gokil|kocak|ngakak|yaelah|lucu banget)/i.test(raw0)
+            || /^(gas|gaskeun|gasskeun|sabi|kuy|hayuk|males ah|males|ogah|mikir dulu|lihat nanti)[\s!.]*$/i.test(raw0)){
+          return pick('wk', [
+            'WKWKWK kok malah kita yang jadi hiburan di sini 😭',
+            'HAHAHA, ternyata tebak-tebakan receh punya penggemar juga.',
+            'HAHAHA, yang penting berhasil bikin kamu ketawa 😄',
+            'WKWKWK, sesekali harus mengeluarkan jokes berkualitas 😭'
+          ]);
+        }
+        return handleGameAnswer(raw0);
+      }
+      if (!game && !ctx.askedName && wantsGame(raw0)){
+        const qw = normalize(raw0);
+        if (/pantun/i.test(qw)) return pick('pn', A.pantun) + '\n' + pick('inv', A.gameAfterInvite);
+        if (/joke/i.test(qw)) return pick('jk', A.jokes);
+        return startGame(/emoji/i.test(qw) ? 'emoji' : 'riddle');
+      }
+      const raw = raw0;
+      const q = normalize(raw);
+      const id = isId();
+      /* ADAPTIVE PERSONA: formal jika pesan ini formal; playful hanya jika 2 streak; selain itu santai */
+      const newTone = detectTone(q, raw);
+      ctx.toneHistory = ctx.toneHistory || [];
+      ctx.toneHistory.push(newTone);
+      if (ctx.toneHistory.length > 3) ctx.toneHistory.shift();
+      const playStreak = ctx.toneHistory.slice(-2).filter(x => x === 'playful').length;
+      tone = (newTone === 'formal') ? 'formal' : (playStreak >= 2 ? 'playful' : 'casual');
+      /* formal juga harus jalan saat sedang playful: cek explicit */
+      if (newTone === 'formal') tone = 'formal';
+
+      /* 1) NAMA — tangani paling awal */
+      const name = extractName(raw);
+      if (ctx.askedName && !ctx.name && name && !isNameDecline(raw)){
+        ctx.name = name; ctx.askedName = false;
+        try { sessionStorage.setItem(NAME_KEY, name); } catch(_){}
+        return pick('nameGot', A.nameIntroGot).replace('{name}', name);
+      }
+      if (ctx.askedName && isNameDecline(raw) && !ctx.name){
+        ctx.askedName = false;
+        return pick('skip', A.nameSkip);
+      }
+      if (ctx.name && /(?:panggil aku|panggil saya|namaku|nama saya|call me)/i.test(q)){
+        const n2 = extractName(raw);
+        if (n2 && n2.toLowerCase() !== ctx.name.toLowerCase()){
+          ctx.name = n2;
+          try { sessionStorage.setItem(NAME_KEY, n2); } catch(_){}
+          return pick('chg', A.nameChange).replace('{name}', n2);
+        }
+      }
+
+      /* 0.5) CONTEXT-AWARE SHORT RESPONSES (Prompt 7 fix)
+         Respons pendek/slang dijawab sesuai konteks pesan sebelumnya,
+         bukan dianggap pertanyaan baru atau fallback. */
+      const lastTopic = ctx.topics[ctx.topics.length - 1] || '';
+      const shortMsg = raw.split(/\s+/).length <= 3;
+      if (shortMsg && ctx.topics.length){
+        if (/^(siap|siyap|siyapp+|siappp+|okee+|ok(ee)+|sip|sip2|ok deh|woke+|wokes)[\s!.]*$/i.test(q)){
+          return pick('ack', [
+            'Wokee, ditunggu pertanyaannya! 😆',
+            'Okeee, gas! 🏀',
+            'Siap! Aku standby di sini 😄'
+          ]);
+        }
+        if (/^(siyapp+|siappp+)\s+maksud(nya|ku)?[\s!.]*$/i.test(q)){
+          return pick('ack2', [
+            'WKWKWK maksudku kamu bebas tanya apa aja soal TOBA! Misalnya jadwal main, cara gabung, atau kegiatan kita. Mau bahas yang mana nih? 🏀',
+            'Hehe iya, bebas kok. Jadwal, biaya, cara gabung, sampai kolaborasi, pilih aja! 😄'
+          ]);
+        }
+        if (/^(ohh?|oalah+|ooo|gitu ya|gitu yaa|paham|ngerti|ohh gitu|ohh? gitu)[\s!.]*$/i.test(q)){
+          return pick('ohh', [
+            'Nahh, kan seru 😄 Ada lagi yang mau ditanyain?',
+            'Oalahh, sipp! Kalau ada yang bingung lagi, tanya aja ya 😄'
+          ]);
+        }
+        if (/^(terus|terus gimana\??|gimana\??|terusnya|abis itu|lalu)[\s!.?]*$/i.test(q)){
+          const cont = {
+            join: 'Terus tinggal isi Form Gabung TOBA lewat tombol Gabung di halaman utama, nanti pengurus follow up 😄',
+            pricing: 'Terus kalau udah ikut sekali, sesi berikutnya jadi Rp30.000 per sesi 😄',
+            schedLadies: 'Terus kalau mau ikut, tinggal isi Form Gabung TOBA ya. Sabtu sore kita main bareng 🏀',
+            schedDeli: 'Terus kalau mau ikut, tinggal isi Form Gabung TOBA ya. Kamis malam kita main bareng 🏀'
+          }[lastTopic] || 'Hmm, terusnya gimana ya... ceritain dulu mau lanjut bahas apa? 😆';
+          return cont;
+        }
+        if (/^(boleh( banget)?|gas|kuy|sabi|aman|okee?|yaudah|oke deh|boleh dong)[\s!.]*$/i.test(q)){
+          if (lastTopic === 'join') return 'Gaskeun! 🏀 Tombol "Yuk, gabung TOBA!" di halaman utama jalurnya yaa.';
+          return pick('yes2', [
+            'Nahh, gitu! 😄',
+            'Fix seru nih! 😆'
+          ]);
+        }
+        if (/^(mau ikut|ikut dong|mau gabung|mau daftar|ikut)[\s!.]*$/i.test(q)){
+          return 'Wihh, gaskeun! 🏀 Kamu bisa langsung isi Form Gabung TOBA lewat tombol Gabung di halaman utama yaa!';
+        }
+      }
+      /* 2) MATCH INTENT — identity punya prioritas tertinggi karena urutan array */
+      let hitId = null;
+      const qs = q.replace(/\s+/g,' ').trim();   /* trim utk regex ^...$ */
+      for (const it of INTENTS){
+        if (it.need ? (it.re.test(qs) && it.need.test(qs)) : it.re.test(qs)){ hitId = it.id; break; }
+      }
+      if (!hitId) hitId = fuzzyIntent(q);
+
+      if (hitId === 'confirmOhh'){
+        /* "sama ya / sama?" setelah jadwal → jawab beda hari, bukan "betul" */
+        if (/sama|mirip/i.test(q)){
+          hitId = 'schedFollowUp';
+        } else if (ctx.lastSchedule){
+          return pick('conf', A.confirmYes);
+        } else {
+          hitId = 'schedFollowUp';
+        }
+      }
+
+      /* 3.5) jawaban tanya makan → respons makan (SEBELUM deteksi nama,
+         supaya "Udah"/"Belum" tidak tersimpan sebagai nama) */
+      if (/^(udah|sudah|udah dong|sudah dong|udah makan|sudah makan|udah kok|sudah kok)[\s!.]*$/i.test(qs)){
+        ctx.askedName = false;
+        return pick('ms', A.makan.sudah);
+      }
+      if (/^(belum|belum lapar|belum makan|masih kenyang|belum dong|nggak lapar)[\s!.]*$/i.test(qs)){
+        ctx.askedName = false;
+        return /belum lapar|nggak lapar|masih kenyang/.test(qs) ? pick('mb', A.makan.belumLapar) : pick('mn', A.makan.belum);
+      }
+
+      /* 4) pesan sangat pendek & tidak dikenal saat menunggu nama → skip halus */
+      if (ctx.askedName && !ctx.name && !hitId && raw.split(/\s+/).length <= 2){
+        ctx.askedName = false;
+        return pick('skip', A.nameSkip);
+      }
+
+      /* 4.5) CONVERSATIONAL RESPONSES (Critical Persona Fix):
+         penolakan, respons pendek, candaan & keputusan pengunjung dijawab
+         sesuai konteks — JANGAN jatuh ke fallback/FAQ. */
+      if (!hitId){
+        const decline = /^(enggak ahh|enggak ah|gak ahh|nggak ahh|nggak ah|enggak dulu|nggak dulu|gak dulu|nanti aja deh|nanti deh|nanti dulu|nanti aja|cuma iseng kok|iseng aja kok|cuma iseng|males dulu|belum dulu|skip dulu|gpp dulu|ga dulu|tidak dulu)[\s!.]*$/i;
+        if (decline.test(qs) || (/^(enggak|nggak|gak|ga|males|belum|nanti|skip)\b/i.test(qs) && raw.split(/\s+/).length <= 4)){
+          ctx.topics.push('declined');
+          if (ctx.topics.length > 8) ctx.topics.shift();
+          return pick('dc', [
+            'WKWKWK gapapaa 😭 Belum kepancing basketnya yaa. Santuy, kita ngobrol aja dulu.',
+            'HAHAHA okeee, nggak maksa kok 😭 Btw, kamu emang suka basket atau cuma mampir buat ngobrol sama aku nih?',
+            'Yahh, belum waktunya jadi anak basket nih kayaknya WKWK. Nggak apa-apa, santuy aja 😄',
+            'Okeee, santuy. Aku nggak bakal maksa kok 😄 Kalau nanti berubah pikiran, aku di sini!',
+            'HAHAHA baiklah, kita ngobrol aja dulu. Lagi ngapain hari ini?',
+            'Santuy aja 😄 Nggak semua orang harus langsung gas. Kita ngobrol aja dulu yaa'
+          ]);
+        }
+        /* pengunjung ingin ngobrol aja → hormati, tanpa CTA */
+        const talkOnly = /(cuma mau ngobrol|pengen ngobrol aja|mau ngobrol aja|cuma mau cerita|ngobrol aja deh|sekadar ngobrol|sekedar ngobrol)/i.test(qs);
+        if (talkOnly){
+          ctx.topics.push('talkOnly');
+          return pick('to', [
+            'Asik, gas ngobrol aja 😄 Ada cerita apa hari ini?',
+            'Boleh banget! Ngobrol santai aja, nggak harus soal TOBA terus 😄',
+            'Sipp, aku dengerin. Spill dong, lagi ada apa? 😆'
+          ]);
+        }
+        /* candaan/sarkasme ringan saat tidak ada intent */
+        if (/^(lucu|lucu banget|kamu lucu|tobi lucu|garing|receh banget|jelek|aneh)[\s!.]*$/i.test(qs)){
+          return pick('funny', [
+            'Akhirnya ada yang mengakui bakat terpendamku 😎 WKWK.',
+            'HAHAHA iya nih, humor garing spesialisasi TOBI 😭',
+            'WKWK maklum, maskot emang garing itu brand identity ku 😂'
+          ]);
+        }
+        /* “aku malu” / emosi ringan tanpa intent lain */
+        if (/(aku malu|malu banget|salting|gugup)/i.test(qs) && raw.split(/\s+/).length <= 4){
+          return pick('shy', [
+            'Ehh, santai dong 😄 Nggak ada yang ngejudge di sini. Pelan-pelan aja ya.',
+            'Gapapaa banget! Semua juga pernah gitu. Santuy 😄'
+          ]);
+        }
+      }
+
+      ctx.topics.push(hitId);
+      if (ctx.topics.length > 8) ctx.topics.shift();
+      window.tobiPersona.lastIntent = hitId;   /* Prompt 7: pipeline pakai ini utk link Join */
+
+      /* nama disisipkan natural, tidak setiap kali */
+      const useName = ctx.name && Math.random() < 0.3;
+      const nm = useName ? ', ' + ctx.name : '';
+
+      switch (hitId){
+        case 'whoami': {
+          if (!ctx.name && !ctx.askedName && ctx.topics.filter(x => x === 'whoami').length === 1)
+            return pick('who', A.whoami) + ' ' + pick('ask', A.nameIntroAsk);
+          return pick('who', A.whoami);
+        }
+        case 'aboutAdmin': return pick('adm', A.aboutAdmin);
+        case 'aboutToba': {
+          /* CRITICAL: kenalan TOBA = berikan pengenalan komunitas dulu,
+             jangan tanya nama dulu (pengunjung butuh informasi nyata). */
+          return pickF('abt', A.aboutToba);
+        }
+        case 'greet': {
+          if (ctx.name) return pick('grN', [
+            'Hai ' + ctx.name + '! 🐊 Ada yang bisa dibantu hari ini?',
+            'Halo ' + ctx.name + '! Mau cari info TOBA atau sekadar ngobrol?'
+          ]);
+          return pickF('gr', A.greet);
+        }
+        case 'makan': {
+          const s = qs;
+          if (/^belum lapar|masih kenyang|baru makan|udah makan|sudah makan/i.test(s))
+            return /belum lapar|masih kenyang/.test(s) ? pick('mb', A.makan.belumLapar) : pick('ms', A.makan.sudah);
+          return pick('mn', A.makan.belum);
+        }
+        case 'makanBalik':
+          return pick('mbk', A.makan.balikTanya);
+        case 'schedLadies':
+          ctx.lastSchedule = 'ladies';
+          return id ? pickF('sL', A.schedLadies) : pick('sLe', A_EN.schedLadies);
+        case 'schedDeli':
+          ctx.lastSchedule = 'deli';
+          return id ? pickF('sD', A.schedDeli) : pick('sDe', A_EN.schedDeli);
+        case 'schedBoth':
+        case 'schedThisWeek':
+          return pickF('sW', id ? A.schedThisWeek : [A_EN.schedDeli[0] + ' ' + A_EN.schedLadies[0]]);
+        case 'schedFollowUp': {
+          /* balas kebalikan dari jadwal terakhir yang dibahas */
+          if (ctx.lastSchedule === 'ladies'){
+            ctx.lastSchedule = 'deli';
+            return id ? pickF('sD', A.schedDeli) : pick('sDe', A_EN.schedDeli);
+          }
+          if (ctx.lastSchedule === 'deli'){
+            ctx.lastSchedule = 'ladies';
+            return id ? pickF('sL', A.schedLadies) : pick('sLe', A_EN.schedLadies);
+          }
+          return pick('sF', id ? A.schedFollowUp : [A_EN.schedDeli[0] + ' ' + A_EN.schedLadies[0]]);
+        }
+        case 'register': {
+          const ans = faq(FAQ_MAP.register);
+          if (ctx.topics.length > 1 && ans && !ctx.lastAnswers.includes(ans)){
+            /* cukup jawab dari FAQ resmi kalau baru pertama kali */
+          }
+          return faqPrefix(id) + (id ? pick('reg', A.register) : A_EN.partnership[0]);
+        }
+        case 'pricing': {
+          const ans = faq(FAQ_MAP.pricing);
+          if (ans) return faqPrefix(id) + ans;
+          return id ? pickF('prc', A.pricing) : pick('prce', A_EN.pricing);
+        }
+        case 'membership': {
+          const ans = faq(FAQ_MAP.membership);
+          if (ans) return faqPrefix(id) + ans;
+          return pick('mem', id ? A.membership : ['No membership needed upfront.']);
+        }
+        case 'location':
+          return pick('loc', id ? A.location : A_EN.location);
+        case 'alone':
+          ctx.newbie = true;
+          return pick('aln', id ? A.alone : ['Totally fine! TOBA folks are friendly 😄']);
+        case 'beginner':
+          ctx.newbie = true;
+          return pick('beg', id ? A.beginner : ['No need to be great first 😄']);
+        case 'confidence':
+          return pick('cnf', id ? A.confidence : ['First-time nerves are normal!']);
+        case 'partnership': {
+          /* event service vs kolaborasi/sponsor */
+          if (/crew|table official|wasit|butuh bantuan event/i.test(q))
+            return pick('pev', id ? A.partnershipEvent : ['We can discuss it — share the details via the Partnership page!']);
+          return id ? pickF('pt', A.partnership) : pick('pte', A_EN.partnership);
+        }
+        case 'join': {
+          /* CRITICAL FIX: JOIN → tombol Gabung / Form Gabung di halaman utama.
+             BUKAN Partnership. Jawaban teks + link klik-langsung. */
+          return id ? pickF('jn', A.join) : 'Easy! Click the "Yuk, gabung TOBA!" button on the homepage and fill out the Join Form. 🏀';
+        }
+        case 'funGame':
+          return pick('fg', id ? A.funGame : ['The Weekly Fun Game is TOBA\'s core weekly session.']);
+        case 'event':
+          return pick('ev', id ? A.event : ['Check the Events page for the latest schedule.']);
+        case 'activities':
+          return pick('act', id ? A.activities : ['Fun Game, training, friendly games, events.']);
+        case 'vibe':
+          return pick('vib', id ? A.vibe : ['Friendly and welcoming!']);
+        case 'trial':
+          return pick('trl', id ? A.trial : ['You can join once first.']);
+        case 'age':
+          return pick('age', id ? A.age : ['Best to ask the TOBA admins directly.']);
+        case 'difference':
+          return pick('dff', id ? A.difference : [LADIES + ' (women, ' + HARI_LADIES + ') vs ' + DELI + ' (men, ' + HARI_DELI + ').']);
+        case 'wkwk': {
+          /* apresiasi candaan vs tawa murni — respons mengikuti konteks */
+          if (/(anjir|bisa aja|buset|gokil|kocak|ngakak|receh|ada-ada aja|lucu|apresiasi|bakat|pelawak|penghibur|bikin kamu ketawa|menghibur)/i.test(q)){
+            return pick('ap', [
+              'WKWKWK, sesekali harus mengeluarkan jokes berkualitas 😭',
+              'HAHAHA, kepikiran aja kan 😭',
+              'Lahh, baru tahu aku punya bakat tersembunyi jadi pelawak 🐊',
+              'HAHAHA, yang penting berhasil bikin kamu ketawa 😄',
+              'HAHAHA, berarti misi menghibur berhasil hari ini!',
+              'NAHH, akhirnya ada yang mengapresiasi buaya satu ini 🐊',
+              'Buset, kamu bisa aja WKWK 😂'
+            ]);
+          }
+          /* humor: candaan diikuti, bukan fallback info */
+          if (ctx.name && Math.random() < 0.5) return pick('wkN', [
+            'Hahaha, ada-ada aja kamu ' + ctx.name + ' 😂',
+            'Haha, santai banget nih ' + ctx.name + ' 😄',
+            'WKWK kamu ini ya 😂',
+            'HAHAHA iya nih, santuy kan obrolannya 😄'
+          ]);
+          return pick('wk', id ? A.wkwk : ['Haha 😄', 'WKWKWK kok malah kita yang jadi hiburan di sini 😭', 'Nah, misi bikin kamu ketawa berhasil berarti!']);
+        }
+        case 'confused2':
+          return pick('c2', id ? A.confused2 : ['Let me explain again!']);
+        case 'agree2':
+          return pick('a2', id ? A.agree2 : ['Nice, let\'s go!']);
+        case 'decline2':
+          return pick('d2', id ? A.decline2 : ['No problem! I\'m here anytime.']);
+        case 'gabut':
+          return pick('gb', id ? A.gabut : ['Bored? Same 😄']);
+        case 'capek':
+          return pick('cp', id ? A.capek : ['Hang in there!']);
+        case 'lagiApa':
+          return pick('la', id ? A.lagiApa : ['Just waiting for the next game 😄']);
+        case 'pindah':
+          return pick('pd', id ? A.pindah : ['Welcome to Jakarta!']);
+        case 'sukaBasket':
+          return pick('sb', id ? A.sukaBasket : ['Long-time hooper!']);
+        case 'outOfTopic':
+          return pick('oot', id ? A.outOfTopic : A_EN.outOfTopic);
+        case 'jagoNonton':
+          return pick('jn2', [
+            'WKWKWK nahh, posisi paling aman itu 😂 Yang penting dukungannya full.',
+            'HAHAHA jago nonton itu skill juga kok 😭 Mungkin level MVP penonton.',
+            'WKWK auto jadi analis basket nih 😂'
+          ]);
+        case 'cariGebetan':
+          return pick('cg', [
+            'Waduhhh, misi utamanya basket apa cari chemistry nih? WKWK.',
+            'HAHAHA duo misi nih. Semoga dapat teman main sekaligus teman cerita 😂'
+          ]);
+        case 'sad':
+          return pick('sd', id ? A.sad : ['Take care of yourself first 😊']);
+        case 'gameAsk': {
+          /* mood gate: jangan ajak main kalau sedang serius/sedih */
+          if (ctx.topics.includes('sad')) return pick('sd', id ? A.sad : ['Take care first 😊']);
+          if (/pantun/i.test(q)) return pick('pn', id ? A.pantun : ['Here\'s one! 🐊']) + '\n' + pick('inv', A.gameAfterInvite);
+          if (/joke/i.test(q)) return pick('jk', id ? A.jokes : ['Haha 😄']);
+          return startGame(/emoji/i.test(q) ? 'emoji' : 'riddle');
+        }
+      }
+
+      /* 6) TIDAK ADA intent → bukan otomatis FAQ!
+         Kalau baru selesai permainan / pengunjung baru saja menolak ajakan,
+         pertahankan suasana santai — jangan jatuh ke fallback FAQ. */
+      if (!hitId){
+        const recentInvite = ctx.topics.some(x => x === 'gameRound' || x === 'declined' || x === 'talkOnly');
+        if (recentInvite && raw.split(/\s+/).length <= 6){
+          return pick('keep', [
+            'Hehe, santai aja 😄 Ngobrol aja yuk, nggak harus soal TOBA terus.',
+            'WKWK oke, kita santuy aja 😄 Ada lagi yang mau diomongin?',
+            'Boleh banget ngobrol santai 😄 Cerita aja, aku dengerin.'
+          ]);
+        }
+        return null;   /* benar-benar tidak jelas → engine lama */
+      }
+    },
+    chips,
+    welcome
+  };
+
+  function faqPrefix(id){
+    return pick('pre', id
+      ? ['', 'Oke! ', 'Nahh, ini yang kamu cari: ', 'Ohh, paham. Begini: ']
+      : ['', 'Sure. ', 'Good question. ']);
+  }
+})();
