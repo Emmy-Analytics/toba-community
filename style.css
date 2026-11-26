@@ -1749,27 +1749,23 @@ section:first-child {
 /* ---------- gallery ---------- */
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px
 }
 
 .gallery-item {
   position: relative;
-  grid-column: span 4;
-  aspect-ratio: 4/3;
+  grid-column: span 1;
+  aspect-ratio: 3/4;
   border-radius: var(--radius);
   overflow: hidden;
   background: var(--accent-soft);
   cursor: zoom-in
 }
 
-.gallery-item:nth-child(7n+1) {
-  grid-column: span 7;
-  aspect-ratio: 16/10
-}
-
-.gallery-item:nth-child(7n+4) {
-  grid-column: span 5;
+/* editorial rhythm: kartu lebar tetap 1 kolom, rasio bervariasi tipis */
+.gallery-item:nth-child(8n+1),
+.gallery-item:nth-child(8n+5) {
   aspect-ratio: 4/5
 }
 
@@ -1782,6 +1778,47 @@ section:first-child {
 
 .gallery-item:hover img {
   transform: scale(1.035)
+}
+
+/* tombol download kecil di pojok kartu — tidak mendominasi */
+.gallery-dl {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 3;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, .4);
+  background: rgba(8, 13, 9, .45);
+  color: #fff;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity .25s var(--ease-out), transform .25s var(--ease-out), background .2s;
+}
+
+.gallery-item:hover .gallery-dl,
+.gallery-item:focus-within .gallery-dl {
+  opacity: 1;
+  transform: none
+}
+
+.gallery-dl:hover {
+  background: var(--accent, #2E7D46)
+}
+
+.gallery-dl.busy svg {
+  animation: spin 1s linear infinite
+}
+
+@media (pointer: coarse) {
+  .gallery-dl {
+    opacity: 1;
+    transform: none
+  }
 }
 
 .gallery-item .pad {
@@ -1863,6 +1900,30 @@ section:first-child {
   font-size: 13px;
   text-align: center;
   max-width: 80vw
+}
+
+.lightbox-dl {
+  position: absolute;
+  bottom: 64px;
+  right: 24px;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, .4);
+  background: rgba(46, 125, 70, .9);
+  color: #fff;
+  cursor: pointer;
+  z-index: 2
+}
+
+.lightbox-dl:hover {
+  background: var(--accent-dark, #1D5A30)
+}
+
+.lightbox-dl.busy svg {
+  animation: spin 1s linear infinite
 }
 
 .lightbox-x {
@@ -2483,6 +2544,134 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 
 
 /* ---------- gallery states ---------- */
+.gallery-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0 14px
+}
+
+.gallery-search {
+  flex: 1 1 240px;
+  min-width: 0;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 999px;
+  padding: 11px 18px;
+  font-size: 14px;
+  color: var(--ink)
+}
+
+.gallery-search:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 0
+}
+
+.gallery-select {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 999px;
+  padding: 11px 16px;
+  font-size: 13.5px;
+  color: var(--ink);
+  max-width: 220px
+}
+
+.gallery-select-sm {
+  padding: 8px 12px;
+  max-width: 90px
+}
+
+.gallery-perpage {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--muted)
+}
+
+.gallery-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px
+}
+
+.gallery-count {
+  font-size: 12.5px;
+  color: var(--muted);
+  margin: 0 0 14px
+}
+
+.gallery-pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 28px
+}
+
+.gallery-pbtn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 20px;
+  cursor: pointer;
+  transition: background .2s, border-color .2s
+}
+
+.gallery-pbtn:hover:not(:disabled) {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff
+}
+
+.gallery-pbtn:disabled {
+  opacity: .35;
+  cursor: not-allowed
+}
+
+.gallery-jump {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--muted)
+}
+
+.gallery-pageinfo {
+  font-size: 13px;
+  color: var(--ink);
+  margin: 0
+}
+
+.gallery-page-active {
+  display: inline-block;
+  min-width: 26px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  text-align: center
+}
+
+/* filters scroll horizontal di layar sempit */
+.filters-scroll {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch
+}
+
+.filters-scroll::-webkit-scrollbar {
+  display: none
+}
+
 .gallery-state {
   background: var(--surface);
   border: 1px solid var(--line);
@@ -3259,6 +3448,11 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
     aspect-ratio: 16 / 9
   }
 
+  .gallery-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px
+  }
+
   .gallery-state {
     padding: 40px 22px
   }
@@ -3355,15 +3549,61 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   }
 
   .gallery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px
   }
 
   .gallery-item,
-  .gallery-item:nth-child(7n+1),
-  .gallery-item:nth-child(7n+4) {
-    grid-column: span 12;
-    aspect-ratio: 4/3
+  .gallery-item:nth-child(8n+1),
+  .gallery-item:nth-child(8n+5) {
+    grid-column: span 1;
+    aspect-ratio: 3/4
   }
+
+  .gallery-dl {
+    width: 40px;
+    height: 40px
+  }
+
+  .gallery-tools {
+    gap: 10px
+  }
+
+  .gallery-search {
+    flex-basis: 100%
+  }
+
+  .gallery-select {
+    max-width: none;
+    flex: 1 1 auto
+  }
+
+  .gallery-pager {
+    flex-wrap: wrap;
+    gap: 10px
+  }
+
+  .lightbox img {
+    max-width: 94vw;
+    max-height: 72vh
+  }
+
+  .lightbox-cap {
+    bottom: 12px;
+    max-width: 92vw;
+    font-size: 12px
+  }
+
+  .lightbox-dl {
+    bottom: 46px;
+    right: 14px;
+    width: 46px;
+    height: 46px
+  }
+
+  .lb-prev { left: 8px }
+  .lb-next { right: 8px }
+  .lightbox-nav { width: 44px; height: 44px }
 
   .form-grid {
     grid-template-columns: 1fr
@@ -3402,12 +3642,13 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
    ============================================================ */
 .hero-home {
   width: 100%; /* full viewport width, no narrow container */
-  grid-template-rows: auto auto 1fr;
+  grid-template-rows: auto auto auto auto;
   grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
     "head"
     "visual"
-    "body";
+    "body"
+    "group";
   column-gap: 0;
   align-content: end;
   min-height: calc(100svh - var(--header-h) - 34px);
@@ -3436,6 +3677,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 
 .hero-home .hero-head { grid-area: head; position: relative; z-index: 2; align-self: end }
 .hero-home .hero-body { grid-area: body; position: relative; z-index: 2; align-self: end }
+.hero-home .hero-group-slideshow { grid-area: group; position: relative; z-index: 1 }
 /* PROMPT 84: hero visual column retired with the ball — grid is single-column */
 .hero-home .hero-visual { display: none }
 
@@ -3531,11 +3773,12 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 @media (max-width: 760px) {
   .hero-home {
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
+    grid-template-rows: auto auto auto auto;
     grid-template-areas:
       "head"
       "visual"
-      "body";
+      "body"
+      "group";
     row-gap: 0;
     min-height: auto;
     /* HEADER KOMPAK: padding atas kecil, whitespace di atas foto ditekan */
@@ -3716,7 +3959,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
     z-index: 2;
     width: min(560px, 100%);
     aspect-ratio: 16 / 9;
-    margin: 6px auto 0;
+    margin: 26px auto 0;
     overflow: hidden;
 
     border: none;
@@ -3740,9 +3983,9 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 }
 
 /* ---------- DESKTOP (≥761px): center stage di slot kanan hero ----------
-   FIX komposisi: foto grup dipindah ke BAWAH TENGAH sebagai elemen pendukung
-   kecil tersendiri (absolute), di antara kaki pemain dan bar info — tidak
-   lagi menimpa pemain utama maupun pemain individual. */
+   REFRACTOR: foto grup DI BAWAH info komunitas via grid-area "group"
+   (normal document flow). Background hijau ikut memanjang mengikuti
+   tinggi konten; hero boleh melebihi 1 viewport dan halaman discroll. */
 @media (min-width: 761px) {
   .hero-cut-desktop {
     position: absolute;
@@ -3757,16 +4000,17 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   .hero-cut-desktop .hero-cut-img.tier-side { width: clamp(20%, 24%, 28%); max-height: 58%; }
   .hero-cut-desktop .hero-cut-img.cut-ball  { width: clamp(48px, 5.5vw, 76px); right: 4%; bottom: 0; }
   .hero-home .hero-group-slideshow {
-    /* PROMPT 1: foto grup diperbesar di desktop — tetap di bawah-tengah,
-       lebih menonjol tanpa menimpa pemain maupun bar info */
-    position: absolute;
-    bottom: clamp(120px, 15vh, 150px);
-    left: 50%;
-    transform: translateX(-50%);
-    width: min(360px, 32vw);
+    /* DESKTOP FLOW (refactor): foto grup = grid-area "group" sendiri,
+       DI BAWAH seluruh informasi komunitas — normal document flow,
+       bukan absolute. Background hijau ikut memanjang karena hero
+       mengikuti tinggi konten grid. */
+    position: relative;
+    width: min(620px, 60vw);
+    max-width: 620px;
     aspect-ratio: 16 / 9;
-    margin: 0;
-    z-index: 0;
+    margin: 34px auto 0;
+    z-index: 1;
+    pointer-events: auto;
   }
   /* PROMPT 1: jarak antar-informasi komunitas desktop lebih nyaman */
   .hero-home .hero-info {
@@ -6487,7 +6731,11 @@ h3 { letter-spacing: -.015em }
   width: 100%;
 }
 .hero-home .hero-info-item strong,
-.hero-home .hero-info-item span { white-space: nowrap }
+.hero-home .hero-info-item span {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+}
 .hero-home .hero-info-item {
   padding-left: 0;
   border-left: 0;
@@ -6753,7 +7001,8 @@ main.page-content section:last-of-type {
   color: #fff;
   opacity: 0;
   transform: translateY(16px);
-  transition: opacity .7s var(--ease-out), transform .7s var(--ease-out);
+  /* PROMPT 6: fade-in 1.4s ease-out — kemunculan lebih gradual, tidak mendadak */
+  transition: opacity 1.4s cubic-bezier(.22,.61,.36,1), transform 1.4s cubic-bezier(.22,.61,.36,1);
   pointer-events: auto;
 }
 .cine-rcard.show { opacity: 1; transform: translateY(0); }
@@ -7864,12 +8113,12 @@ body.tm-panel-open { overflow: '' !important; }
 }
 
 /* PROMPT 6: fade-in bubble review lebih halus — opacity 0→1 + translateY,
-   easing cubic-bezier halus; durasi 1.2s agar kemunculan pertama tidak mendadak.
+   easing cubic-bezier halus; durasi 1.4s agar kemunculan pertama tidak mendadak.
    Rotasi konten lanjutan memakai durasi yang sama agar tidak mendadak juga. */
 .cine-rcard {
   transition:
-    opacity 1.2s cubic-bezier(.22,.61,.36,1),
-    transform 1.2s cubic-bezier(.22,.61,.36,1) !important;
+    opacity 1.4s cubic-bezier(.22,.61,.36,1),
+    transform 1.4s cubic-bezier(.22,.61,.36,1) !important;
 }
 
 /* Nama reviewer mengikuti kapitalisasi asli */
@@ -8010,6 +8259,16 @@ body.tm-panel-open { overflow: '' !important; }
 }
 @keyframes tobi-pop { from { opacity: 0; transform: scale(.86) translateY(6px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
+/* Balloon greeting interaktif: greeting dgn aksi (mis. "Tebak emoji yuk!")
+   jadi klikable → buka chatbot & mulai permainan. Tetap ringan & pendek. */
+.tobi-balloon.tobi-balloon-act {
+  pointer-events: auto;
+  cursor: pointer;
+  border-color: var(--brand, #2e7d46);
+  box-shadow: 0 8px 22px rgba(15,40,25,.22);
+}
+.tobi-balloon.tobi-balloon-act:hover { transform: translateY(-2px); }
+
 /* ---------- panel chat ---------- */
 .tobi-panel {
   position: absolute;
@@ -8053,6 +8312,29 @@ body.tm-panel-open { overflow: '' !important; }
   border-radius: 14px;
 }
 .tobi-bot .tobi-bubble { background: #fff; color: var(--ink, #17301f); border: 1px solid rgba(23,48,31,.1); border-bottom-left-radius: 4px; }
+/* PROMPT: CTA link di dalam bubble TOBI — jelas interaktif, bukan teks biasa.
+   Tombol hijau TOBA, bold, arrow, hover/active state, touch-friendly. */
+.tobi-bubble .tobi-page-link {
+  display: inline-block;
+  margin-top: 7px;
+  padding: 8px 14px;
+  background: var(--accent, #2E7D46);
+  color: #fff !important;
+  font-weight: 700;
+  font-size: 12.5px;
+  line-height: 1.2;
+  border-radius: 999px;
+  text-decoration: none;
+  border: 1.5px solid rgba(255,255,255,.35);
+  box-shadow: 0 3px 10px rgba(30,92,56,.28);
+  cursor: pointer;
+  transition: background .18s ease, transform .18s ease;
+}
+.tobi-bubble .tobi-page-link::after { content: ''; font-weight: 800; }
+.tobi-bubble .tobi-page-link:hover { background: var(--accent-dark, #1D5A30); transform: translateY(-1px); }
+.tobi-bubble .tobi-page-link:active { transform: translateY(0); background: var(--accent-dark, #1D5A30); }
+/* link teks biasa di bubble tetap bergaya link */
+.tobi-bubble a:not(.tobi-page-link) { color: var(--accent, #2E7D46); font-weight: 600; text-decoration: underline; }
 .tobi-user .tobi-bubble { background: var(--primary, #1e5c38); color: #fff; border-bottom-right-radius: 4px; }
 .tobi-dots { display: inline-flex; gap: 4px; padding: 3px 2px; }
 .tobi-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--primary, #1e5c38); opacity: .4; animation: tobi-dot 1s infinite; }
