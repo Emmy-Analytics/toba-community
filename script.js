@@ -303,16 +303,38 @@ function merchPage() {
 }
 
 /* ---------- GALLERY – editorial, live API ---------- */
-function galleryPage() {
+function renderGalleryPageShell() {
  const labels = t('gallery.filters').split('|');
  const phOpts = t('gallery.ph.all');
  const perOpts = [12, 24].map(n => `<option value="${n}"${n === 12 ? ' selected' : ''}>${n}</option>`).join('');
+ const searchHint = t('gallery.search.hint');
  return `
-<section class="gallery-hero-blur"><section class="hero section-wrap" style="min-height:auto"><div class="hero-copy"><p class="eyebrow">${t('gallery.hero.eyebrow')}</p><h1>${t('gallery.hero.h')}</h1><p class="hero-subtitle">${t('gallery.hero.lede.live')}</p></div></section></section>
+<section class="gallery-hero-blur">
+ <section class="hero gallery-hero section-wrap" style="min-height:auto">
+   <div class="hero-copy gallery-hero-copy">
+    <p class="eyebrow">${t('gallery.hero.eyebrow')}</p>
+    <h1>${t('gallery.hero.h')}</h1>
+    <p class="hero-subtitle">${t('gallery.hero.lede.live')}</p>
+   </div>
+   <!-- Five Interactive Glass Highlight Panels — centered horizontal swap carousel -->
+   <div class="hl-wrap">
+    <button class="hl-arrow hl-arrow-l" id="hlPrev" type="button" aria-label="${t('hl.prev')}">‹</button>
+    <div class="hl-carousel" id="hlCarousel" role="listbox" aria-label="${t('gallery.hero.eyebrow')}"></div>
+    <button class="hl-arrow hl-arrow-r" id="hlNext" type="button" aria-label="${t('hl.next')}">›</button>
+   </div>
+ </section>
+</section>
+<section class="gallery-featured" id="galleryFeatured" hidden>
+ <div class="section-wrap wide"><div class="gf-head"><p class="eyebrow accent-orange">${t('gallery.featured.eyebrow')}</p><h2>${t('gallery.featured.h')}</h2></div>
+ <div class="gf-grid" id="gfGrid"></div></div>
+</section>
 <section class="gallery-shell"><div class="section-wrap wide" style="padding-top:clamp(28px,4vh,56px)">
  <div class="filters filters-scroll" id="galleryFilters">${labels.map((x, i) => `<button class="filter-btn ${i === 0? 'active' : ''}" data-filter="${x}">${x}</button>`).join('')}</div>
  <div class="gallery-tools">
-   <input class="gallery-search" id="gallerySearch" type="search" placeholder="${t('gallery.search.ph')}" aria-label="${t('gallery.search.ph')}">
+   <div class="gallery-search-wrap">
+    <input class="gallery-search" id="gallerySearch" type="search" placeholder="${t('gallery.search.ph')}" aria-label="${t('gallery.search.ph')}">
+    <p class="gallery-search-hint">${searchHint}</p>
+   </div>
    <select class="gallery-select" id="galleryPhotographer" aria-label="${t('gallery.ph.all')}"><option value="">${phOpts}</option></select>
    <label class="gallery-perpage" id="galleryPerPageWrap"><span>${t('gallery.perpage')}</span><select class="gallery-select gallery-select-sm" id="galleryPerPage" aria-label="${t('gallery.perpage')}">${perOpts}</select></label>
  </div>
@@ -413,7 +435,7 @@ function partnershipPage() {
 }
 
 const page = document.body.dataset.page; const appEl = document.getElementById('app');
-const renderers = { home, tobaladies: () => communityPage('tobaladies'), tobadeli: () => communityPage('tobadeli'), events: eventsPage, merchandise: merchPage, gallery: galleryPage, partnership: partnershipPage };
+const renderers = { home, tobaladies: () => communityPage('tobaladies'), tobadeli: () => communityPage('tobadeli'), events: eventsPage, merchandise: merchPage, gallery: renderGalleryPageShell, partnership: partnershipPage };
 if (page!== 'game') { appEl.innerHTML = (renderers[page] || home)(); }
 document.querySelector(`[data-nav="${page}"]`)?.classList.add('active'); document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -1984,7 +2006,7 @@ initMerchTilt();
  prefers-reduced-motion? bola tetap statis (modul tidak aktif).
  ===================================================================== */
 (function interactiveBall(){
- const box = document.querySelector('.hero-home.hero-cut-slideshow');
+ const box = document.getElementById('heroCutShow');
  if (!box) return;
  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
@@ -2268,8 +2290,9 @@ initMerchTilt();
  root.id = 'tobiRoot';
  root.innerHTML = `
  <button class="tobi-launcher" id="tobiLauncher" type="button" aria-label="TOBI – buka chat" aria-expanded="false">
- <span class="tobi-peek"><img src="${AVATAR}" alt="" draggable="false"></span>
+  <span class="tobi-peek"><img src="${AVATAR}" alt="" draggable="false"></span>
  </button>
+ <button class="tobi-dismiss" id="tobiDismiss" type="button" aria-label="Sembunyikan TOBI">×</button>
  <div class="tobi-balloon" id="tobiBalloon" hidden role="status"></div>
  <section class="tobi-panel" id="tobiPanel" role="dialog" aria-label="TOBA Assistant" aria-modal="false" hidden>
  <header class="tobi-head">
@@ -2279,7 +2302,7 @@ initMerchTilt();
  <small><span class="tobi-dot" aria-hidden="true"></span><span id="tobiSub">Toba Assistant</span><span class="tobi-sep" aria-hidden="true">·</span><span id="tobiStatus"></span></small>
  </div>
  <button class="tobi-head-btn" id="tobiMinimize" type="button" aria-label="Minimize chat">–</button>
- <button class="tobi-head-btn" id="tobiClose" type="button" aria-label="Tutup chat"></button>
+ <button class="tobi-head-btn" id="tobiClose" type="button" aria-label="Tutup chat">x</button>
  </header>
  <div class="tobi-log" id="tobiLog" role="log" aria-live="polite"></div>
  <div class="tobi-chips" id="tobiChips"></div>
@@ -2289,12 +2312,18 @@ initMerchTilt();
  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true"><path d="M3 11.5L21 3l-7 18-2.5-7.5L3 11.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
  </button>
  </form>
- </section>`;
+  </section>
+  <button id="tobiRestore" type="button">Tampilkan TOBI</button>`;
  /* intro gate: launcher chatbot hanya di-append SETELAH intro selesai
  (home / Tobaladies / Tobadeli). Inisialisasi internal tetap berjalan
  normal; hanya kehadiran DOM-nya yang ditunda supaya intro tidak
  tertutup launcher. Kontrak yang sama dipakai music.js. */
- const showRoot = () => document.body.appendChild(root);
+ const showRoot = () => {
+ document.body.appendChild(root);
+ /* Task 5: kontrol panggil TOBI juga harus tersedia di semua halaman,
+ termasuk halaman SPA-like yang tidak punya data-page. */
+ if (!document.body.dataset.page) document.body.dataset.page = 'home';
+ };
  if (document.documentElement.classList.contains('intro-running')) {
  document.addEventListener('toba:introdone', showRoot, { once: true });
  setTimeout(() => { if (!root.isConnected) showRoot(); }, 9000);
@@ -2308,8 +2337,88 @@ initMerchTilt();
  const form = root.querySelector('#tobiForm');
  const input = root.querySelector('#tobiInput');
  const statusEl = root.querySelector('#tobiStatus');
- let open = false, peekIdleTimer = 0;
+ const restoreBtn = root.querySelector('#tobiRestore');
 
+  restoreBtn.style.cssText = `
+    position: fixed;
+    right: 18px;
+    bottom: 82px;
+    z-index: 9981;
+
+    width: 38px;
+    height: 38px;
+    padding: 0;
+
+    display: none;
+    place-items: center;
+
+    border: 1px solid rgba(255,255,255,.45);
+    border-radius: 50%;
+
+    background: rgba(23,37,29,.88);
+    backdrop-filter: blur(8px);
+    color: #fff;
+
+    font-size: 0;
+    cursor: pointer;
+  `;
+
+  restoreBtn.innerHTML = '🐊';
+  restoreBtn.setAttribute('aria-label', 'Tampilkan TOBI');
+  restoreBtn.title = 'Tampilkan TOBI';
+ let open = false, peekIdleTimer = 0;
+ const HIDE_KEY = 'tobi.hidden';
+ const INTERACT_KEY = 'tobi.interacted'; /* Task 1: tombol glass hanya muncul setelah avatar berinteraksi */
+
+  function hideTobi() {
+    localStorage.setItem(HIDE_KEY, '1');
+
+    clearTimeout(peekIdleTimer);
+    peekIdleTimer = 0;
+
+    open = false;
+    launcher.style.display = 'none';
+    balloon.hidden = true;
+    balloon.classList.remove('tobi-balloon-act');
+    delete balloon.dataset.act;
+    panel.hidden = true;
+
+    const dismissBtn = root.querySelector('#tobiDismiss');
+    if (dismissBtn) dismissBtn.style.display = 'none';
+
+    restoreBtn.style.display = 'grid';
+  }
+  const dismissBtn = root.querySelector('#tobiDismiss');
+
+  if (dismissBtn) {
+    dismissBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      hideTobi();
+    });
+  }
+
+  function restoreTobi() {
+    localStorage.removeItem(HIDE_KEY);
+    sessionStorage.removeItem(INTERACT_KEY);
+
+    launcher.style.display = '';
+    panel.hidden = true;
+    balloon.hidden = true;
+
+    /* tombol glass kembali tersembunyi sampai avatar berinteraksi lagi (Task 1) */
+    const dismissBtn = root.querySelector('#tobiDismiss');
+    if (dismissBtn) dismissBtn.style.display = 'none';
+
+    restoreBtn.style.display = 'none';
+
+    open = false;
+    clearTimeout(peekIdleTimer);
+
+    /* sapaan muncul lagi setelah TOBI dipanggil (Task 4) */
+    sessionStorage.removeItem(OPEN_KEY);
+    setTimeout(showBalloon, 300);
+  }
  /* ---------- Prompt 12: variasi template – pilih acak, tidak berulang dua kali ---------- */
  const lastPick = {};
  function pickVar(cat, keys){
@@ -2326,6 +2435,12 @@ initMerchTilt();
  userPlaced = pengguna pernah memindahkan? mode User-Placed (Prompt 14):
  posisi disimpan di localStorage dan animasi keluar-masuk tepi dimatikan. */
  let posY = null, posX = null, userPlaced = false;
+ /* Task 6: balloon greeting dihitung dari bounding box launcher (kiri/kanan),
+ dan top dari posY aktual — bukan CSS statis yang bisa tertinggal di posisi lama. */
+ function placeBalloonTop(){
+ const r = launcher.getBoundingClientRect();
+ balloon.style.top = Math.max(8, r.top) + 'px';
+ }
  function defaultY(){ return Math.round(window.innerHeight * 0.38); }
  function defaultX(){ return window.innerWidth - (launcher.offsetWidth || 86); }
  function clampX(x){
@@ -2338,6 +2453,18 @@ initMerchTilt();
  const min = 78, max = window.innerHeight - h - 92; /* sisakan ruang utk music player di bawah */
  return Math.min(Math.max(y, min), Math.max(min, max));
  }
+ function positionDismiss() {
+  const dismissBtn = root.querySelector('#tobiDismiss');
+  if (!dismissBtn || launcher.style.display === 'none') return;
+ if (dismissBtn.style.display === 'none') return; /* Task 1: jangan posisi-kan kalau memang disembunyikan */
+
+  const r = launcher.getBoundingClientRect();
+
+  /* posisi mengikuti bounding box avatar; clamp agar tidak keluar viewport */
+  const size = dismissBtn.offsetWidth || 20;
+  dismissBtn.style.left = Math.min(Math.max(r.left + r.width * 0.72, 4), Math.max(4, window.innerWidth - size - 4)) + 'px';
+  dismissBtn.style.top = Math.min(Math.max(r.top + 2, 4), Math.max(4, window.innerHeight - size - 4)) + 'px';
+}
  function applyPos(){
  if (posY === null) { posY = defaultY(); }
  posY = clampY(posY);
@@ -2350,9 +2477,11 @@ initMerchTilt();
  /* sinkronkan balon sapaan dgn posisi launcher (improvement 6 + Prompt 10) */
  root.style.setProperty('--tobi-top', posY + 'px');
  placeBalloon();
+ positionDismiss();
  positionPanel();
  }
- /* Prompt 10: balon selalu menempel di sisi launcher, walau launcher dipindah */
+ /* Prompt 10 + Task 6: balon selalu menempel di sisi launcher, walau launcher dipindah.
+ Top dihitung dari bounding box launcher, bukan CSS statis. */
  function placeBalloon(){
  const r = launcher.getBoundingClientRect();
  if (r.left + r.width / 2 > window.innerWidth / 2) {
@@ -2362,6 +2491,8 @@ initMerchTilt();
  balloon.style.right = 'auto';
  balloon.style.left = Math.max(8, r.right + 10) + 'px';
  }
+ /* clamp top: bubble tidak menutupi wajah avatar dan tidak keluar viewport */
+ balloon.style.top = Math.min(Math.max(r.top, 8), Math.max(8, window.innerHeight - 60)) + 'px';
  }
  function loadPos(){
  try {
@@ -2383,17 +2514,41 @@ initMerchTilt();
  }
 
  function positionPanel(){
+ /* mobile: panel pakai layout fluid CSS di @media 640px, jangan ditimpa inline */
+ if (window.innerWidth <= 640) { panel.style.top = ''; panel.style.left = ''; panel.style.right = ''; return; }
  if (!open) return;
- /* panel muncul di samping launcher; geser vertikal jika melebihi viewport */
+ /* panel muncul di samping launcher (Task 3): dihitung dari posisi AKTUAL
+ avatar via bounding box, bukan posisi hardcoded tepi kanan. */
+ const r = launcher.getBoundingClientRect();
  const ph = panel.offsetHeight || 460;
  const pw = panel.offsetWidth || 320;
  let top = posY - 40;
  top = Math.min(Math.max(top, 12), Math.max(12, window.innerHeight - ph - 12));
- const left = Math.min(Math.max(window.innerWidth - pw - 12, 12), window.innerWidth - pw - 12);
+ /* pilih sisi: launcher di setengah kanan layar → panel di kirinya; sebaliknya kanan */
+ let left;
+ const anchorCx = r.left + r.width / 2;
+ if (anchorCx > window.innerWidth / 2) left = r.left - pw - 10;
+ else left = r.right + 10;
+ /* clamp agar tidak keluar viewport (desktop + mobile) */
+ left = Math.min(Math.max(left, 10), Math.max(10, window.innerWidth - pw - 10));
  panel.style.top = top + 'px';
  panel.style.left = left + 'px';
+ panel.style.right = 'auto';
  }
 
+ /* Task 1: tombol glass × hanya muncul setelah pengguna berinteraksi
+ dengan avatar (klik atau mulai drag) — tidak tampil saat halaman dibuka. */
+ /* Task 1 + Task 2: tombol glass disembunyikan permanen saat TOBI di-hide,
+ refresh halaman juga tidak memunculkannya kembali (cek HIDE_KEY). */
+ function revealDismiss(){
+ if (localStorage.getItem(HIDE_KEY) === '1') return;
+ try { sessionStorage.setItem(INTERACT_KEY, '1'); } catch(_){}
+ const btn = root.querySelector('#tobiDismiss');
+ if (btn && launcher.style.display !== 'none') {
+ btn.style.display = 'flex';
+ positionDismiss();
+ }
+ }
  /* drag launcher – pointer events (mouse + touch), 2 axis; klik vs drag dibedakan */
  let drag = null;
  launcher.addEventListener('pointerdown', e => {
@@ -2401,6 +2556,7 @@ initMerchTilt();
  drag = { startX: e.clientX, startY: e.clientY, top0: posY, left0: posX === null? defaultX() : posX, moved: false };
  launcher.classList.add('dragging');
  clearTimeout(peekIdleTimer);
+ revealDismiss(); /* mulai interaksi → tombol glass muncul dekat avatar */
  try { launcher.setPointerCapture(e.pointerId); } catch(_){}
  });
  launcher.addEventListener('pointermove', e => {
@@ -2414,8 +2570,8 @@ initMerchTilt();
  launcher.style.left = posX + 'px';
  launcher.style.right = 'auto';
  launcher.classList.add('tobi-free');
- if (!balloon.hidden) balloon.style.top = Math.round(posY) + 'px'; /* balloon ikut mascot */
- placeBalloon();
+ if (!balloon.hidden) placeBalloon(); /* Task 6: bubble ikut posisi avatar saat drag */
+ positionDismiss();
  positionPanel();
  }
  });
@@ -2426,7 +2582,8 @@ initMerchTilt();
  const wasDrag = drag.moved;
  drag = null;
  launcher.classList.remove('dragging');
- if (wasDrag) { userPlaced = true; savePos(); } /* Prompt 14: mode User-Placed */
+ revealDismiss(); /* klik/drag avatar → tombol glass muncul (Task 1) */
+ if (wasDrag) { userPlaced = true; savePos(); positionDismiss(); positionPanel(); } /* Prompt 14: mode User-Placed */
  else toggleChat(); /* klik tanpa drag? toggle */
  }
  launcher.addEventListener('pointerup', endDrag);
@@ -2439,8 +2596,8 @@ initMerchTilt();
  if (posX!== null) posX = clampX(posX);
  launcher.style.top = posY + 'px';
  if (posX!== null) launcher.style.left = posX + 'px';
- if (!balloon.hidden) balloon.style.top = Math.round(posY) + 'px'; /* balloon ikut mascot */
- placeBalloon();
+ if (!balloon.hidden) placeBalloon(); /* Task 6: bubble ikut posisi avatar saat resize */
+ positionDismiss();
  positionPanel();
  });
 
@@ -2458,9 +2615,14 @@ initMerchTilt();
  }
  const isId2 = () => document.documentElement.lang!== 'en';
  function showBalloon(){
- if (open || document.hidden) return;
- greetText().then(res => {
- if (open || document.hidden) return;
+  if (localStorage.getItem(HIDE_KEY) === '1') return;
+  if (launcher.style.display === 'none') return; /* avatar disembunyikan */
+  if (open || document.hidden) return;
+
+  greetText().then(res => {
+    if (localStorage.getItem(HIDE_KEY) === '1') return;
+    if (launcher.style.display === 'none') return;
+    if (open || document.hidden) return;
  const txt = typeof res === 'object' && res? res.text : res;
  const act = typeof res === 'object' && res? res.act : null;
  balloon.textContent = txt;
@@ -2492,16 +2654,22 @@ initMerchTilt();
  - Reduced motion: tanpa animasi otomatis. */
  setInterval(() => {
  if (open || document.hidden || REDUCE) return;
+ if (localStorage.getItem(HIDE_KEY) === '1') return; /* Task 2: greeting tidak muncul saat TOBI di-hide */
  if (!userPlaced) {
  launcher.classList.add('tobi-away');
- setTimeout(() => { launcher.classList.remove('tobi-away'); showBalloon(); }, 1400);
+ setTimeout(() => {
+ if (localStorage.getItem(HIDE_KEY) === '1') return;
+ launcher.classList.remove('tobi-away'); showBalloon();
+ }, 1400);
  } else {
  showBalloon();
  }
  }, 45000);
- /* sapaan pertama per sesi browser */
- setTimeout(() => { if (!sessionStorage.getItem(OPEN_KEY)) { sessionStorage.setItem(OPEN_KEY, '1'); showBalloon(); } }, 1600);
- launcher.addEventListener('pointerenter', () => { if (!REDUCE &&!open) showBalloon(); });
+ /* sapaan pertama per sesi browser — TIDAK muncul saat TOBI di-hide (Task 4) */
+ setTimeout(() => {
+ if (localStorage.getItem(HIDE_KEY) === '1') return;
+ if (!sessionStorage.getItem(OPEN_KEY)) { sessionStorage.setItem(OPEN_KEY, '1'); showBalloon(); }
+ }, 1600);
 
  /* ---------- chat log ---------- */
  function esc(s){ const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
@@ -2606,10 +2774,22 @@ initMerchTilt();
  let list = null;
  try { list = (window.tobiPersona && window.tobiPersona.chips()) || null; } catch(_){ list = null; }
  if (!list ||!list.length) { chips.innerHTML = ''; return; }
- chips.innerHTML = list.map(c => `<button class="tobi-chip" type="button" data-send="${esc(c.q)}"${c.act? ` data-act="${c.act}"` : ''}>${esc(c.q)}</button>`).join('');
+ chips.innerHTML = list.map(c => `<button class="tobi-chip" type="button" data-send="${esc(c.q)}"${c.act? ` data-act="${c.act}"` : ''}${c.link? ` data-link="${c.link}"` : ''}>${esc(c.q)}</button>`).join('');
  }
  chips.addEventListener('click', e => {
  const b = e.target.closest('.tobi-chip'); if (!b) return;
+ /* Task 8: chip Partnership / Form Kolaborasi membuka langsung halaman
+ partnership di section form resmi (#partnerForm) — URL asli, bukan Google Form palsu */
+ if (b.dataset.link) {
+ addMsg(b.dataset.send, 'user'); input.value = '';
+ typing(true);
+ setTimeout(() => {
+ typing(false);
+ addMsg(document.documentElement.lang !== 'en'? 'Oke, aku antar kamu ke form kolaborasinya ya!' : 'Okay, taking you to the collaboration form!', 'bot');
+ setTimeout(() => { location.href = b.dataset.link; }, 800);
+ }, REDUCE? 80 : 650);
+ return;
+ }
  /* chip permainan (Tebak emoji) langsung memulai game, bukan sekadar kirim teks */
  if (b.dataset.act && window.tobiPersona && window.tobiPersona.startGame) {
  addMsg(b.dataset.send, 'user'); input.value = '';
@@ -2644,8 +2824,11 @@ initMerchTilt();
  setTimeout(() => input.focus(), 120);
  }
  }
- root.querySelector('#tobiMinimize').addEventListener('click', () => toggleChat(false));
- root.querySelector('#tobiClose').addEventListener('click', () => toggleChat(false));
+ root.querySelector('#tobiMinimize').addEventListener('click', () => {
+  toggleChat(false);
+  showBalloon();
+});
+ root.querySelector('#tobiClose').addEventListener('click', hideTobi);
  document.addEventListener('keydown', e => { if (e.key === 'Escape' && open) toggleChat(false); });
 
  /* ---------- improvement 5: launcher sembunyi saat scroll ke bawah ----------
@@ -2685,11 +2868,29 @@ initMerchTilt();
  }
  });
  placeBalloon();
+ positionDismiss();
  }
  }
  document.addEventListener('toba:langchange', refreshLang);
  refreshLang();
  loadPos();
+ restoreBtn.addEventListener('click', restoreTobi);
+
+ /* Task 1: saat halaman pertama dibuka, tombol glass × TIDAK terlihat —
+ hanya muncul setelah avatar diklik / di-drag (revealDismiss). */
+ const dismissBtn0 = root.querySelector('#tobiDismiss');
+ if (dismissBtn0) dismissBtn0.style.display = 'none';
+
+ if (localStorage.getItem(HIDE_KEY) === '1') {
+    launcher.style.display = 'none';
+    balloon.hidden = true;
+    panel.hidden = true;
+    if (dismissBtn0) dismissBtn0.style.display = 'none';
+    restoreBtn.style.display = 'grid';
+    restoreBtn.style.right = '22px';
+    restoreBtn.style.bottom = '82px';
+    /* Task 5: jarak aman dari music player (tm-fab) di kanan-bawah */
+}
 })();
 
 /* =====================================================================
@@ -3094,9 +3295,10 @@ initMerchTilt();
  ] }
  ],
  nameIntroGot: [
- 'Hai {name}! Senang kenalan! Lagi penasaran tentang TOBA atau mau ngobrol santai?',
- 'Salam kenal, {name}! Welcome di TOBA. Ada yang mau ditanyain?',
- 'Haii {name}! Seru nih kenalan. Btw, kamu udah pernah denger TOBA dari mana?'
+ /* Task 7B: setelah tahu nama, tanya kebutuhan — bukan FAQ mentah */
+ 'Senang kenalan dengan kamu, {name}! Lagi ingin tahu tentang kegiatan TOBA, jadwal main, cara bergabung, atau ingin berkolaborasi?',
+ 'Hai {name}! Salam kenal ya. Kamu mau cari info apa nih — jadwal, cara gabung, atau kerja sama?',
+ 'Wah, seru kenalan sama {name}! Ada yang bisa TOBI bantu hari ini? Kegiatan, jadwal, atau kolaborasi?'
  ],
  nameIntroAsk: [
  'BTW, kamu biasa dipanggil siapa nih?',
@@ -3208,23 +3410,21 @@ initMerchTilt();
  'Datang sendiri bukan masalah Nanti bisa kenalan sama teman-teman pelan-pelan.'
  ],
  beginner: [
- 'Gapapa banget! Nggak harus jago dulu kok. Yang penting mau belajar dan seru-seruan bareng.',
- 'Nggak masalah! Banyak yang mulai dari nol di TOBA. Yang penting datang dan enjoy ',
- 'Santai aja, TOBA terbuka buat semua level. Pelan-pelan belajar bareng.'
+ /* Task 7D: "Aku masih pemula" → respons ramah + tanya pengalaman,
+ lalu jelaskan pilihan kegiatan — bukan FAQ mentah. */
+ 'Gapapa banget! Semua juga mulai dari nol. Kamu udah pernah pegang bola sebelumnya, atau beneran baru mau coba?',
+ 'Nggak masalah! TOBA terbuka buat semua level. Biasanya pemula mulai dari Weekly Fun Game — santai, sambil kenalan. Mau aku jelasin kegiatannya?',
+ 'Tenang, nggak harus jago dulu kok. Kamu lagi cari latihan rutin atau sekadar main santai bareng teman-teman?'
  ],
  confidence: [
  'Ragu itu wajar kok. Kalau mau, aku ceritain dulu suasana kegiatan TOBA biar kamu kebayang.',
  'Relate banget! Yang penting berani datang, sisanya berjalan pelan-pelan.'
  ],
  partnership: [
- 'Seru, bisa dibahas! TOBA terbuka untuk kolaborasi, sparing, event bareng, dan sponsorship. Ceritakan kebutuhannya lewat formulir Partnership di halaman Partnership ya.',
- 'Wah, terima kasih sudah tertarik dukung TOBA! TOBA terbuka untuk pembicaraan kerja sama — ceritakan konsepnya lewat halaman Partnership ya.',
- 'Asik! Kalau mau ngajak kolaborasi atau sparing, jalurnya lewat halaman Partnership TOBA ya.',
- 'Bisa banget dibahas! Untuk kolaborasi, event bareng, atau sponsorship, sampaikan lewat halaman Partnership TOBA ya.',
- { _formal: [
- 'TOBA membuka kesempatan kerja sama. Silakan ajukan rencana kolaborasi, sparing, atau sponsorship melalui halaman Partnership TOBA.',
- 'Baik, untuk kerja sama, kolaborasi event, atau penawaran sponsorship, Anda dapat menyampaikannya melalui halaman Partnership TOBA. Tim pengurus akan meninjau lebih lanjut.'
- ] }
+ /* Task 7D: "Aku mau kerja sama" → klarifikasi jenis kolaborasi dulu */
+ 'Boleh! Kerja samanya untuk sponsorship, event, media, atau bentuk kolaborasi lainnya?',
+ 'Wah, seru! Ceritain bentuk kerja samanya dong — sponsorship, event bareng, media partner, atau yang lain?',
+ 'Gas! Kamu mau ngajak TOBA kerja sama dalam bentuk apa — sponsorship, event, media, atau kolaborasi lain?'
  ],
  partnershipEvent: [
  'Bisa kita obrolin nih! Kamu lagi butuh bantuan crew, table official, atau wasit?',
@@ -3280,12 +3480,12 @@ initMerchTilt();
  'Relate banget! Nggak apa-apa kok ngerasa gitu. Pelan-pelan aja ya '
  ],
  greetProactive: [
- 'Halo! Aku TOBI, asisten TOBA Community. Baru kenal TOBA? Aku bisa bantu kamu mengenal komunitas, kegiatan mingguan, dan cara bergabung.',
- 'Heyy! Aku TOBI. Lagi cari info TOBA atau mau ngobrol santai?',
- 'Halo! Mau kenalan sama TOBA, minta pantun, atau ada rencana bikin event bareng?',
- 'Halo halo! Lagi butuh info komunitas atau mau aku hibur pakai tebak-tebakan?',
+ /* Task 7A: perkenalan singkat + tanya nama natural, bukan daftar FAQ panjang */
+ 'Halo! Aku TOBI, asisten TOBA Community. Boleh tahu nama kamu siapa?',
+ 'Heyy! Aku TOBI dari TOBA Community. Panggilan kamu apa nih biar nggak kaku?',
+ 'Hai! Aku TOBI, teman ngobrol TOBA. Siapa nama kamu? Biar aku bisa menyapamu lebih akrab.',
  { _formal: [
- 'Selamat datang! Saya TOBI dari TOBA Community. Ada informasi seputar komunitas, jadwal latihan, atau kerja sama yang bisa saya bantu?'
+ 'Selamat datang! Saya TOBI, asisten TOBA Community. Boleh tahu nama Anda?'
  ] }
  ],
  makan: {
@@ -3417,7 +3617,7 @@ initMerchTilt();
  schedFollowUp: [LADIES + ' plays ' + HARI_LADIES + ' evening, ' + DELI + ' plays ' + HARI_DELI + ' night. Different days, one community!'],
  pricing: ['First-timers Rp50,000 per session, then Rp30,000. Verified by admins.'],
  location: ['Brickhouse The East, Duren Sawit, East Jakarta.'],
- partnership: ['Great! TOBA is open for collaboration — sparring sessions, friendly matches, event collabs, or community partnerships. Share your proposal via the Partnership page.'],
+ partnership: ['Boleh! Is the collaboration for sponsorship, events, media, or another form?'],
  funGame: ['The Weekly Fun Game is TOBA\'s core weekly session at Brickhouse The East, Duren Sawit. Lots of members start here. Details are on the Events page.'],
  membership: ['No membership needed upfront — you can start by joining a Fun Game session.'],
  join: ['Let\'s go! Glad you want to join TOBA. Click the "Fill Out the TOBA Join Form" button below my message!'],
@@ -3451,23 +3651,18 @@ initMerchTilt();
  const last = ctx.topics[ctx.topics.length - 1] || '';
  let sets;
  if (ctx.topics.length === 0){
- /* hiburan ke-5 berotasi antar kunjungan, tidak menampilkan semua game sekaligus */
- const fun = id
-? ['Pantun dong!', 'Tebak-tebakan dong!', 'Tebak emoji yuk!']
- : ['Tell me a Rhyme!', 'Let\'s Play a Riddle!', 'Emoji Guessing Game!'];
- const funRot = (ctx.funTurn = (ctx.funTurn || 0) + 1);
  sets = id? [
  'Gabung TOBA',
- 'Kerja Sama',
+ 'Partnership',
+ 'Form Kolaborasi',
  'Jadwal Fun Game',
- 'Tentang TOBA',
- fun[(funRot - 1) % fun.length]
+ 'Tentang TOBA'
  ] : [
  'Join TOBA',
  'Partnership',
+ 'Collaboration Form',
  'Weekly Games',
- 'About TOBA',
- fun[(funRot - 1) % fun.length]
+ 'About TOBA'
  ];
  } else if (last.startsWith('sched')){
  sets = id? [
@@ -3483,13 +3678,13 @@ initMerchTilt();
  'Cara gabung TOBA?',
  'Ada kegiatan untuk pemula?'
  ] : ['What activities?', 'When\'s game time?', 'How to join?', 'Beginners okay?'];
- } else if (last === 'partnership'){
+ } else if (last === 'partnership' || last === 'joinAsked' || last.startsWith('join')){
  sets = id? [
- 'Info partnership lebih detail?',
- 'Cara sponsorship gimana?',
- 'Mau ajak kolaborasi dong',
- 'Aku mau gabung komunitas!'
- ] : ['More on partnership?', 'How to sponsor?', 'Let\'s collaborate!', 'I want to join!'];
+ 'Form Kolaborasi',
+ 'Partnership',
+ 'Aku mau gabung komunitas!',
+ 'Info partnership lebih detail?'
+ ] : ['Collaboration Form', 'Partnership', 'I want to join!', 'More on partnership?'];
  } else if (last === 'pricing' || last === 'join' || last === 'membership' || last === 'trial'){
  sets = id? [
  'Aku mau gabung!',
@@ -3533,7 +3728,14 @@ initMerchTilt();
  'Lokasi mainnya di mana?'
  ] : ['I want to join!', 'Any session this week?', 'Let\'s collaborate!', 'Where do you play?'];
  }
- return sets.slice(0, 5).map(q => ({ q, act: /Tebak emoji/i.test(q)? 'emoji' : null }));
+ /* Task 8: chip Partnership & Form Kolaborasi = link langsung ke form resmi
+ partnership.html#partnerForm (bukan Google Form palsu). */
+ const isLink = /partnership|kolaborasi|collaboration/i.test(q);
+ return sets.slice(0, 5).map(q => ({
+ q,
+ act: /Tebak emoji/i.test(q)? 'emoji' : null,
+ link: isLink? 'partnership.html#partnerForm' : null
+ }));
  }
 
  /* ---------- greeting interaktif + chips greeting ---------- */
@@ -4058,7 +4260,7 @@ initMerchTilt();
  ctx.topics.push(hitId);
  if (ctx.topics.length > 8) ctx.topics.shift();
  /* reset join link: hanya pesan JOIN yang boleh menyertakan tombol form */
- window.tobiPersona.lastIntent = (hitId === 'join')? 'join' : null; /* Prompt 7: pipeline pakai ini utk link Join */
+ window.tobiPersona.lastIntent = (hitId === 'join' || hitId === 'joinAsk')? 'join' : null; /* Prompt 7 + Task 7D: jawaban klarifikasi join tetap menyertakan link Form Gabung */
 
  /* nama disisipkan natural, tidak setiap kali */
  const useName = ctx.name && Math.random() < 0.3;
@@ -4143,11 +4345,40 @@ initMerchTilt();
  /* event service vs kolaborasi/sponsor */
  if (/crew|table official|wasit|butuh bantuan event/i.test(q))
  return pick('pev', id? A.partnershipEvent : ['We can discuss it — share the details via the Partnership page!']);
+ /* sudah di halaman Partnership → scroll langsung ke form resmi (#partnerForm); */
+ if (document.body.dataset.page === 'partnership') {
+ setTimeout(() => {
+ const el = document.getElementById('partnerForm');
+ if (el) el.scrollIntoView({ behavior: REDUCE? 'auto' : 'smooth', block: 'start' });
+ }, 350);
+ } else {
+ /* di halaman lain → buka Partnership langsung di section form resmi */
+ setTimeout(() => { location.href = 'partnership.html#partnerForm'; }, 900);
+ }
  return id? pickF('pt', A.partnership) : pick('pte', A_EN.partnership);
  }
  case 'join': {
- /* CRITICAL FIX: JOIN → tombol Gabung / Form Gabung di halaman utama.
- BUKAN Partnership. Jawaban teks + link klik-langsung. */
+ /* Task 7D: "Aku mau ikut basket" → klarifikasi dulu: Tobaladies / Tobadeli.
+ Kalau pengunjung sudah menyebut salah satu tim, langsung ke Form Gabung. */
+ if (/tobaladies|cewek|perempuan|ladies/i.test(q)) {
+ ctx.topics.push('joinLadies');
+ return id? pickF('jn', A.join) : pick('jnE', A_EN.join);
+ }
+ if (/tobadeli|cowok|laki|deli/i.test(q)) {
+ ctx.topics.push('joinDeli');
+ return id? pickF('jn', A.join) : pick('jnE', A_EN.join);
+ }
+ if (!ctx.topics.includes('joinAsked')) {
+ ctx.topics.push('joinAsked');
+ window.tobiPersona.lastIntent = 'joinAsk';
+ return id? pick('jA', [
+ 'Wah, seru! Kamu tertarik bergabung dengan tim perempuan ' + LADIES + ' atau tim laki-laki ' + DELI + '?',
+ 'Mantap! Mau gabung di grup ' + LADIES + ' (perempuan) atau ' + DELI + ' (laki-laki)?'
+ ]) : pick('jAe', [
+ 'Fun! Are you interested in joining the women\'s squad ' + LADIES + ' or the men\'s ' + DELI + '?',
+ 'Awesome! Which group — ' + LADIES + ' (women) or ' + DELI + ' (men)?'
+ ]);
+ }
  return id? pickF('jn', A.join) : pick('jnE', A_EN.join);
  }
  case 'funGame':

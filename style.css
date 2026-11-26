@@ -1,5 +1,5 @@
-﻿/* ============================================================
-   TOBA COMMUNITY — PREMIUM EDITORIAL x CINEMATIC
+/* ============================================================
+   TOBA COMMUNITY ? PREMIUM EDITORIAL x CINEMATIC
    Design system: obsidian/deep-forest base (TOBA General),
    strong orange (Tobadeli), strong pink (Tobaladies).
    Type: Manrope (headlines) + Instrument Sans (body).
@@ -210,7 +210,7 @@ p {
   margin-top: 0
 }
 
-/* Bagian 10: ikon bola basket — menggantikan ikon buaya di navbar
+/* Bagian 10: ikon bola basket ? menggantikan ikon buaya di navbar
    (inline SVG, tanpa lingkaran/background, menyatu dengan header & footer) */
 .brand-mark {
   width: 38px;
@@ -238,7 +238,7 @@ p {
   letter-spacing: .02em
 }
 
-/* ---------- PROMPT 34 · Drawer wordmark follows the official standard ---------- */
+/* ---------- PROMPT 34 ? Drawer wordmark follows the official standard ---------- */
 .drawer-name {
   display: inline-flex;
   align-items: baseline;
@@ -260,7 +260,7 @@ p {
   color: #252923;
 }
 
-/* ---------- PROMPT 23 · TOBACOMMUNITY wordmark (Header & Footer) ----------
+/* ---------- PROMPT 23 ? TOBACOMMUNITY wordmark (Header & Footer) ----------
    One-line brand, two-tone: TOBA green + COMMUNITY charcoal. Same family,
    weight & tight tracking as the homepage headline. Header keeps the
    croc mark; the footer renders typography only. */
@@ -304,7 +304,7 @@ p {
 }
 
 /* mobile drawer header + CTA never render on desktop.
-   On ≤1000px the drawer overrides these with its own rules. */
+   On =1000px the drawer overrides these with its own rules. */
 .drawer-head,
 .drawer-intro,
 .drawer-footer,
@@ -1780,7 +1780,48 @@ section:first-child {
   transform: scale(1.035)
 }
 
-/* tombol download kecil di pojok kartu — tidak mendominasi */
+/* 3D tilt + light sheen on cards (motion-safe only ? JS gates the transform) */
+.gallery-item {
+  transition: box-shadow .35s var(--ease-out)
+}
+
+.gallery-item:hover {
+  box-shadow: 0 16px 34px rgba(8, 13, 9, .16)
+}
+
+.gallery-item:after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(260px circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 255, 255, .18), transparent 65%);
+  transition: opacity .3s
+}
+
+.gallery-item:hover:after {
+  opacity: 1
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-item {
+    transition: none
+  }
+  .gallery-item:hover {
+    box-shadow: none
+  }
+  .gallery-item:after {
+    display: none
+  }
+  .gh-shot {
+    transition: none;
+    opacity: 1;
+    transform: none
+  }
+}
+
+/* tombol download kecil di pojok kartu ? tidak mendominasi */
 .gallery-dl {
   position: absolute;
   top: 10px;
@@ -2380,14 +2421,14 @@ html:has(#tobaIntro) {
 .hero-home.in .hero-court circle { animation: obiDraw 1.5s var(--ease-out) 1s forwards }
 .hero-home.in .hero-court path { animation: obiDraw 1.6s var(--ease-out) 1.2s forwards }
 
-/* community pages: their hero has no .in gate — draw via IntersectionObserver-independent timing */
+/* community pages: their hero has no .in gate ? draw via IntersectionObserver-independent timing */
 body:not([data-page="home"]) .hero-court rect { animation: obiDraw 1.6s var(--ease-out) .5s forwards }
 body:not([data-page="home"]) .hero-court line { animation: obiDraw 1.4s var(--ease-out) .9s forwards }
 body:not([data-page="home"]) .hero-court circle { animation: obiDraw 1.5s var(--ease-out) 1.1s forwards }
 body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ease-out) 1.3s forwards }
 
 @media (max-width: 760px) {
-  /* mobile: court stays clearly visible — soft but readable, never washed out */
+  /* mobile: court stays clearly visible ? soft but readable, never washed out */
   .hero-court { opacity: .8 }
   .hero-court rect,
   .hero-court line,
@@ -2418,7 +2459,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   opacity: 0;
   transform: translateY(34px) scale(.94);
   transition: opacity .9s var(--ease-out), transform 1.2s var(--ease-cine);
-  /* Prompt 12: figure adalah grid item dari .obi-stage (place-items:center) —
+  /* Prompt 12: figure adalah grid item dari .obi-stage (place-items:center) ?
      logo & copy berbagi sumbu tengah horizontal yang sama */
   justify-self: center;
 }
@@ -2491,7 +2532,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   flex-wrap: wrap
 }
 
-/* Prompt 47: wordmark tepat di sumbu tengah intro — pusat geometris
+/* Prompt 47: wordmark tepat di sumbu tengah intro ? pusat geometris
    TOBA + COMMUNITY harus segaris dengan pusat kepala buaya */
 .obi-wordmark .ow-toba, .obi-wordmark .ow-comm { flex: 0 0 auto }
 
@@ -2552,9 +2593,16 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   margin: 18px 0 14px
 }
 
-.gallery-search {
-  flex: 1 1 240px;
+.gallery-search-wrap {
+  flex: 1 1 260px;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px
+}
+
+.gallery-search {
+  width: 100%;
   border: 1px solid var(--line);
   background: var(--surface);
   border-radius: 999px;
@@ -2566,6 +2614,12 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 .gallery-search:focus {
   outline: 2px solid var(--accent);
   outline-offset: 0
+}
+
+.gallery-search-hint {
+  font-size: 11.5px;
+  color: var(--muted);
+  margin: 0 0 0 18px
 }
 
 .gallery-select {
@@ -2743,7 +2797,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 }
 
 /* ============================================================
-   TOBA COURT — hybrid game (preserved untouched, recolored via theme)
+   TOBA COURT ? hybrid game (preserved untouched, recolored via theme)
    ============================================================ */
 .game-hero .hero-art {
   min-height: 260px;
@@ -3075,7 +3129,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   .header-tools .header-cta { display: none }
 
   /* mobile drawer: full-height panel, sticky head, controlled scroll.
-     One layout for every width ≤1000px — 760px no longer restyles it. */
+     One layout for every width =1000px ? 760px no longer restyles it. */
   .main-nav {
     display: flex;
     position: fixed;
@@ -3084,7 +3138,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
     height: 100dvh;
     background: var(--bg);
     flex-direction: column;
-    align-items: stretch; /* reset the desktop centering — children fill the width */
+    align-items: stretch; /* reset the desktop centering ? children fill the width */
     padding: 0;
     z-index: 45;
     transform: translateX(100%);
@@ -3097,7 +3151,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
     visibility: visible;
   }
 
-  /* drawer chrome: shown only when the drawer is open — the !important
+  /* drawer chrome: shown only when the drawer is open ? the !important
      base rule above hides them on desktop, so the open-state rules need
      their own !important to win inside the media query */
   .main-nav.open .drawer-head,
@@ -3228,7 +3282,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
     background: color-mix(in srgb, var(--ink) 7%, transparent)
   }
 
-  /* brand introduction — compact, not a banner */
+  /* brand introduction ? compact, not a banner */
   .drawer-intro {
     padding: 16px 2px 14px;
     flex-shrink: 0
@@ -3307,7 +3361,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
     padding: 0
   }
 
-  /* photography panel is desktop-only — keep the drawer lean */
+  /* photography panel is desktop-only ? keep the drawer lean */
   .mega-visual { display: none }
 
   .mega-groups { display: block }
@@ -3352,7 +3406,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
     -webkit-tap-highlight-color: transparent
   }
 
-  /* chevron indicator only — never an X on accordion rows */
+  /* chevron indicator only ? never an X on accordion rows */
   .mega-label:after {
     content: '';
     position: absolute;
@@ -3402,7 +3456,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
     z-index: 46
   }
 
-  /* the drawer has its own close button — hide the burger (X morph) while open:
+  /* the drawer has its own close button ? hide the burger (X morph) while open:
      hanya SATU X terlihat, tidak menimpa konten drawer (Prompt 14) */
   body:has(#mainNav.open) .menu-toggle {
     visibility: hidden;
@@ -3569,8 +3623,12 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
     gap: 10px
   }
 
-  .gallery-search {
+  .gallery-search-wrap {
     flex-basis: 100%
+  }
+
+  .gallery-search-hint {
+    margin-left: 4px
   }
 
   .gallery-select {
@@ -3638,7 +3696,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 }
 
 /* ============================================================
-   HOME HERO — THE RIVER COURT (homepage only)
+   HOME HERO ? THE RIVER COURT (homepage only)
    ============================================================ */
 .hero-home {
   width: 100%; /* full viewport width, no narrow container */
@@ -3678,7 +3736,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 .hero-home .hero-head { grid-area: head; position: relative; z-index: 2; align-self: end }
 .hero-home .hero-body { grid-area: body; position: relative; z-index: 2; align-self: end }
 .hero-home .hero-group-slideshow { grid-area: group; position: relative; z-index: 1 }
-/* PROMPT 84: hero visual column retired with the ball — grid is single-column */
+/* PROMPT 84: hero visual column retired with the ball ? grid is single-column */
 .hero-home .hero-visual { display: none }
 
 /* staged entrance: eyebrow -> headline -> subtitle -> CTA -> info bar, then the river */
@@ -3761,7 +3819,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   font-size: clamp(2.5rem, 5.4vw, 4.6rem);
 }
 
-/* Prompt 47: mascot removed from hero — asset kept in /assets for other uses */
+/* Prompt 47: mascot removed from hero ? asset kept in /assets for other uses */
 .hero-mascot { display: none }
 
 @keyframes mascotIn {
@@ -3828,14 +3886,14 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
     margin: 12px 0 8px
   }
 
-  /* homepage mascot on mobile: compact signature, ~30–34% width —
+  /* homepage mascot on mobile: compact signature, ~30?34% width ?
      part of the composition, never the whole hero */
   .hero-mascot {
     width: clamp(120px, 32vw, 160px);
     max-height: 30vh;
   }
 
-  /* mobile court: full FIBA geometry stays visible — quieter stroke but
+  /* mobile court: full FIBA geometry stays visible ? quieter stroke but
      clearly present; nothing is display:none'd away */
   .hero-court { opacity: .75 }
   .hero-court rect,
@@ -3848,15 +3906,15 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 }
 
 /* ============================================================
-   HERO CUTOUT — CENTER STAGE PLAYER CAROUSEL (refactor Nov 2026)
+   HERO CUTOUT ? CENTER STAGE PLAYER CAROUSEL (refactor Nov 2026)
    Struktur DOM (dibuat oleh modul JS hero-cut):
      .hero-cut-slideshow
-       ├─ .cut-stage            → 3 pemain: tier-left | tier-main | tier-right
-       │    ├─ .hero-cut-img.tier-side.tier-left  (preview kiri ~50%)
-       │    ├─ .hero-cut-img.tier-main            (UTAMA, dominan)
-       │    └─ .hero-cut-img.tier-side.tier-right (preview kanan ~50%)
-       └─ .cut-ball-layer       → bola basket (fisika interaktif, persisten)
-     .hero-group-slideshow      → foto GROUP landscape, slideshow 7s terpisah
+       +- .cut-stage            ? 3 pemain: tier-left | tier-main | tier-right
+       ?    +- .hero-cut-img.tier-side.tier-left  (preview kiri ~50%)
+       ?    +- .hero-cut-img.tier-main            (UTAMA, dominan)
+       ?    +- .hero-cut-img.tier-side.tier-right (preview kanan ~50%)
+       +- .cut-ball-layer       ? bola basket (fisika interaktif, persisten)
+     .hero-group-slideshow      ? foto GROUP landscape, slideshow 7s terpisah
    Transisi antar pemain: transform + opacity (smooth, loop tanpa jeda).
    ============================================================ */
 .hero-cut-slideshow {
@@ -3909,7 +3967,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   transform: translateX(0) scale(1);
 }
 
-/* THREE TIERS — utama dominan, sisi 50-55% sebagai preview depth */
+/* THREE TIERS ? utama dominan, sisi 50-55% sebagai preview depth */
 .hero-cut-img.tier-main {
   width: clamp(44%, 52%, 60%);
   max-height: 100%;
@@ -3952,7 +4010,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 .hero-cut-img.cut-ball.cut-ball-live { transition: none !important; }
 
 /* GROUP slideshow: landscape, object-fit contain, transisi halus.
-     Kerangka foto gelap (glass court panel) → dokumentasi landscape
+     Kerangka foto gelap (glass court panel) ? dokumentasi landscape
      tampil premium & terpisah jelas dari player carousel. */
   .hero-group-slideshow {
     position: relative;
@@ -3982,49 +4040,42 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   .hero-cut-img { transition: none; opacity: 1; transform: none; }
 }
 
-/* ---------- DESKTOP (≥761px): center stage di slot kanan hero ----------
+/* ---------- DESKTOP (=761px): center stage di slot kanan hero ----------
    REFRACTOR: foto grup DI BAWAH info komunitas via grid-area "group"
    (normal document flow). Background hijau ikut memanjang mengikuti
    tinggi konten; hero boleh melebihi 1 viewport dan halaman discroll. */
-@media (min-width: 761px) {
-  .hero-cut-desktop {
-    position: absolute;
-    left: clamp(24px, 4vw, 90px);
-    right: clamp(24px, 5vw, 120px);
-    bottom: clamp(250px, 32vh, 320px);
-    width: auto;
-    height: min(34vh, 340px);
-    z-index: 1;
+
+/* DESKTOP ONLY ? reserve space for player carousel,
+   then place group slideshow below all community info */
+@media (min-width: 1001px) {
+  .hero-home {
+    overflow: visible;
   }
-  .hero-cut-desktop .hero-cut-img.tier-main { width: clamp(38%, 44%, 50%); }
-  .hero-cut-desktop .hero-cut-img.tier-side { width: clamp(20%, 24%, 28%); max-height: 58%; }
-  .hero-cut-desktop .hero-cut-img.cut-ball  { width: clamp(48px, 5.5vw, 76px); right: 4%; bottom: 0; }
-  .hero-home .hero-group-slideshow {
-    /* DESKTOP FLOW (refactor): foto grup = grid-area "group" sendiri,
-       DI BAWAH seluruh informasi komunitas — normal document flow,
-       bukan absolute. Background hijau ikut memanjang karena hero
-       mengikuti tinggi konten grid. */
+
+  
+  .hero-home .hero-cut-slideshow.hero-cut-desktop {
     position: relative;
-    width: min(620px, 60vw);
-    max-width: 620px;
-    aspect-ratio: 16 / 9;
-    margin: 34px auto 0;
-    z-index: 1;
-    pointer-events: auto;
+    grid-area: visual;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    width: 100%;
+    height: min(34vh, 340px);
+    margin: clamp(60px, 8vh, 100px) 0 0;
   }
-  /* PROMPT 1: jarak antar-informasi komunitas desktop lebih nyaman */
-  .hero-home .hero-info {
-    gap: 24px clamp(34px, 5vw, 72px);
-  }
+
 }
 
-/* ---------- MOBILE (≤760px): carousel dalam alur hero ---------- */
+
+/* ---------- MOBILE (=760px): carousel dalam alur hero ---------- */
 @media (max-width: 760px) {
   .hero-home .hero-cut-slideshow {
     grid-area: visual;
     position: relative;
+    width: calc(100% + 44px);
+    max-width: none;
     height: clamp(250px, 36vh, 380px);
-    margin: 8px 0 12px;
+    margin: 8px -22px 12px;
     min-width: 0;
   }
   .hero-cut-img.tier-main { width: clamp(48%, 56%, 64%); }
@@ -4046,7 +4097,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 }
 
 /* ============================================================
-   PROMPT 53 — mobile: kill oversized vertical gaps between the
+   PROMPT 53 ? mobile: kill oversized vertical gaps between the
    "LATIHAN DAN SPARRING SETIAP MINGGU" eyebrow and "AKTIVITAS KAMI"
    (sections collapse tight; rhythm carried by smaller margins)
    ============================================================ */
@@ -4132,7 +4183,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 }
 
 /* ============================================================
-   TOBALADIES — BRIGHT EDITORIAL WELCOME INTRO (~5s)
+   TOBALADIES ? BRIGHT EDITORIAL WELCOME INTRO (~5s)
    Warm ivory court, rose accents, one natural ball bounce.
    ============================================================ */
 .tld-intro {
@@ -4165,7 +4216,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   place-items: center
 }
 
-/* scene 1 — court lines draw themselves (soft rose on ivory) */
+/* scene 1 ? court lines draw themselves (soft rose on ivory) */
 .tld-court {
   position: absolute;
   inset: 0;
@@ -4214,7 +4265,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   to { opacity: 1 }
 }
 
-/* scene 2 — the ball drops with one natural bounce */
+/* scene 2 ? the ball drops with one natural bounce */
 .tld-ball-wrap {
   position: absolute;
   left: 50%;
@@ -4260,7 +4311,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   100% { transform: scale(1); opacity: .8 }
 }
 
-/* scene 3 — the lady croc surfaces beside the ball */
+/* scene 3 ? the lady croc surfaces beside the ball */
 .tld-mascot-wrap {
   position: absolute;
   left: 50%;
@@ -4300,7 +4351,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   transition: opacity .4s ease .1s
 }
 
-/* scenes 4+5 — wordmark, welcome line, CTA */
+/* scenes 4+5 ? wordmark, welcome line, CTA */
 .tld-copy {
   position: absolute;
   inset: 0;
@@ -4408,7 +4459,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   opacity: .22
 }
 
-/* mobile — simplify: no ball flight across the screen, shorter copy */
+/* mobile ? simplify: no ball flight across the screen, shorter copy */
 @media(max-width:760px) {
   .tld-ball-wrap { top: 30% }
   .tld-mascot-wrap { width: min(66vw, 300px); bottom: 16% }
@@ -4417,7 +4468,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 }
 
 /* ============================================================
-   TOBADELI — BOLD EDITORIAL WELCOME INTRO (~4.4s)
+   TOBADELI ? BOLD EDITORIAL WELCOME INTRO (~4.4s)
    Warm ivory + burnt orange, confident motion.
    ============================================================ */
 #tdlIntro {
@@ -4491,7 +4542,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   to   { transform: translate(2.5%, -1.5%) scale(1.04) }
 }
 
-/* court geometry — burnt orange on ivory, slightly firmer than the pink one */
+/* court geometry ? burnt orange on ivory, slightly firmer than the pink one */
 .tdl-court {
   position: absolute;
   inset: 0;
@@ -4540,7 +4591,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   to { stroke-dashoffset: 0 }
 }
 
-/* ball — firm single bounce, more decisive than the pink intro */
+/* ball ? firm single bounce, more decisive than the pink intro */
 .tdl-ball-wrap {
   position: absolute;
   left: 50%;
@@ -4617,7 +4668,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 .tdl-copy.in .tdl-eyebrow { animation: tdlUp .7s var(--ease-out) .05s backwards }
 .tdl-copy.in .tdl-wordmark { animation: tdlUp .8s var(--ease-cine) .16s backwards }
 .tdl-copy.in .tdl-cta { animation: tdlUp .7s var(--ease-out) .42s backwards }
-/* Prompt 62: kalimat welcome dihapus — animasi welcome tidak dipakai lagi */
+/* Prompt 62: kalimat welcome dihapus ? animasi welcome tidak dipakai lagi */
 
 @keyframes tdlUp {
   from { opacity: 0; transform: translateY(16px) }
@@ -4765,11 +4816,11 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   /* gentler scene on small devices */
   .kinetic .kline-inner { animation-duration: .7s }
 
-  /* community hero on mobile: editorial composition — mascot as a compact
+  /* community hero on mobile: editorial composition ? mascot as a compact
      signature tucked right of the copy with controlled overlap, not a lone
      centered object with dead space around it.
      The court SVG stays absolutely positioned in the background and the
-     mascot flows in normal grid flow — nothing is hidden at any width. */
+     mascot flows in normal grid flow ? nothing is hidden at any width. */
   .hero .hero-croc {
     position: relative;
     inset: auto;
@@ -4778,7 +4829,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
     margin: -34px 6px -30px auto;
   }
 
-  /* Prompt 41: maskot buaya pakai aset TRANSPARAN yang sama dengan desktop —
+  /* Prompt 41: maskot buaya pakai aset TRANSPARAN yang sama dengan desktop ?
      watermark dekoratif (opacity rendah), tidak menutupi teks/tombol */
   .hero .hero-croc img {
     width: clamp(96px, 28vw, 132px);
@@ -4786,7 +4837,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
     filter: grayscale(1) contrast(1.05);
   }
 
-  /* FIX: mascot must never swallow the headline on ≥360px phones.
+  /* FIX: mascot must never swallow the headline on =360px phones.
      The croc drops BELOW the copy as its own row instead of overlapping it. */
   .hero.hero-community-flow .hero-croc {
     margin: 18px 6px -6px auto;
@@ -4800,7 +4851,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   /* court geometry: always visible on mobile, quietly behind the copy */
   .hero .hero-court { opacity: .9 }
 
-  /* quieter accent tint on small screens — but still visible */
+  /* quieter accent tint on small screens ? but still visible */
   .court-pink,
   .court-orange {
     transform: none
@@ -4842,7 +4893,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 }
 
 /* ============================================================
-   TOBA REFINEMENT PASS — Nov 2026
+   TOBA REFINEMENT PASS ? Nov 2026
    Prioritas: geometry akurat, gambar tak pernah hilang di mobile,
    keterbacaan, gallery premium, horizontal aktivitas, footer rapi.
    ============================================================ */
@@ -4853,7 +4904,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 
 @media (max-width: 1000px) {
   .hero-community-flow .hero-copy { position: relative; z-index: 2; max-width: 92%; }
-  /* Prompt 41: buaya transparan yang SAMA dengan desktop — watermark dekoratif,
+  /* Prompt 41: buaya transparan yang SAMA dengan desktop ? watermark dekoratif,
      tidak menutupi teks/tombol; tetap pakai aset crocodile-head-trans.png */
   .hero-community-flow .hero-croc {
     position: relative;
@@ -4879,10 +4930,15 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
     place-items: center;
   }
   .hero-community-flow .hero-croc img { opacity: .16; filter: grayscale(1) contrast(1.05); }
+
+  .hero-home .hero-body {
+    margin-top: clamp(40px, 6vh, 65px);
+  }
+
 }
 
 /* ---------- 2. Horizontal scroll aktivitas (event grid) ---------- */
-/* Mobile: snap-scroll 1.2–1.5 card terlihat, hint visual card berikutnya.
+/* Mobile: snap-scroll 1.2?1.5 card terlihat, hint visual card berikutnya.
    Desktop: tetap grid 3 kolom. */
 @media (max-width: 1000px) {
   .event-grid.events-scroll {
@@ -4899,7 +4955,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   }
   .event-grid.events-scroll::-webkit-scrollbar { display: none; }
   .event-grid.events-scroll .event-card {
-    flex: 0 0 clamp(255px, 74vw, 330px); /* 1.2–1.5 card terlihat */
+    flex: 0 0 clamp(255px, 74vw, 330px); /* 1.2?1.5 card terlihat */
     scroll-snap-align: start;
   }
   /* petunjuk visual: card berikutnya muncul sebagian */
@@ -4911,13 +4967,13 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   .event-scroll-wrap { position: relative; }
 }
 
-/* di desktop pakai grid normal — tidak ada scrollbar buatan */
+/* di desktop pakai grid normal ? tidak ada scrollbar buatan */
 @media (min-width: 1001px) {
   .event-grid.events-scroll { display: grid; grid-template-columns: repeat(3, 1fr); }
 }
 
 /* ---------- 3. Keterbacaan: kontras teks ---------- */
-/* muted lebih gelap dari sebelumnya (#6E7168 → #5D6058) supaya body text
+/* muted lebih gelap dari sebelumnya (#6E7168 ? #5D6058) supaya body text
    di atas ivory pass kontras AA pada ukuran 14px+ */
 :root { --muted: #565A51; }
 .theme-tobadeli { --muted: #6A5E45; }
@@ -4941,7 +4997,7 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 .mega-sub { color: #5D6157; }
 
 /* ---------- 4. Event card: kontras judul & metadata ---------- */
-/* Sebelumnya judul krem di atas card terang — sekarang selalu ink di surface */
+/* Sebelumnya judul krem di atas card terang ? sekarang selalu ink di surface */
 .event-card h3 { color: var(--ink); }
 .event-card .tag { background: var(--accent-soft); color: var(--accent-dark); }
 .event-card .pill { color: #fff; }
@@ -5125,7 +5181,7 @@ html, body { overflow-x: clip; }
 img { max-width: 100%; height: auto; }
 
 /* ============================================================
-   PROMPT 10–15 — identity, storyline, founder, FAQ, docs
+   PROMPT 10?15 ? identity, storyline, founder, FAQ, docs
    ============================================================ */
 
 /* ---------- Prompt 11: hero identity hierarchy ---------- */
@@ -5192,12 +5248,12 @@ img { max-width: 100%; height: auto; }
 
 .tl-story-side { display: flex; flex-direction: column; gap: 28px; }
 
-/* Prompt 18: partnership services — 9 kartu, responsive */
+/* Prompt 18: partnership services ? 9 kartu, responsive */
 .part-grid { grid-template-columns: repeat(3, 1fr) !important; }
 @media (max-width: 900px) { .part-grid { grid-template-columns: repeat(2, 1fr) !important; } }
 @media (max-width: 600px) { .part-grid { grid-template-columns: 1fr !important; } }
 
-/* Prompt 24/25: storytelling komunitas (Tobaladies & Tobadeli) — satu pola,
+/* Prompt 24/25: storytelling komunitas (Tobaladies & Tobadeli) ? satu pola,
    teks singkat, foto tampil, tanpa fixed height / ruang kosong besar */
 .comm-story { padding-top: clamp(36px, 6vh, 64px); }
 .comm-story-grid {
@@ -5217,7 +5273,7 @@ img { max-width: 100%; height: auto; }
 .comm-story-copy p { margin-bottom: 16px; line-height: 1.68; }
 @media (max-width: 900px) {
   .comm-story-grid { grid-template-columns: 1fr; gap: 24px; }
-  /* mobile: foto dulu, lalu teks — alur membaca natural, tidak ada overlap */
+  /* mobile: foto dulu, lalu teks ? alur membaca natural, tidak ada overlap */
   .comm-story-grid .photo-frame { order: -1; }
 }
 
@@ -5281,7 +5337,7 @@ img { max-width: 100%; height: auto; }
   max-width: 460px;
   width: 100%;
   justify-self: end;
-  clip-path: none !important;   /* founder photo always visible — no scroll-gated reveal */
+  clip-path: none !important;   /* founder photo always visible ? no scroll-gated reveal */
 }
 
 .tl-founder-photo img {
@@ -5324,8 +5380,8 @@ img { max-width: 100%; height: auto; }
   .tl-story-side { order: 2; }
 }
 
-/* ---------- Prompt 14 → PROMPT 76/77: FAQ redesign (compact, editorial) ----------
-   Hierarchy: eyebrow → heading → description → WFG panel (left col) /
+/* ---------- Prompt 14 ? PROMPT 76/77: FAQ redesign (compact, editorial) ----------
+   Hierarchy: eyebrow ? heading ? description ? WFG panel (left col) /
    accordion (right col). Tighter rows, thin neutral borders, no heavy shadows. */
 .faq-wrap { margin-block: clamp(48px, 8vh, 88px); }
 
@@ -5509,7 +5565,7 @@ img { max-width: 100%; height: auto; }
 }
 
 /* ============================================================
-   PROMPT 60 — parallax transition: storyline → The Founder.
+   PROMPT 60 ? parallax transition: storyline ? The Founder.
    Court geometry + a soft vertical connector drift between the two
    chapters at different speeds (JS data-parallax drives the motion).
    Founder photo reveals via clip reveal (existing .img-reveal class).
@@ -5556,20 +5612,20 @@ img { max-width: 100%; height: auto; }
 }
 
 /* ============================================================
-   PROMPT 62 — TOBA MERCH section spacing (lebih lega, konsisten)
+   PROMPT 62 ? TOBA MERCH section spacing (lebih lega, konsisten)
    ============================================================ */
-.merch-section { padding-top: clamp(20px, 3vh, 36px) }   /* Prompt 28: sebelumnya clamp(40,6vh,72) — marquee→merch lebih dekat */
+.merch-section { padding-top: clamp(20px, 3vh, 36px) }   /* Prompt 28: sebelumnya clamp(40,6vh,72) ? marquee?merch lebih dekat */
 
 /* ============================================================
-   PROMPT 63 — CONTACT CARD redesign (compact, tipis, elegan)
+   PROMPT 63 ? CONTACT CARD redesign (compact, tipis, elegan)
    ============================================================ */
-.contact-section { padding-top: clamp(20px, 3vh, 36px); padding-bottom: clamp(40px, 7vh, 72px) }   /* Prompt 33: sebelumnya 40-72 / 56-96 — produk → card Partnership lebih dekat */
+.contact-section { padding-top: clamp(20px, 3vh, 36px); padding-bottom: clamp(40px, 7vh, 72px) }   /* Prompt 33: sebelumnya 40-72 / 56-96 ? produk ? card Partnership lebih dekat */
 @media (max-width: 760px) {
   .contact-section.contact-section { margin-top: clamp(8px, 2vh, 16px); padding-top: clamp(16px, 3vh, 28px) }
 }
 
 /* ---------- Prompt 31: contact card = pintu masuk Partnership (bukan form member) ----------
-   Aksen hijau tetap; seluruh card klik → partnership.html. */
+   Aksen hijau tetap; seluruh card klik ? partnership.html. */
 .part-card .part-card-inner { cursor: pointer; }
 .part-card .part-card-inner .eyebrow { color: var(--accent); letter-spacing: .14em; }
 
@@ -5624,14 +5680,14 @@ button.contact-card {          /* Prompt 27: join card kini tombol pembuka form 
 }
 
 /* ============================================================
-   PROMPT 16-23 — VISUAL REFINEMENT PASS (Nov 2026)
+   PROMPT 16-23 ? VISUAL REFINEMENT PASS (Nov 2026)
    ============================================================ */
 
-/* ---------- Prompt 16/36: hero gradient — full-bleed ke seluruh konten +
-   pergantian warna perlahan HIJAU → ORANYE → PINK → HIJAU.
+/* ---------- Prompt 16/36: hero gradient ? full-bleed ke seluruh konten +
+   pergantian warna perlahan HIJAU ? ORANYE ? PINK ? HIJAU.
    Mekanisme: layer :before/:after dgn opacity animasi (hanya background,
    teks/foto di atasnya z-index 2, tombol tetap klikable, tanpa layout shift).
-   Satu siklus 36s; reduced-motion → gradient hijau statis. */
+   Satu siklus 36s; reduced-motion ? gradient hijau statis. */
 .hero-home {
   position: relative;
   background:
@@ -5684,7 +5740,7 @@ button.contact-card {          /* Prompt 27: join card kini tombol pembuka form 
 
 /* ---------- Prompt 18: typography redesign ----------
    Display: Bricolage Grotesque (karakter kuat)
-   Body:    Manrope (naik dari Instrument Sans — lebih halus)
+   Body:    Manrope (naik dari Instrument Sans ? lebih halus)
    Script:  Caveat (aksen cursive pada headline, jarang dipakai) */
 :root {
   --font-display: 'Bricolage Grotesque', 'Manrope', sans-serif;
@@ -5703,7 +5759,7 @@ h3, .eyebrow, .brand-name, .btn, .pill, .mega-title {
   font-family: var(--font-display);
 }
 
-/* aksen script di hero: dinonaktifkan — tidak dipakai lagi (PROMPT 78/79:
+/* aksen script di hero: dinonaktifkan ? tidak dipakai lagi (PROMPT 78/79:
    slogan memakai sans-serif utama, bukan cursive/handwriting) */
 .hero-script,
 .obi-welcome, .tl-welcome, .tdl-welcome {
@@ -5725,7 +5781,7 @@ h3, .eyebrow, .brand-name, .btn, .pill, .mega-title {
 .theme-tobadeli .obi-welcome,
 .tdl-welcome { color: #A83D20 }
 
-/* ---------- Prompt 17: mobile drawer — LEFT panel (70-75%), bukan fullscreen ---------- */
+/* ---------- Prompt 17: mobile drawer ? LEFT panel (70-75%), bukan fullscreen ---------- */
 @media (max-width: 1000px) {
   .main-nav {
     display: flex;
@@ -5771,7 +5827,7 @@ h3, .eyebrow, .brand-name, .btn, .pill, .mega-title {
     overflow-y: auto;
   }
 
-  /* backdrop dengan blur — lembut, tidak pekat */
+  /* backdrop dengan blur ? lembut, tidak pekat */
   .nav-backdrop {
     position: fixed;
     inset: 0;
@@ -5798,7 +5854,7 @@ h3, .eyebrow, .brand-name, .btn, .pill, .mega-title {
   }
 }
 
-/* ---------- Prompt 58: checklist redesign — icon aligned with title,
+/* ---------- Prompt 58: checklist redesign ? icon aligned with title,
    NO divider lines, tighter vertical rhythm ---------- */
 .feature-checklist {
   display: grid;
@@ -6024,7 +6080,7 @@ h3, .eyebrow, .brand-name, .btn, .pill, .mega-title {
 
 /* ---------- Prompt 23: spacing Storyline vs Agenda ---------- */
 .agenda-section {
-  margin-top: clamp(40px, 6vh, 72px) !important;   /* Prompt 24: jadwal → galeri rapat */
+  margin-top: clamp(40px, 6vh, 72px) !important;   /* Prompt 24: jadwal ? galeri rapat */
   padding-top: 0;
 }
 
@@ -6032,7 +6088,7 @@ h3, .eyebrow, .brand-name, .btn, .pill, .mega-title {
   margin-bottom: clamp(24px, 4vh, 40px);
 }
 
-/* ---------- Prompt 21: Gallery — background photographic blur, tidak hitam ---------- */
+/* ---------- Prompt 21: Gallery ? background photographic blur, tidak hitam ---------- */
 .gallery-hero-blur {
   position: relative;
   overflow: hidden;
@@ -6078,6 +6134,55 @@ h3, .eyebrow, .brand-name, .btn, .pill, .mega-title {
   z-index: 2;
 }
 
+/* ---------- hero editorial: headline + featured real photos ---------- */
+.gallery-hero-blur .hero .hero-copy {
+  max-width: 620px
+}
+
+.gallery-hero-photos {
+  position: absolute;
+  right: clamp(16px, 4vw, 64px);
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  width: min(46vw, 560px);
+  pointer-events: none
+}
+
+.gh-shot {
+  margin: 0;
+  flex: 1;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--accent-soft);
+  box-shadow: 0 22px 48px rgba(8, 13, 9, .22);
+  opacity: 0;
+  transform: translateY(26px) rotate(var(--r, 0deg));
+  transition: opacity .8s var(--ease-cine), transform .9s var(--ease-cine)
+}
+
+.gh-shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block
+}
+
+.gh-1 { aspect-ratio: 3/4; --r: -3deg; transition-delay: .1s }
+.gh-2 { aspect-ratio: 4/5; height: 88%; --r: 2deg; transition-delay: .22s }
+.gh-3 { aspect-ratio: 3/4; height: 76%; --r: -1deg; transition-delay: .34s }
+
+.gallery-hero-photos.ready .gh-shot {
+  opacity: 1;
+  transform: translateY(0) rotate(var(--r, 0deg))
+}
+
+@media (max-width: 1000px) {
+  .gallery-hero-photos { display: none }
+}
+
 /* pastikan foto tetap fokus utama */
 .gallery-item { background: var(--accent-soft) }
 
@@ -6100,7 +6205,7 @@ h3, .eyebrow, .brand-name, .btn, .pill, .mega-title {
 }
 
 /* ============================================================
-   PROMPT 24-34 — FINAL REFINEMENT PASS (Nov 2026)
+   PROMPT 24-34 ? FINAL REFINEMENT PASS (Nov 2026)
    ============================================================ */
 
 /* ---------- Prompt 34: navbar gradient premium (no more dark/black) ---------- */
@@ -6134,7 +6239,7 @@ h3, .eyebrow, .brand-name, .btn, .pill, .mega-title {
   background: linear-gradient(100deg, rgba(251, 247, 239, .92) 0%, rgba(241, 233, 220, .88) 45%, rgba(244, 223, 210, .45) 100%);
 }
 
-/* ---------- Prompt 25: typography revamp — Plus Jakarta Sans ---------- */
+/* ---------- Prompt 25: typography revamp ? Plus Jakarta Sans ---------- */
 :root {
   --font-display: 'Plus Jakarta Sans', 'Manrope', sans-serif;
   --font-head: 'Plus Jakarta Sans', sans-serif;
@@ -6347,7 +6452,7 @@ h3 { letter-spacing: -.015em }
 }
 
 .agenda-section {
-  margin-top: clamp(40px, 6vh, 72px) !important;   /* Prompt 24: jadwal → galeri rapat */
+  margin-top: clamp(40px, 6vh, 72px) !important;   /* Prompt 24: jadwal ? galeri rapat */
 }
 
 .gallery-shell + .info-editorial,
@@ -6409,7 +6514,7 @@ h3 { letter-spacing: -.015em }
 /* .shortcut-grid / .shortcut styles remain harmless if unused elsewhere */
 
 /* ---------- Prompt 31 supplement: section awal/akhir yang jelas ---------- */
-/* Anti-flash reveal untuk section paling awal (di atas fold) — hindari layout
+/* Anti-flash reveal untuk section paling awal (di atas fold) ? hindari layout
    tampak kosong sebelum animasi dimulai */
 .hero-home.in + .section-wrap,
 .comm-cards.reveal {
@@ -6417,11 +6522,11 @@ h3 { letter-spacing: -.015em }
   transform: none !important;
 }
 
-/* story section heading tidak duplikat — hanya satu heading per section */
+/* story section heading tidak duplikat ? hanya satu heading per section */
 .brand-story .section-heading { margin-bottom: clamp(20px, 3vh, 32px) }
 
 /* ============================================================
-   PROMPT 40 — EDITORIAL PARALLAX STORYTELLING (homepage)
+   PROMPT 40 ? EDITORIAL PARALLAX STORYTELLING (homepage)
    Satu foto utama + satu lapisan geometry lapangan + tipografi
    bertahap. Ringan: transform-only parallax, reveal bertahap,
    simplified on mobile, respects prefers-reduced-motion.
@@ -6435,7 +6540,7 @@ h3 { letter-spacing: -.015em }
   margin-inline: auto;
 }
 
-/* chapter 1 — judul + narasi TOBA */
+/* chapter 1 ? judul + narasi TOBA */
 .story-ed-chapter {
   max-width: 62ch;
 }
@@ -6469,7 +6574,7 @@ h3 { letter-spacing: -.015em }
   display: block;
 }
 
-/* Prompt 59: geometry pushed BELOW-RIGHT, mostly outside the photo —
+/* Prompt 59: geometry pushed BELOW-RIGHT, mostly outside the photo ?
    no lines creeping across the image face */
 .story-ed-geo {
   position: absolute;
@@ -6491,7 +6596,7 @@ h3 { letter-spacing: -.015em }
   .story-ed-geo { width: 44%; inset: auto -4% -8% auto; opacity: .55 }
 }
 
-/* chapter 2 — dua circle, layout editorial tanpa card */
+/* chapter 2 ? dua circle, layout editorial tanpa card */
 .story-ch2 {
   margin-block: clamp(56px, 9vh, 112px);
   display: grid;
@@ -6510,7 +6615,7 @@ h3 { letter-spacing: -.015em }
   }
   .story-circle p { max-width: 40ch }
   .story-circle-lede { align-self: end }
-  .story-circle-deli { margin-top: 0 }  /* no more vertical offset — rows align */
+  .story-circle-deli { margin-top: 0 }  /* no more vertical offset ? rows align */
 }
 
 .story-circle-ladies { border-color: #D64D78 }
@@ -6557,11 +6662,11 @@ h3 { letter-spacing: -.015em }
     max-width: 1080px;
     margin-inline: auto;            /* centred inside the container */
   }
-  .story-circle-deli { margin-top: 0 }  /* no vertical offset — rows align */
+  .story-circle-deli { margin-top: 0 }  /* no vertical offset ? rows align */
   .story-circle-lede { grid-column: 1 / -1; max-width: 46ch }
 }
 
-/* chapter 3 — transisi ke The Founder */
+/* chapter 3 ? transisi ke The Founder */
 .story-ch3 {
   text-align: left;
   max-width: 52ch;
@@ -6601,13 +6706,13 @@ h3 { letter-spacing: -.015em }
 }
 
 /* ============================================================
-   PROMPT 64–71 — FINAL REFINEMENT PASS (Nov 2026)
+   PROMPT 64?71 ? FINAL REFINEMENT PASS (Nov 2026)
    Append-only: overrides the retired geometry carriers and
    adds the welcome-invitation experience. No existing rule
    above this block is modified.
    ============================================================ */
 
-/* ---------- PROMPT 64 · geometry no longer bleeds onto photos ----------
+/* ---------- PROMPT 64 ? geometry no longer bleeds onto photos ----------
    The two decorative overlays were removed from the DOM in script.js;
    these hard rules guarantee nothing regenerates them (even stale CSS). */
 .story-ed-geo,
@@ -6617,10 +6722,10 @@ h3 { letter-spacing: -.015em }
   display: none !important;
 }
 
-/* story photo now stands alone — keep the clean frame */
+/* story photo now stands alone ? keep the clean frame */
 .story-ed-photo { overflow: hidden }
 
-/* ---------- PROMPT 68 · checklist: zero lines anywhere, real check glyph.
+/* ---------- PROMPT 68 ? checklist: zero lines anywhere, real check glyph.
    Existing layout is kept; this hardens it against the old border rules
    and enlarges the tick so it reads instantly. */
 .feature-checklist,
@@ -6645,7 +6750,7 @@ h3 { letter-spacing: -.015em }
   place-items: center;
 }
 .check-ind svg { width: 13px; height: 13px }
-/* the tick must be WHITE and VISIBLE on the green roundel —
+/* the tick must be WHITE and VISIBLE on the green roundel ?
    the inherited body colour was grey-on-green (invisible) */
 .check-ind,
 .check-ind svg { color: #fff }
@@ -6653,7 +6758,7 @@ h3 { letter-spacing: -.015em }
 .check-copy strong { font-size: 15.5px }
 .check-copy span { color: #565B52 }
 
-/* ---------- PROMPT 69/70 · simplified hero ----------
+/* ---------- PROMPT 69/70 ? simplified hero ----------
    Old headline/slug/eyebrow are gone from the DOM; neutralise their CSS
    hooks so nothing shifts or flashes if referenced elsewhere. */
 .hero-eyebrow-slot,
@@ -6682,14 +6787,14 @@ h3 { letter-spacing: -.015em }
   margin-top: 10px;
   color: #4A5148;
 }
-/* ---------- PROMPT 80/81 · Homepage cleanup hooks ----------
+/* ---------- PROMPT 80/81 ? Homepage cleanup hooks ----------
    Court geometry SVG and the scroll cue are no longer rendered in
    home()'s markup (removed in script.js). These homepage-scoped rules
    guarantee nothing lingers; community pages keep their geometry. */
 .hero-home .hero-court { display: none !important }
 .hero-home .scroll-cue { display: none !important }
 
-/* ---------- PROMPT 23/73/85 · TOBACOMMUNITY headline colours ----------
+/* ---------- PROMPT 23/73/85 ? TOBACOMMUNITY headline colours ----------
    Single brand wordmark, two-tone: TOBA green + COMMUNITY charcoal.
    No space between the spans (translate="no" keeps it un-translated). */
 .hero-home .hero-identity.brand-wordmark {
@@ -6717,7 +6822,7 @@ h3 { letter-spacing: -.015em }
   .hero-home .hero-identity.brand-wordmark { white-space: normal; font-size: clamp(2rem, 9vw, 2.6rem) }
 }
 
-/* ---------- PROMPT 74 · centered, clean info group ----------
+/* ---------- PROMPT 74 ? centered, clean info group ----------
    No decorative rules: whitespace, typography and alignment only.
    Desktop = three proportional columns, centered; mobile = stacked. */
 .hero-home .hero-info {
@@ -6762,10 +6867,10 @@ h3 { letter-spacing: -.015em }
 }
 .hero-info-item span { color: #565B52; font-size: 13.5px }
 
-/* ---------- PROMPT 67 · interactive ball hardening ----------
+/* ---------- PROMPT 67 ? interactive ball hardening ----------
    Perfect circle guaranteed; transforms never distort the silhouette. */
 
-/* ---------- PROMPT 84 · interactive ball retired ----------
+/* ---------- PROMPT 84 ? interactive ball retired ----------
    .hero-ball / .ball-dismiss CSS removed together with the markup;
    nothing replaces the ball on the Homepage. */
 
@@ -6851,9 +6956,9 @@ main.page-content section:last-of-type {
 }
 /* ---------- end TOBA REFRESH 2026-11 ---------- */
 /* ============================================================
-   PROMPT 1 & 22 — INTRO: foto KOCAK asli + komposisi layer
-   Layer: 1 cream bg → 2 foto kocak → 3 geometry → 4 atmosfera
-          → 5 maskot → 6 wordmark/tagline → 7 skip button
+   PROMPT 1 & 22 ? INTRO: foto KOCAK asli + komposisi layer
+   Layer: 1 cream bg ? 2 foto kocak ? 3 geometry ? 4 atmosfera
+          ? 5 maskot ? 6 wordmark/tagline ? 7 skip button
    ============================================================ */
 .obi-kocak {
   position: absolute;
@@ -6923,7 +7028,7 @@ main.page-content section:last-of-type {
 /* ---------- end PROMPT 1 & 22 ---------- */
 
 /* ====================================================================
-   PROMPT 1-9 · CINEMATIC MODULE — namespace .cine- (homepage only)
+   PROMPT 1-9 ? CINEMATIC MODULE ? namespace .cine- (homepage only)
    Transform/opacity only. IntersectionObserver lifecycle. GPU-friendly.
    ==================================================================== */
 .cine-reviews, .cine-gallery, .cine-marquee {
@@ -6952,7 +7057,7 @@ main.page-content section:last-of-type {
   background-position: center;
   opacity: 0;
   transform: scale(1.02);
-  transition: opacity 1.2s ease, transform 7s linear;   /* subtle Ken-Burns ≤1.05× */
+  transition: opacity 1.2s ease, transform 7s linear;   /* subtle Ken-Burns =1.05? */
   will-change: opacity, transform;
 }
 .cine-rbg-img.active { opacity: 1; transform: scale(1.05); }
@@ -7001,7 +7106,7 @@ main.page-content section:last-of-type {
   color: #fff;
   opacity: 0;
   transform: translateY(16px);
-  /* PROMPT 6: fade-in 1.4s ease-out — kemunculan lebih gradual, tidak mendadak */
+  /* PROMPT 6: fade-in 1.4s ease-out ? kemunculan lebih gradual, tidak mendadak */
   transition: opacity 1.4s cubic-bezier(.22,.61,.36,1), transform 1.4s cubic-bezier(.22,.61,.36,1);
   pointer-events: auto;
 }
@@ -7038,7 +7143,7 @@ main.page-content section:last-of-type {
 .cine-g-row + .cine-g-row { margin-top: clamp(12px, 2vw, 24px); }
 .cine-g-track {
   display: flex;
-  /* Prompt 30: TANPA gap antar-seq — pitch antar-barang dijaga oleh
+  /* Prompt 30: TANPA gap antar-seq ? pitch antar-barang dijaga oleh
  padding kanan tiap seq, jadi wrap modulo tidak menghasilkan celah kosong
  (bug baris kedua: celah sebesar 1 gap muncul di titik wrap). */
   width: max-content;
@@ -7046,7 +7151,7 @@ main.page-content section:last-of-type {
 }
 .cine-g-seq { display: flex; gap: clamp(10px, 1.5vw, 20px); padding-right: clamp(10px, 1.5vw, 20px); }
 .cine-m-track { gap: 0; }
-/* Prompt 43: nol gap antar item — track = kelompok identik berdampingan rapat,
+/* Prompt 43: nol gap antar item ? track = kelompok identik berdampingan rapat,
    sehingga loop sejauh satu lebar kelompok tidak pernah menyisakan celah */
 .cine-m-inner { display: flex; gap: 0 }
 .cine-g-card {
@@ -7115,13 +7220,13 @@ main.page-content section:last-of-type {
 }
 .cine-focus.cine-in { opacity: 1; filter: blur(0); transform: none; }
 .section-wrap.cine-section, .dark-section, .cine-reviews { scroll-margin-top: 72px; }
-.dark-section, .cine-reviews { opacity: 1; transition: none; }   /* jangan fade section besar penuh — biar scroll tetap lega */
+.dark-section, .cine-reviews { opacity: 1; transition: none; }   /* jangan fade section besar penuh ? biar scroll tetap lega */
 
-/* ---------- Prompt 32: sosial media footer — rapat, satu warna ink ----------
+/* ---------- Prompt 32: sosial media footer ? rapat, satu warna ink ----------
    Ikon IG pakai currentColor (sudah di-HTML), teks & ikon satu warna.
-   Prompt 44: kelompok sosial media kompak — gap antar-link 10px. */
+   Prompt 44: kelompok sosial media kompak ? gap antar-link 10px. */
 .footer-connect { margin-top: 18px }
-.footer-social { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }   /* Prompt 53: 10px → 8px, kelompok kompak */
+.footer-social { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }   /* Prompt 53: 10px ? 8px, kelompok kompak */
 .footer-slink {
   display: inline-flex;
   align-items: center;
@@ -7130,7 +7235,7 @@ main.page-content section:last-of-type {
   text-decoration: none;
   font-size: 14px;
   padding: 4px 8px;
-  min-height: 28px;   /* Prompt 53: 40px → 28px, klik tetap nyaman */
+  min-height: 28px;   /* Prompt 53: 40px ? 28px, klik tetap nyaman */
   border-radius: 8px;
   transition: opacity .25s var(--ease-out), transform .25s var(--ease-out);
 }
@@ -7138,7 +7243,7 @@ main.page-content section:last-of-type {
 .fs-icon { width: 18px; height: 18px; flex: 0 0 auto; }
 
 /* Prompt 52: SVG Instagram harus outline (bukan kotak solid).
-   outer rect ikon IG jangan fill currentColor penuh — ganti ke stroke. */
+   outer rect ikon IG jangan fill currentColor penuh ? ganti ke stroke. */
 .fs-icon rect:first-of-type { fill: none; stroke: currentColor; stroke-width: 1.6 }
 .footer-credit {
   display: flex;
@@ -7174,23 +7279,23 @@ main.page-content section:last-of-type {
 .pw-credit .pw-ig circle[fill] { fill: #25D366; stroke: none; }
 .pw-ig-link { margin-left: 2px }
 
-/* ---------- Prompt 40: heading TOBA MERCH. — TOBA hitam, MERCH. oranye ---------- */
+/* ---------- Prompt 40: heading TOBA MERCH. ? TOBA hitam, MERCH. oranye ---------- */
 .merch-section .section-heading h2 .mw-ink { color: var(--ink); }
 .merch-section .section-heading h2 .accent-orange { color: var(--accent); }
 
 /* ---------- Prompt 41 diganti Prompt 55: TOBA hitam gelap, APPAREL hijau TOBA.
    Setiap salinan teks marquee dibungkus span per kata, warna diterapkan per kata
    (bukan mewarnai parent). Loop & kecepatan tidak diubah.
-   FIX FINAL: blok warna hijau/charcoal lama dihapus dari sumbernya —
+   FIX FINAL: blok warna hijau/charcoal lama dihapus dari sumbernya ?
    sekarang satu-satunya sumber warna marquee adalah blok orange di P25
    (akhir file), tanpa konflik specificity. ---------- */
 
-/* ---------- Prompt 45: WhatsApp TOBA Community — gaya sama dgn link IG,
+/* ---------- Prompt 45: WhatsApp TOBA Community ? gaya sama dgn link IG,
    satu warna identitas (ink), tanpa card/border/hijau WhatsApp ---------- */
 .footer-wa { color: var(--ink) }
 
 /* ---------- Prompt 28: brand-coloured social icons, subtle interaction ----------
-   Prompt 52: WhatsApp SVG logo valid (outline bubblem + handset) — ikon
+   Prompt 52: WhatsApp SVG logo valid (outline bubblem + handset) ? ikon
    dirender via currentColor, ukuran konsisten dengan Instagram. */
 .footer-social .footer-slink {
   display: inline-flex;
@@ -7220,7 +7325,7 @@ main.page-content section:last-of-type {
   .cine-rheadline { font-size: clamp(30px, 9vw, 44px); }
 }
 @media (max-width: 560px) {
-  /* mobile: variasi posisi dikurangi — semua kartu di area bawah yang aman */
+  /* mobile: variasi posisi dikurangi ? semua kartu di area bawah yang aman */
   .cine-rcard { left: 16px !important; right: 16px !important; transform: translateY(14px); max-width: none; }
   .cine-rcard.pos-c.show { transform: translateY(0); }
   .cine-rcard.show { transform: translateY(0); }
@@ -7291,16 +7396,16 @@ main.page-content section:last-of-type {
 .pw-ig { color: rgba(255,255,255,.55) }
 
 /* ====================================================================
-   MASTER PROMPT 37-57 — FINAL PASS (Nov 2026)
-   37-38 footer credit & copyright · 39 story rhythm · 40 checklist gap
-   41 croc watermark consistency · 43/48 desktop & section spacing
-   44 join card margin · 46 no duplicate CTA · 50 premium join card
-   54-55 cinematic hero motion · 56 gallery drag/lightbox · 57 starfield
+   MASTER PROMPT 37-57 ? FINAL PASS (Nov 2026)
+   37-38 footer credit & copyright ? 39 story rhythm ? 40 checklist gap
+   41 croc watermark consistency ? 43/48 desktop & section spacing
+   44 join card margin ? 46 no duplicate CTA ? 50 premium join card
+   54-55 cinematic hero motion ? 56 gallery drag/lightbox ? 57 starfield
    ==================================================================== */
 
-/* ---------- Prompt 9/21: sisa "Kembali ke atas" dihapus — spacing footer-bottom tetap proporsional ---------- */
+/* ---------- Prompt 9/21: sisa "Kembali ke atas" dihapus ? spacing footer-bottom tetap proporsional ---------- */
 
-/* ---------- 37-38: PortoWeb credit — netral, satu kesatuan, rapi ---------- */
+/* ---------- 37-38: PortoWeb credit ? netral, satu kesatuan, rapi ---------- */
 .pw-credit b { color: inherit; font-weight: 600; }          /* hapus hijau mencolok */
 .pw-credit b:hover { color: var(--accent); }                 /* aksen halus hanya saat hover */
 .pw-crafted {
@@ -7325,7 +7430,7 @@ main.page-content section:last-of-type {
   .footer-bottom { flex-direction: column; align-items: center; gap: 6px; text-align: center; padding: 16px 12px; }
 }
 
-/* ---------- 40: checklist — jarak centang & informasi rapat ---------- */
+/* ---------- 40: checklist ? jarak centang & informasi rapat ---------- */
 .feature-checklist { gap: 8px 40px !important; }
 .feature-check { gap: 10px; align-items: flex-start; }
 .check-ind { flex: 0 0 22px; width: 22px; height: 22px; }
@@ -7337,7 +7442,7 @@ main.page-content section:last-of-type {
   .check-ind { flex: 0 0 20px; width: 20px; height: 20px; }
 }
 
-/* ---------- 43: desktop breathing room — proporsional, tidak renggang ---------- */
+/* ---------- 43: desktop breathing room ? proporsional, tidak renggang ---------- */
 @media (min-width: 1001px) {
   section { margin: clamp(72px, 10vh, 128px) 0; }
   .section-heading { margin-bottom: clamp(24px, 3.4vh, 36px); }
@@ -7350,7 +7455,7 @@ main.page-content section:last-of-type {
   .hero-actions { margin-bottom: clamp(40px, 6vh, 60px); }
 }
 
-/* ---------- 44 + 50 + Prompt 56: card Gabung/Kolaborasi — lebih kompak,
+/* ---------- 44 + 50 + Prompt 56: card Gabung/Kolaborasi ? lebih kompak,
    jarak dari card produk terakhir dippersempit ~35% ---------- */
 .contact-card {
   position: relative;
@@ -7399,11 +7504,11 @@ main.page-content section:last-of-type {
   .contact-cta { align-self: flex-start; }
 }
 
-/* ---------- PROMPT 28: jarak marquee → TOBA Merch diperkecil (±45%) ----------
+/* ---------- PROMPT 28: jarak marquee ? TOBA Merch diperkecil (?45%) ----------
    Sumber spacing: padding vertikal marquee + padding-top merch-section. */
 .cine-marquee { padding: clamp(18px, 2.2vw, 28px) 0 clamp(10px, 1.2vw, 16px); }   /* sebelumnya clamp(28,4vw,48) */
 .merch-section { padding-top: clamp(20px, 3vh, 36px) }   /* Prompt 28: sebelumnya clamp(40px,6vh,72px) */
-/* CTA duplikat di marquee TOBA APPAREL disembunyikan — link tetap ada di heading Merch */
+/* CTA duplikat di marquee TOBA APPAREL disembunyikan ? link tetap ada di heading Merch */
 
 /* ---------- 48: Update dari Lapangan lebih dekat ke section sebelumnya ---------- */
 .cine-gallery { padding-top: clamp(3px, 3.5vw, 12px) !important; margin-top: clamp(-8px, -1vh, 0px); }
@@ -7416,7 +7521,7 @@ section.cine-gallery { margin-top: clamp(6px, 3vh, 40px); }
 /* ---------- 55: cinematic color-transition bridge antar section ---------- */
 .section-wrap, .dark-section { scroll-margin-top: 72px; }
 .dark-section { position: relative; }
-.dark-section:before {                         /* fade masuk dari bg terang — tanpa garis keras */
+.dark-section:before {                         /* fade masuk dari bg terang ? tanpa garis keras */
   content: '';
   position: absolute;
   inset: 0 0 auto 0;
@@ -7427,7 +7532,7 @@ section.cine-gallery { margin-top: clamp(6px, 3vh, 40px); }
 }
 .dark-section > * { position: relative; z-index: 1; }
 
-/* ---------- 56: gallery — drag/swipe + lightbox premium untuk cinematic rows ---------- */
+/* ---------- 56: gallery ? drag/swipe + lightbox premium untuk cinematic rows ---------- */
 .cine-g-track { cursor: grab; touch-action: pan-y; }
 .cine-g-track.dragging { cursor: grabbing; scroll-behavior: auto; }
 .cine-g-card { cursor: zoom-in; }
@@ -7499,7 +7604,7 @@ section.cine-gallery { margin-top: clamp(6px, 3vh, 40px); }
   .cine-lightbox, .cine-lightbox figure { transition: none; }
 }
 
-/* ---------- 57: starfield canvas — lapisan kedalaman di cine-reviews ---------- */
+/* ---------- 57: starfield canvas ? lapisan kedalaman di cine-reviews ---------- */
 .starfield-layer {
   position: absolute;
   inset: 0;
@@ -7529,7 +7634,7 @@ section.cine-gallery { margin-top: clamp(6px, 3vh, 40px); }
   .cine-rbg-overlay:after { animation: none; }
 }
 
-/* ---------- 42: intro geometry — sama seperti master (stagger animasi tetap) ---------- */
+/* ---------- 42: intro geometry ? sama seperti master (stagger animasi tetap) ---------- */
 .tld-stage .tcl, .tdl-stage .tob {
   stroke-width: 1.6;
   fill: none;
@@ -7544,7 +7649,7 @@ section.cine-gallery { margin-top: clamp(6px, 3vh, 40px); }
 .tld-stage.run .tcl:nth-of-type(n) { animation-delay: calc(var(--i, 0) * 0.18s); }
 
 /* ====================================================================
-   PROMPT 54 — CINEMATIC HERO COLLAGE (foto asli TOBA, layered editorial)
+   PROMPT 54 ? CINEMATIC HERO COLLAGE (foto asli TOBA, layered editorial)
    Desktop: foto bertumpuk asimetris di kanan hero, typography kiri.
    Mobile: collage jadi strip vertikal yang lebih ringkas di atas copy.
    ==================================================================== */
@@ -7608,7 +7713,7 @@ html { scroll-behavior: auto; }               /* hindari lag rAF pada smooth glo
    PROMPT 1-25 IMPLEMENTATION PASS (Nov 2026)
    ============================================================ */
 
-/* ---------- P12+P11: marquee TOBA APPAREL — orange, seamless ---------- */
+/* ---------- P12+P11: marquee TOBA APPAREL ? orange, seamless ---------- */
 /* FIX FINAL: warna dikunci ke orange solid #E65C25 (sama dengan teks "MERCH."),
    tidak mengikuti --accent tema hijau/pink; teks uppercase dari sumber JS. */
 .cine-marquee .cine-m-item,
@@ -7620,7 +7725,7 @@ html { scroll-behavior: auto; }               /* hindari lag rAF pada smooth glo
 .cine-marquee .cine-m-item .cm-other * { color: #E65C25; }
 .cine-m-star { fill: #E65C25; }
 .cine-m-item { text-transform: uppercase; font-weight: 800; letter-spacing: -.01em; }
-/* FIX FINAL: marquee→heading merch lebih dekat (padding atas + bawah dirapatkan,
+/* FIX FINAL: marquee?heading merch lebih dekat (padding atas + bawah dirapatkan,
    padding-top merch-section konsolidasi di sini, tidak lagi pakai !important) */
 .cine-marquee { padding: clamp(10px, 1.4vw, 18px) 0 clamp(6px, 1vw, 12px); }
 .merch-section, .merch-page-wrap { padding-top: clamp(14px, 2.4vh, 28px); }
@@ -7629,7 +7734,7 @@ html { scroll-behavior: auto; }               /* hindari lag rAF pada smooth glo
 @media (max-width: 760px) {
   .hero-home {
     /* HERO MEMENUHI INITIAL VIEWPORT: header sticky 60px (mobile) + hero
-       mengisi sisanya persis — section putih tidak terlihat sebelum scroll. */
+       mengisi sisanya persis ? section putih tidak terlihat sebelum scroll. */
     min-height: calc(100svh - 60px) !important;
     grid-template-rows: auto auto auto;
     padding-bottom: clamp(28px, 5vh, 44px);
@@ -7639,7 +7744,7 @@ html { scroll-behavior: auto; }               /* hindari lag rAF pada smooth glo
 
 /* fade di-handle transition pada blok hero-cut di atas (rebuild) */
 
-/* ---------- P8: founder section — cinematic sports editorial ---------- */
+/* ---------- P8: founder section ? cinematic sports editorial ---------- */
 .founder-story {
   position: relative;
   background:
@@ -7662,12 +7767,12 @@ html { scroll-behavior: auto; }               /* hindari lag rAF pada smooth glo
 }
 /* garis penghubung di atas foto dihapus */
 .founder-transit, .founder-transit-court, .founder-transit-line { display: none !important; }
-/* gerakan ringan mengikuti scroll — parallax data-parallax sudah ada di JS */
+/* gerakan ringan mengikuti scroll ? parallax data-parallax sudah ada di JS */
 @media (prefers-reduced-motion: reduce) {
   .founder-story .founder-photo img { filter: none; }
 }
 
-/* ---------- P19: typography menu mobile — lebih santai, tanpa divider kaku ---------- */
+/* ---------- P19: typography menu mobile ? lebih santai, tanpa divider kaku ---------- */
 @media (max-width: 1000px) {
   .mega-label {
     font-family: var(--font-display);
@@ -7695,7 +7800,7 @@ html { scroll-behavior: auto; }               /* hindari lag rAF pada smooth glo
 /* ---------- P17: logo drawer samakan standar header/footer ---------- */
 .drawer-name small { color: #252923; font-weight: 800; }
 
-/* ---------- P21: event section homepage — bahasa visual TOBA MERCH ---------- */
+/* ---------- P21: event section homepage ? bahasa visual TOBA MERCH ---------- */
 .agenda-section .section-heading h2 {
   font-family: var(--font-display);
   font-weight: 800;
@@ -7825,7 +7930,7 @@ section.hero:has(+ .merch-page-wrap) { margin-bottom: clamp(10px, 2vh, 20px) !im
 }
 
 
-/* FOOTER EMAIL — compact and visible */
+/* FOOTER EMAIL ? compact and visible */
 .footer-emails {
   display: flex;
   flex-direction: column;
@@ -7877,7 +7982,7 @@ section.hero:has(+ .merch-page-wrap) { margin-bottom: clamp(10px, 2vh, 20px) !im
 }
 
 /* ============================================================
-   FINAL FIX — MOBILE HERO: background penuh sampai bawah
+   FINAL FIX ? MOBILE HERO: background penuh sampai bawah
    ============================================================
    Strip putih di bawah Hero berasal dari margin atas section berikutnya
    (comm-cards margin-top clamp(40px,7vh,56px) di @media 760px + 6184px)
@@ -7891,12 +7996,12 @@ section.hero:has(+ .merch-page-wrap) { margin-bottom: clamp(10px, 2vh, 20px) !im
   .hero-home .hero-gradient-shift,
   .hero-home .hero-atmosphere { bottom: 0; top: 0; height: 100%; }
 }
-/* reduced-motion: gradasi shift disembunyikan — background statis hero
+/* reduced-motion: gradasi shift disembunyikan ? background statis hero
    tetap menutupi seluruh area (linear-gradient di .hero-home sendiri) */
 
 
 /* =====================================================================
-   TOBA MUSIC PLAYER — floating FAB + panel (konsisten identitas TOBA:
+   TOBA MUSIC PLAYER ? floating FAB + panel (konsisten identitas TOBA:
    sporty/premium, palet hijau gelap #14251A, Plus Jakarta Sans)
    ===================================================================== */
 #tobaMusicRoot { position: fixed; z-index: 9990; right: 22px; bottom: 22px; font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -7992,7 +8097,7 @@ body.tm-panel-open { overflow: '' !important; }
 
 
 /* =====================================================================
-   REVIEWS FRONTEND — tombol Tulis Review + modal form + star rating
+   REVIEWS FRONTEND ? tombol Tulis Review + modal form + star rating
    (endpoint & integrasi: lihat initReviewsApi di script.js)
    ===================================================================== */
 .cine-rform-btn { margin-top: 22px; pointer-events: auto; cursor: pointer }
@@ -8065,7 +8170,7 @@ body.tm-panel-open { overflow: '' !important; }
 #revSubmit:disabled { opacity: .6; cursor: wait }
 
 
-/* ===== TOBA REVIEWS — FOUR CORNER CINEMATIC LAYOUT ===== */
+/* ===== TOBA REVIEWS ? FOUR CORNER CINEMATIC LAYOUT ===== */
 
 @media (min-width: 769px) {
   .cine-rcard {
@@ -8112,7 +8217,7 @@ body.tm-panel-open { overflow: '' !important; }
   }
 }
 
-/* PROMPT 6: fade-in bubble review lebih halus — opacity 0→1 + translateY,
+/* PROMPT 6: fade-in bubble review lebih halus ? opacity 0?1 + translateY,
    easing cubic-bezier halus; durasi 1.4s agar kemunculan pertama tidak mendadak.
    Rotasi konten lanjutan memakai durasi yang sama agar tidak mendadak juga. */
 .cine-rcard {
@@ -8188,7 +8293,7 @@ body.tm-panel-open { overflow: '' !important; }
 
 
 /* =====================================================================
-   TOBA AI ASSISTANT (TOBI) — global floating chatbot
+   TOBA AI ASSISTANT (TOBI) ? global floating chatbot
    z-index 9980: di bawah music player (9990) & header; di atas konten.
    ===================================================================== */
 #tobiRoot { position: fixed; inset: 0; pointer-events: none; z-index: 9980; font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -8224,7 +8329,7 @@ body.tm-panel-open { overflow: '' !important; }
   70% { transform: translateX(-6%); }
   100% { transform: translateX(0); }
 }
-/* napas halus (peek-a-boo) — hormati prefers-reduced-motion */
+/* napas halus (peek-a-boo) ? hormati prefers-reduced-motion */
 @media (prefers-reduced-motion: no-preference) {
   .tobi-launcher:not(.dragging):not(.open) .tobi-peek { animation: tobi-breathe 5.5s ease-in-out 2.2s infinite; }
   @keyframes tobi-breathe {
@@ -8260,7 +8365,7 @@ body.tm-panel-open { overflow: '' !important; }
 @keyframes tobi-pop { from { opacity: 0; transform: scale(.86) translateY(6px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
 /* Balloon greeting interaktif: greeting dgn aksi (mis. "Tebak emoji yuk!")
-   jadi klikable → buka chatbot & mulai permainan. Tetap ringan & pendek. */
+   jadi klikable ? buka chatbot & mulai permainan. Tetap ringan & pendek. */
 .tobi-balloon.tobi-balloon-act {
   pointer-events: auto;
   cursor: pointer;
@@ -8281,6 +8386,11 @@ body.tm-panel-open { overflow: '' !important; }
   box-shadow: 0 22px 54px rgba(15,40,25,.3);
   overflow: hidden;
   animation: tobi-pop .26s cubic-bezier(.34,1.4,.64,1) both;
+}
+/* Pastikan elemen TOBI benar-benar tersembunyi */
+#tobiRoot .tobi-panel[hidden],
+#tobiRoot .tobi-balloon[hidden] {
+  display: none !important;
 }
 .tobi-head {
   display: flex; align-items: center; gap: 10px;
@@ -8312,7 +8422,7 @@ body.tm-panel-open { overflow: '' !important; }
   border-radius: 14px;
 }
 .tobi-bot .tobi-bubble { background: #fff; color: var(--ink, #17301f); border: 1px solid rgba(23,48,31,.1); border-bottom-left-radius: 4px; }
-/* PROMPT: CTA link di dalam bubble TOBI — jelas interaktif, bukan teks biasa.
+/* PROMPT: CTA link di dalam bubble TOBI ? jelas interaktif, bukan teks biasa.
    Tombol hijau TOBA, bold, arrow, hover/active state, touch-friendly. */
 .tobi-bubble .tobi-page-link {
   display: inline-block;
@@ -8371,6 +8481,8 @@ body.tm-panel-open { overflow: '' !important; }
 @media (max-width: 640px) {
   .tobi-launcher { width: 64px; height: 82px; }
   .tobi-balloon { right: 72px; }
+  /* panel di mobile tetap memakai CSS fluid ini (overflow #tobiRoot fixed);
+  positionPanel() tidak menimpanya karena kalkulasi panel di-mobile dilewati */
   .tobi-panel { right: 8px !important; left: 8px !important; width: auto; top: auto !important; bottom: 12px; }
 }
 
@@ -8382,7 +8494,7 @@ body.tm-panel-open { overflow: '' !important; }
 
 
 /* =====================================================
-   FIX MOBILE HOME HERO — CTA & INFO ANCHORED TO BOTTOM
+   FIX MOBILE HOME HERO ? CTA & INFO ANCHORED TO BOTTOM
    ===================================================== */
 
 @media (max-width: 760px) {
@@ -8410,7 +8522,7 @@ body.tm-panel-open { overflow: '' !important; }
 
 
 /* =========================================
-   TOBA EVENT CAROUSEL — MOBILE ONLY
+   TOBA EVENT CAROUSEL ? MOBILE ONLY
    Desktop tetap menggunakan grid 3 kolom
    ========================================= */
 
@@ -8452,7 +8564,7 @@ body.tm-panel-open { overflow: '' !important; }
 }
 
 
-/* TOBA APPAREL — minimal monochrome separators */
+/* TOBA APPAREL ? minimal monochrome separators */
 
 .cm-product-icon {
   width: 50px;
@@ -8477,7 +8589,7 @@ body.tm-panel-open { overflow: '' !important; }
 
 
 
-/* TOBA GROUP PHOTO — MOBILE SPACING & SIZE */
+/* TOBA GROUP PHOTO ? MOBILE SPACING & SIZE */
 @media (max-width: 760px) {
   .hero-home #heroGroupShow {
     margin-top: 18px;
@@ -8492,7 +8604,7 @@ body.tm-panel-open { overflow: '' !important; }
 }
 
 
-/* FOOTER CREDIT — CHARCOAL & WARM GOLD */
+/* FOOTER CREDIT ? CHARCOAL & WARM GOLD */
 .footer-credit .pw-crafted {
   color: #66645F !important;
   font-size: 12px;
@@ -8540,9 +8652,9 @@ body.tm-panel-open { overflow: '' !important; }
 
 
 /* =====================================================================
-   PARTNERSHIP — simple premium × cinematic sports
-   Hero (soft gradient + partner logos) → Opportunities (editorial, 4 cats)
-   → Past Collaborations (3x3 August Rush) → Inquiry Form
+   PARTNERSHIP ? simple premium ? cinematic sports
+   Hero (soft gradient + partner logos) ? Opportunities (editorial, 4 cats)
+   ? Past Collaborations (3x3 August Rush) ? Inquiry Form
    ===================================================================== */
 
 /* ---------- Hero: soft gradient, no dark overlay, no big photo ---------- */
@@ -8561,7 +8673,7 @@ body.tm-panel-open { overflow: '' !important; }
   font-size: clamp(2.4rem, 5.6vw, 4.4rem);
   max-width: 18ch;
 }
-/* PROMPT 3: teks EN lebih panjang → wrapping natural, bukan pengecilan font */
+/* PROMPT 3: teks EN lebih panjang ? wrapping natural, bukan pengecilan font */
 :root[lang='en'] .hp-inner h1,
 html[lang='en'] .hp-inner h1 {
   max-width: 24ch;   /* EN: heading partnership muat tanpa pemotongan kasar */
@@ -8746,7 +8858,7 @@ html[lang='en'] .hp-inner h1 {
   .cs-poster { height: auto; width: 100%; aspect-ratio: 3/4; }
   .form-card { padding: 22px 18px; }
   .po-tab { font-size: 11.5px; padding: 9px 16px; }
-  /* Partnership mobile — turunkan CTA dan logo partner */
+  /* Partnership mobile ? turunkan CTA dan logo partner */
 .hero-p .hero-actions {
   margin-top: clamp(40px, 15vh, 90px);
 }
@@ -8762,7 +8874,7 @@ html[lang='en'] .hp-inner h1 {
 
 
 /* ==========================================
-   PAST COLLABORATIONS — FULL WIDTH SHOWCASE
+   PAST COLLABORATIONS ? FULL WIDTH SHOWCASE
    ========================================== */
 
 #pastCollabs.collab-showcase {
@@ -8876,7 +8988,7 @@ html[lang='en'] .hp-inner h1 {
 }
 
 /* ==========================================
-   PAST COLLABORATIONS — COMPACT SHOWCASE
+   PAST COLLABORATIONS ? COMPACT SHOWCASE
    ========================================== */
 
 /* Desktop */
@@ -8984,7 +9096,7 @@ html[lang='en'] .hp-inner h1 {
   }
 }
 
-/* PAST COLLABORATIONS — TYPOGRAPHY & LOGO BALANCE */
+/* PAST COLLABORATIONS ? TYPOGRAPHY & LOGO BALANCE */
 
 /* Judul lebih kecil */
 #pastCollabs .cs-intro h2 {
@@ -9024,11 +9136,11 @@ html[lang='en'] .hp-inner h1 {
   }
 }
 
-/* Partnership headline — warna oranye TOBA solid (identitas, kontras baik,
+/* Partnership headline ? warna oranye TOBA solid (identitas, kontras baik,
    tanpa gradasi bergerak pada teks) */
 .hero-p .accent-orange { color: #E8722A; }
 
-/* Komposisi hero desktop kembali ke alur natural — offset relatif dihapus
+/* Komposisi hero desktop kembali ke alur natural ? offset relatif dihapus
    agar tidak menyisakan ruang kosong di bawah hero. */
 @media (min-width: 641px) {
   .hero-p .hp-inner { position: static; top: auto; }
@@ -9036,7 +9148,7 @@ html[lang='en'] .hp-inner h1 {
 @media (max-width: 640px) {
   .hero-p { min-height: 0; }
 }
-/* TOBA Partnership — Pink Orange Green Flow */
+/* TOBA Partnership ? Pink Orange Green Flow */
 .hero-p .accent-orange {
   background: linear-gradient(
     90deg,
@@ -9126,4 +9238,413 @@ html[lang='en'] .hp-inner h1 {
     height: 36px;
     flex-basis: 36px;
   }
+}
+
+
+/* ============================================================
+   GALLERY ? premium editorial refresh (TOBA ? THE GAME IS OUR STORY)
+   ============================================================ */
+
+/* hero: headline kiri, strip foto asli menempel di dasar hero */
+.gallery-hero {
+  position: relative;
+  overflow: visible;
+  padding-bottom: clamp(120px, 16vw, 190px);
+}
+
+.gh-strip {
+  position: absolute;
+  right: clamp(16px, 4vw, 72px);
+  bottom: clamp(-24px, -2vw, -10px);
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  width: min(44vw, 540px);
+  pointer-events: auto;
+}
+
+.gh-strip .gh-shot {
+  margin: 0;
+  flex: 1;
+  border-radius: var(--radius-lg, 18px);
+  overflow: hidden;
+  background: var(--accent-soft);
+  box-shadow: 0 24px 52px rgba(8, 13, 9, .24), 0 4px 14px rgba(8, 13, 9, .12);
+  opacity: 0;
+  transform: translateY(30px) rotate(var(--r, 0deg));
+  transition: opacity .9s var(--ease-cine, ease), transform 1s var(--ease-cine, ease);
+}
+
+.gh-strip .gh-shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.gh-strip .gh-1 { aspect-ratio: 3/4; --r: -2.5deg; transition-delay: .08s }
+.gh-strip .gh-2 { aspect-ratio: 4/5; height: 90%; --r: 1.8deg; transition-delay: .2s }
+.gh-strip .gh-3 { aspect-ratio: 3/4; height: 78%; --r: -1deg; transition-delay: .32s }
+
+.gh-strip.ready .gh-shot {
+  opacity: 1;
+  transform: translateY(0) rotate(var(--r, 0deg));
+}
+
+/* bola kecil melayang lembut di dekat komposisi hero ? hanya desktop */
+.gh-ball {
+  position: absolute;
+  left: -64px;
+  bottom: 34px;
+  width: 46px;
+  height: 46px;
+  opacity: 0;
+  transition: opacity .6s .5s;
+  animation: gh-float 7s ease-in-out infinite;
+}
+
+.gallery-hero-photos.ready .gh-ball { opacity: .95 }
+
+@keyframes gh-float {
+  0%, 100% { transform: translateY(0) rotate(0deg) }
+  50% { transform: translateY(-9px) rotate(9deg) }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gh-ball { animation: none }
+  .gh-strip .gh-shot { transition: none; opacity: 1; transform: rotate(var(--r, 0deg)) }
+}
+
+/* bola hanya muncul kalau komposisi foto hero aktif */
+@media (max-width: 1000px) {
+  .gh-strip { display: none }
+  .gallery-hero { padding-bottom: 0 }
+}
+
+/* ---------- featured moments: komposisi editorial asimetris ---------- */
+.gallery-featured {
+  padding: clamp(48px, 7vw, 96px) 0 8px;
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .8s var(--ease-cine, ease), transform .8s var(--ease-cine, ease);
+}
+
+.gallery-featured.in { opacity: 1; transform: none }
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-featured { transition: none; opacity: 1; transform: none }
+}
+
+.gf-head { max-width: 560px; margin-bottom: clamp(22px, 3vw, 40px) }
+.gf-head h2 { font-size: clamp(1.5rem, 2.6vw, 2.1rem); margin: 6px 0 0 }
+
+.gf-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: clamp(110px, 11vw, 170px);
+  gap: clamp(12px, 1.6vw, 22px);
+}
+
+.gf-shot {
+  margin: 0;
+  position: relative;
+  border-radius: var(--radius-lg, 18px);
+  overflow: hidden;
+  background: var(--accent-soft);
+  cursor: zoom-in;
+  box-shadow: 0 10px 26px rgba(8, 13, 9, .12);
+  transition: transform .45s var(--ease-out, ease), box-shadow .35s var(--ease-out, ease);
+  will-change: transform;
+}
+
+.gf-shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .8s var(--ease-out, ease);
+}
+
+.gf-shot:hover { box-shadow: 0 18px 40px rgba(8, 13, 9, .2) }
+.gf-shot:hover img { transform: scale(1.04) }
+
+.gf-shot figcaption {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 40px 16px 12px;
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 600;
+  background: linear-gradient(transparent, rgba(8, 13, 9, .62));
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .3s, transform .3s;
+}
+
+.gf-shot:hover figcaption,
+.gf-shot:focus-visible figcaption { opacity: 1; transform: none }
+
+.gf-ph { font-weight: 500; opacity: .82; font-size: 11.5px; white-space: nowrap }
+
+/* komposisi asimetris desktop: 1 foto besar + 4 pendamping */
+.gf-1 { grid-column: 1 / span 6; grid-row: 1 / span 3 }
+.gf-2 { grid-column: 7 / span 4; grid-row: 1 / span 2 }
+.gf-3 { grid-column: 11 / span 2; grid-row: 1 / span 2 }
+.gf-4 { grid-column: 7 / span 2; grid-row: 3 / span 1 }
+.gf-5 { grid-column: 9 / span 4; grid-row: 3 / span 1 }
+
+/* tablet: 2 kolom besar + 2 kecil */
+@media (max-width: 1000px) {
+  .gf-grid { grid-template-columns: repeat(6, 1fr) }
+  .gf-1 { grid-column: 1 / span 4; grid-row: 1 / span 2 }
+  .gf-2 { grid-column: 5 / span 2; grid-row: 1 / span 2 }
+  .gf-3 { grid-column: 1 / span 2; grid-row: 3 / span 1 }
+  .gf-4 { grid-column: 3 / span 2; grid-row: 3 / span 1 }
+  .gf-5 { grid-column: 5 / span 2; grid-row: 3 / span 1 }
+}
+
+/* mobile: komposisi menyusut, tetap editorial bukan sekadar ditumpuk */
+@media (max-width: 640px) {
+  .gf-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: clamp(120px, 30vw, 160px);
+  }
+  .gf-1 { grid-column: 1 / span 2; grid-row: 1 / span 2 }
+  .gf-2 { grid-column: 1 / span 1; grid-row: 3 / span 1 }
+  .gf-3 { grid-column: 2 / span 1; grid-row: 3 / span 1 }
+  .gf-4 { grid-column: 1 / span 1; grid-row: 4 / span 1 }
+  .gf-5 { grid-column: 2 / span 1; grid-row: 4 / span 1 }
+  .gf-shot figcaption { opacity: 1; transform: none }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gf-shot { transition: none }
+  .gf-shot img { transition: none }
+  .gf-shot:hover img { transform: none }
+}
+
+
+
+/* Tombol glass untuk menyembunyikan TOBI */
+#tobiRoot .tobi-dismiss {
+  position: fixed;
+  z-index: 10000;
+
+  width: 17px;
+  height: 17px;
+  min-width: 17px;
+  min-height: 17px;
+
+  padding: 0;
+  margin: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255,255,255,.65);
+  border-radius: 50%;
+
+  background: rgba(40,50,43,.48);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+
+  color: #fff;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
+
+  cursor: pointer;
+  pointer-events: auto;
+  box-sizing: border-box;
+}
+#tobiRoot .tobi-dismiss:hover {
+  background: rgba(30,40,34,.75);
+}
+
+
+/* =====================================================
+   FIVE INTERACTIVE GLASS HIGHLIGHT PANELS (GALLERY HERO)
+   Centered horizontal swap carousel — seluruh track
+   bergeser bersama menuju panel aktif di tengah.
+   Susunan: 2 panel samping kiri — 1 aktif besar — 2 samping kanan.
+   ===================================================== */
+.gallery-hero { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.2fr); gap: clamp(24px, 4vw, 60px); align-items: center; }
+.gallery-hero .gallery-hero-copy { max-width: 560px; }
+
+.hl-wrap {
+  min-width: 0;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ===== carousel viewport ===== */
+.hl-carousel {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: clamp(340px, 40vw, 540px);
+  overflow: hidden;             /* track digeser via transform */
+  border-radius: 24px;
+}
+/* track: seluruh panel bergerak bersama via translateX (smooth swap) */
+.hl-track {
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(10px, 1.2vw, 18px);
+  height: 100%;
+  transition: transform .65s cubic-bezier(.33,1,.4,1);
+  will-change: transform;
+}
+
+/* ===== panel: tegak lurus, rasio samping ≈ 1 : 1.6 (aktif) ===== */
+.hl-panel {
+  position: relative;
+  margin: 0;
+  flex: 0 0 clamp(140px, 15.5vw, 220px);
+  height: 86%;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, .34);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, .55);
+  box-shadow: 0 12px 30px rgba(15, 40, 25, .12);
+  cursor: pointer;
+  transition:
+    flex-basis .65s cubic-bezier(.33,1,.4,1),
+    height .65s cubic-bezier(.33,1,.4,1),
+    filter .55s ease,
+    box-shadow .55s ease,
+    border-color .55s ease,
+    opacity .55s ease,
+    transform .65s cubic-bezier(.33,1,.4,1);
+  outline: none;
+  display: flex;
+  align-items: flex-end;
+}
+.hl-panel img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center 30%;   /* crop menjaga wajah/subjek tetap terlihat */
+  filter: grayscale(1) brightness(.92);
+  transition: filter .55s ease;
+}
+.hl-panel .hl-label {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 44px 12px 12px;
+  background: linear-gradient(transparent, rgba(15, 40, 25, .55));
+  color: #fff;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1.25;
+  letter-spacing: .01em;
+  text-shadow: 0 1px 6px rgba(8, 13, 9, .5);
+  opacity: .88;
+  transition: opacity .45s ease, font-size .55s ease;
+  pointer-events: none;
+}
+
+/* ===== komposisi bertingkat (tegal lurus, tanpa rotasi) =====
+   berdasarkan jarak panel dari posisi aktif di tengah (data-offset) */
+.hl-panel[data-offset="-2"] { height: 78%; transform: translateY(14px); opacity: .9; }
+.hl-panel[data-offset="-1"] { height: 88%; transform: translateY(2px);  opacity: .95; }
+.hl-panel[data-offset="0"]  { /* aktif */ }
+.hl-panel[data-offset="1"]  { height: 88%; transform: translateY(2px);  opacity: .95; }
+.hl-panel[data-offset="2"]  { height: 78%; transform: translateY(14px); opacity: .9; }
+.hl-panel:not(.active) { z-index: 0; }
+.hl-panel:not(.active):hover img { filter: grayscale(1) brightness(1); }
+.hl-panel:focus-visible { border-color: var(--accent, #2E7D46); box-shadow: 0 12px 30px rgba(15, 40, 25, .14), 0 0 0 3px rgba(46, 125, 70, .3); }
+
+/* ===== active: paling tinggi, dominan, full color, terangkat ===== */
+.hl-panel.active {
+  flex-basis: clamp(210px, 24vw, 340px); /* ≈1.6x panel samping */
+  height: 100%;
+  opacity: 1;
+  transform: translateY(-10px);
+  border-color: rgba(255, 255, 255, .9);
+  box-shadow: 0 30px 64px rgba(15, 40, 25, .24), 0 6px 18px rgba(15, 40, 25, .12);
+  z-index: 2;
+}
+.hl-panel.active img { filter: none; object-position: center; }
+.hl-panel.active .hl-label { opacity: 1; font-size: 14px; }
+
+/* hover lift halus panel nonaktif (motion-safe) */
+@media (prefers-reduced-motion: no-preference) {
+  .hl-panel:not(.active):hover { transform: translateY(-3px); }
+}
+
+/* ===== panah navigasi glass kiri & kanan di sisi showcase ===== */
+.hl-arrow {
+  flex: none;
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, .6);
+  background: rgba(255, 255, 255, .5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--ink, #17301f);
+  font-size: 22px; line-height: 1;
+  cursor: pointer;
+  display: grid; place-items: center;
+  box-shadow: 0 6px 16px rgba(15, 40, 25, .12);
+  transition: background .25s ease, transform .25s ease, box-shadow .25s ease;
+  align-self: center;
+  z-index: 3;
+}
+.hl-arrow:hover { background: rgba(255, 255, 255, .85); transform: translateY(-2px); box-shadow: 0 10px 22px rgba(15, 40, 25, .16); }
+.hl-arrow:active { transform: translateY(0); }
+.hl-arrow:focus-visible { outline: 2px solid var(--accent, #2E7D46); outline-offset: 2px; }
+.hl-arrow-l { margin-left: 2px; }
+.hl-arrow-r { margin-right: 2px; }
+
+/* ---------- DESKTOP (≥769px): transform track, tanpa scroll ---------- */
+@media (min-width: 769px) {
+  .hl-carousel { overflow: hidden; }
+}
+
+/* ---------- MOBILE & TABLET (≤768px): full-width swipe carousel ---------- */
+@media (max-width: 768px) {
+  .gallery-hero { grid-template-columns: 1fr; gap: clamp(16px, 4vw, 26px); }
+  .gallery-hero { min-height: 0 !important; padding-bottom: 0 !important; }
+  .gallery-hero-blur { padding-bottom: 12px; }
+  .gallery-hero .gallery-hero-copy { max-width: 100%; }
+  .hl-wrap { order: 2; margin: 0 calc(50% - 50vw); gap: 6px; }
+  /* mobile: swipe via scroll natif; panah disembunyikan agar swipe jelas */
+  .hl-arrow { display: none; }
+  .hl-carousel {
+    height: clamp(300px, 72vw, 430px);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 4vw 14px;
+    border-radius: 0;
+  }
+  .hl-track { transform: none !important; transition: none; }
+  .hl-panel { flex: 0 0 min(74vw, 320px); height: 86%; scroll-snap-align: center; }
+  .hl-panel[data-offset="-2"], .hl-panel[data-offset="2"] { height: 79%; transform: translateY(6px); }
+  .hl-panel[data-offset="-1"], .hl-panel[data-offset="1"] { height: 84%; transform: translateY(1px); }
+  .hl-panel.active { flex: 0 0 min(86vw, 360px); height: 96%; transform: translateY(-5px); }
+  .gallery-shell .section-wrap { padding-top: clamp(22px, 5vw, 34px) !important; }
+}
+@media (max-width: 400px) {
+  .hl-carousel { height: min(84vw, 380px); }
+  .hl-panel { flex-basis: 80vw; }
+  .hl-panel.active { flex-basis: 90vw; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hl-panel, .hl-panel img, .hl-track, .hl-arrow { transition: none; }
 }

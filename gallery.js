@@ -7,6 +7,7 @@
 const GALLERY_API='https://script.google.com/macros/s/AKfycbxgx0kHXRa7uR3PuADKiEgvs_sLHp0U9UbxHsxkPwWl9kjlCZnQWa6iZBa1NW9tjrcLvg/exec';
 let galleryPhotos=[],galleryState='loading',lightboxIndex=-1;
 let jsonpRequest=null;
+let jsonpToken=0;                       /* anti stale-response: token tiap request */
 /* filter & pagination state */
 let galleryCommunityFilter='All';
 let gallerySearch='',gallerySearchRaw='';
@@ -18,7 +19,7 @@ function tobaGalleryCallback(res){
   if(jsonpRequest){clearTimeout(jsonpRequest.timeout);jsonpRequest.script.remove();jsonpRequest=null;}
   try{
     if(!res||res.success===false||!Array.isArray(res.photos))throw new Error('Respons API Gallery tidak valid');
-    galleryPhotos=res.photos
+    const mapped=res.photos
       .map(p=>({
         id:String(p.photoId||p.photo_id||p.id||Math.random().toString(36).slice(2)),
         community:p.community||'',
@@ -29,22 +30,27 @@ function tobaGalleryCallback(res){
         order:Number(p.displayOrder||p.display_order||0),
         /* arsip = kualitas terbaik (COPIED), bukan source */
         archiveId:p.archiveFileId||p.archive_file_id||'',
-        url:p.imageUrl||(
+        url:(p.imageUrl||(
           (p.archiveFileId||p.archive_file_id)
-            ? 'https://drive.google.com/thumbnail?id='+encodeURIComponent(p.archiveFileId||p.archive_file_id)+'&sz=w1200'
+            ? 'https://drive.google.com/thumbnail?id='+encodeURIComponent(p.archiveFileId||p.archive_file_id)+'&sz=w800'
             : ''
-        )
+        )).replace(/=w\d+/i, '=w800')
       }))
       .filter(p=>p.url)
       .sort((a,b)=>a.order-b.order);
+    /* MASTER COLLECTION disimpan penuh — filter komunitas adalah view di
+       atasnya, sehingga tab Semua tidak pernah kehilangan foto. */
+    console.log('TOBA GALLERY CB', mapped.length, res.photos.length);
+    galleryPhotos=mapped;
     galleryState='ok';
   }catch(error){
     console.error('TOBA Gallery API error:',error);
     galleryState='error';
   }
-  if(document.body.dataset.page==='gallery')renderGalleryUI();
+  if(document.body.dataset.page==='gallery'){renderGalleryUI();renderGalleryHero();}
 }
 window.tobaGalleryCallback=tobaGalleryCallback;window.galleryFetchFail=galleryFetchFail;window.loadGallery=loadGallery;
+let tokenPending=0;
 function galleryFetchFail(){
   if(jsonpRequest){clearTimeout(jsonpRequest.timeout);jsonpRequest.script.remove();jsonpRequest=null;}
   galleryState='error';
@@ -54,9 +60,9 @@ function loadGallery(){
   galleryState='loading';renderGalleryUI();
   const old=document.getElementById('tobaGalleryJsonp');if(old)old.remove();
   const script=document.createElement('script');script.id='tobaGalleryJsonp';
-  /* komunitas dikirim ke API, tapi seluruh foto tetap disimpan agar filter
-     lokal tidak butuh fetch ulang saat pengguna berpindah tab komunitas */
-  const url=GALLERY_API+'?api=gallery&community='+encodeURIComponent(galleryCommunityFilter==='All'?'':galleryCommunityFilter)+'&callback=tobaGalleryCallback';
+  /* SELALU ambil SEMUA komunitas: master collection lengkap; filter komunitas
+     dilakukan lokal supaya tab Semua tidak pernah kehilangan foto. */
+  const url=GALLERY_API+'?api=gallery&community=&callback=tobaGalleryCallback';
   script.src=url;script.onerror=galleryFetchFail;
   jsonpRequest={script,timeout:setTimeout(galleryFetchFail,15000)};
   document.body.appendChild(script);
@@ -65,10 +71,14 @@ function loadGallery(){
 /* ---------- filter pipeline ---------- */
 function filteredPhotos(){
   const q=gallerySearch.trim().toLowerCase();
-  return galleryPhotos.filter(p=>{
-    if(galleryCommunityFilter!=='All'&&p.community!==galleryCommunityFilter)return false;
+  return galleryPhotos.filter(p=>{           /* SELALU dari master collection */
+    if(galleryCommunityFilter!=='All'&&String(p.community||'').toLowerCase()!==galleryCommunityFilter.toLowerCase())return false;
     if(galleryPhotographer&&(p.photographer||'')!==galleryPhotographer)return false;
-    if(q&&!(p.caption||'').toLowerCase().includes(q))return false;
+    if(q){
+      const cap=(p.caption||'').toLowerCase();
+      const tit=(p.title||'').toLowerCase();
+      if(!cap.includes(q)&&!tit.includes(q))return false;
+    }
     return true;
   });
 }
@@ -101,30 +111,248 @@ function galleryCard(p,i){
     ${(p.caption||p.title)?`<div class="pad">${p.caption||p.title}</div>`:''}
   </article>`;
 }
+/* ---------- card & grid binding ---------- */
 const DL_ICON='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M4 21h16"/></svg>';
 
-/* download via fetch blob — nama file rapi, kualitas arsip terbaik */
-function downloadPhoto(idx){
-  const p=galleryFiltered[idx];if(!p)return;
-  const btn=document.querySelector(`.gallery-dl[data-dl="${idx}"]`);
-  if(btn)btn.classList.add('busy');
-  const name=downloadName(p);
-  const src=p.archiveId
-    ? 'https://drive.google.com/uc?export=download&id='+encodeURIComponent(p.archiveId)
-    : p.url;
-  fetch(src).then(r=>{
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    return r.blob();
-  }).then(blob=>{
-    const a=document.createElement('a');
-    a.href=URL.createObjectURL(blob);a.download=name;
-    document.body.appendChild(a);a.click();
-    setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1500);
-  }).catch(()=>{
-    /* fallback: buka file arsip langsung (kualitas asli, biar browser yang simpan) */
-    window.open(src,'_blank','noopener');
-  }).finally(()=>{if(btn)btn.classList.remove('busy');});
+/* reveal-on-scroll + tilt + lightbox + download — sekali bind per render */
+let galleryRevealIO=null;
+function bindGalleryGrid(grid){
+  grid.querySelectorAll('img[data-api-photo]').forEach(img=>{img.addEventListener('error',()=>{img.closest('.gallery-item').classList.add('img-failed');img.replaceWith(Object.assign(document.createElement('div'),{className:'gallery-fallback',textContent:'✳'}))})});
+  /* image reveal on scroll */
+  if(!galleryRevealIO){
+    galleryRevealIO=('IntersectionObserver' in window)?new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');galleryRevealIO.unobserve(en.target)}})},{threshold:.1}):null;
+  }
+  grid.querySelectorAll('.gallery-item').forEach(el=>{
+    if(!galleryRevealIO)el.classList.add('in');
+    else if(el.getBoundingClientRect().top<window.innerHeight)el.classList.add('in');
+    else galleryRevealIO.observe(el);
+  });
+  /* subtle 3D tilt (pointer-fine, motion-safe) */
+  const REDUCE=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const FINE=window.matchMedia('(pointer: fine)').matches;
+  grid.querySelectorAll('.gallery-item').forEach(card=>{
+    card.addEventListener('click',e=>{if(e.target.closest('.gallery-dl'))return;openLightbox(Number(card.dataset.index),galleryFiltered);});
+    card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openLightbox(Number(card.dataset.index),galleryFiltered)}});
+    if(FINE&&!REDUCE){
+      card.addEventListener('pointermove',e=>{
+        const r=card.getBoundingClientRect();
+        const x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5;
+        card.style.setProperty('--gx',(x*100)+'%');
+        card.style.setProperty('--gy',(y*100)+'%');
+        card.style.transform=`perspective(700px) rotateY(${x*4}deg) rotateX(${-y*4}deg)`;
+      });
+      card.addEventListener('pointerleave',()=>{card.style.transform='';});
+    }
+  });
+  grid.querySelectorAll('.gallery-dl').forEach(btn=>{
+    btn.addEventListener('click',e=>{e.stopPropagation();downloadPhoto(Number(btn.dataset.dl));});
+  });
 }
+
+/* ---------- hero featured photos + featured editorial section ---------- */
+let heroPhotosBound=false;
+/* Five Interactive Glass Highlight Panels — kategori: nama saja, tanpa nomor.
+ Foto dari kategori terkait di master collection (API asli); kategori tanpa
+ foto memakai fallback foto lokal TOBA yang relevan — tidak ada metadata palsu. */
+const HL_CATS=[
+ {key:'fun', label:['Weekly Fun Game'], comms:['all'], fallback:'assets/img/web/toba-015.jpg'},
+ {key:'deli', label:['Tobadeli'], comms:['tobadeli'], fallback:'assets/img/web/toba-060.jpg'},
+ {key:'ladies',label:['Tobaladies'], comms:['tobaladies'], fallback:'assets/img/web/toba-052.jpg'},
+ {key:'events',label:['Events'], comms:['all'], fallback:'assets/img/web/toba-026.jpg'},
+ {key:'community',label:['Community'], comms:['all'], fallback:'assets/img/web/toba-045.jpg'}
+];
+let hlActive=2; /* Tobaladies default */
+let hlBound=false;
+function hlPickPhoto(cat,idx,used){
+  /* 1) foto asli dari kategori terkait (urutan arsip), 2) foto lain yang belum terpakai,
+     3) fallback lokal yang valid — dipilih sekali, tidak diacak tiap render. */
+  const cands=cat.comms.map(c=>c==='all'?galleryPhotos:galleryPhotos.filter(p=>String(p.community||'').toLowerCase()===c)).flat();
+  /* foto utama kategori = yang belum terpakai; jika habis, ambil foto unik lain
+  dari master collection (anti duplikat), baru fallback lokal. */
+  let pick=cands.find(p=>!used.has(p.id)) || galleryPhotos.find(p=>!used.has(p.id));
+  const url=pick?pick.url:cat.fallback;
+  if(pick)used.add(pick.id);
+  return {url,isApi:!!pick,alt:pick?galleryAlt(pick):('TOBA '+cat.label[0])};
+}
+function renderGalleryHero(){
+  const carousel=document.getElementById('hlCarousel');
+  const box=document.getElementById('galleryHeroPhotos');
+  if(box&&!box.dataset.dead){box.dataset.dead='1';box.remove();} /* strip lama (legacy) tidak dipakai lagi */
+  if(!carousel||hlBound)return;
+  if(galleryState!=='ok'||!galleryPhotos.length)return; /* tunggu data */
+  const used=new Set();
+  const panels=HL_CATS.map((cat,i)=>{
+    const ph=hlPickPhoto(cat,i,used);
+    return `<figure class="hl-panel${i===hlActive?' active':''}" data-cat="${cat.key}" data-idx="${i}" role="option" tabindex="0" aria-selected="${i===hlActive}" aria-label="${cat.label[0]}">
+      <img src="${ph.url}" alt="${ph.alt}" loading="lazy" ${ph.isApi?'data-api-photo':''}>
+      <figcaption class="hl-label"><span>${cat.label[0]}</span></figcaption>
+    </figure>`;
+  }).join('');
+  carousel.innerHTML=`<div class="hl-track">${panels}</div>`;
+  /* fallback tampil jika foto gagal dimuat */
+  carousel.querySelectorAll('.hl-panel img').forEach(img=>{
+    img.addEventListener('error',()=>{const p=img.closest('.hl-panel');const cat=HL_CATS[Number(p.dataset.idx)];if(cat&&!img.dataset.fbdone){img.dataset.fbdone='1';img.src=cat.fallback;}});
+  });
+  bindHlPanels();
+  carousel.classList.add('ready');
+  hlBound=true;
+  requestAnimationFrame(()=>hlSetActive(hlActive)); /* posisi awal: aktif di tengah */
+  renderGalleryFeatured();
+}
+function hlSetActive(i){
+  /* circular: wrap dari panel terakhir ke pertama & sebaliknya */
+  hlActive=((i % HL_CATS.length) + HL_CATS.length) % HL_CATS.length;
+  const carousel=document.getElementById('hlCarousel');
+  if(!carousel)return;
+  const mid=Math.floor(HL_CATS.length/2); /* posisi tengah = index 2 */
+  carousel.querySelectorAll('.hl-panel').forEach(el=>{
+    const idx=Number(el.dataset.idx);
+    const on=idx===hlActive;
+    el.classList.toggle('active',on);
+    el.setAttribute('aria-selected',String(on));
+    /* data-offset = jarak panel dari POSISI TENGAH track — mengatur tinggi/posisi
+    bertingkat mengikuti tempatnya di komposisi (kiri luar, kiri dalam, tengah, dst.) */
+    const slot=idx-hlActive+mid; /* posisi visual panel saat aktif ini di tengah */
+    const offset=slot-mid;       /* -2..+2 relatif tengah */
+    el.dataset.offset=String(Math.max(-2,Math.min(2,offset)));
+  });
+  /* SELURUH TRACK BERGESER BERSAMA menuju panel aktif di tengah:
+  desktop = translateX track; mobile = scroll carousel native. */
+  const activeEl=carousel.querySelector('.hl-panel.active');
+  if(!activeEl)return;
+  if(window.innerWidth<=768){
+    const target=Math.max(0,activeEl.offsetLeft-(carousel.clientWidth-activeEl.offsetWidth)/2);
+    carousel.scrollTo({left:target,behavior:REDUCE_MQ.matches?'auto':'smooth'});
+  } else {
+    const track=carousel.querySelector('.hl-track');
+    if(!track)return;
+    const cRect=carousel.getBoundingClientRect();
+    const aRect=activeEl.getBoundingClientRect();
+    const currentCenter=aRect.left+aRect.width/2;
+    const desiredCenter=cRect.left+cRect.width/2;
+    const shift=desiredCenter-currentCenter;
+    /* akumulasi transform sebelumnya supaya selalu relatif terhadap posisi natural */
+    track.style.transform=shift?`translateX(${shift}px)`:'';
+  }
+}
+function bindHlPanels(){
+  const carousel=document.getElementById('hlCarousel');
+  if(!carousel)return;
+  const REDUCE=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  carousel.querySelectorAll('.hl-panel').forEach(el=>{
+    el.addEventListener('click',()=>{
+      const i=Number(el.dataset.idx);
+      if(i===hlActive){openHlCollection(i);return;} /* panel aktif diklik lagi → buka koleksi */
+      hlSetActive(i);
+    });
+    el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();
+      const i=Number(el.dataset.idx);
+      if(i===hlActive)openHlCollection(i);else hlSetActive(i);}});
+  });
+  /* panah kiri/kanan: geser satu panel (circular wrap), track bergeser bersama */
+  document.getElementById('hlPrev')?.addEventListener('click',()=>hlSetActive(hlActive-1));
+  document.getElementById('hlNext')?.addEventListener('click',()=>hlSetActive(hlActive+1));
+  /* navigasi via klik panel, panah & swipe mobile */
+  /* swipe mobile: track pointer untuk bedakan drag vs tap */
+  let sx=0,moved=false;
+  carousel.addEventListener('pointerdown',e=>{sx=e.clientX;moved=false;},{passive:true});
+  carousel.addEventListener('pointermove',e=>{if(Math.abs(e.clientX-sx)>12)moved=true;},{passive:true});
+  carousel.addEventListener('pointerup',()=>{if(moved&&!REDUCE)return;},{passive:true});
+  /* scroll snap mobile → sync active state */
+  carousel.addEventListener('scroll',()=>{
+    if(window.innerWidth>768)return;
+    let best=0,bestD=1e9;
+    carousel.querySelectorAll('.hl-panel').forEach(el=>{const d=Math.abs(el.offsetLeft-carousel.scrollLeft);if(d<bestD){bestD=d;best=Number(el.dataset.idx);}});
+    if(best!==hlActive){
+      hlActive=best;
+      carousel.querySelectorAll('.hl-panel').forEach(el=>el.classList.toggle('active',Number(el.dataset.idx)===hlActive));
+    }
+  },{passive:true});
+  /* keyboard global saat carousel focus */
+  carousel.addEventListener('keydown',e=>{
+    if(e.key==='ArrowLeft'){e.preventDefault();hlSetActive(hlActive-1);}
+    if(e.key==='ArrowRight'){e.preventDefault();hlSetActive(hlActive+1);}
+  });
+}
+const REDUCE_MQ=window.matchMedia('(prefers-reduced-motion: reduce)');
+/* panel aktif diklik → terapkan filter kategori pada gallery yang sudah ada */
+function openHlCollection(i){
+  const cat=HL_CATS[i];if(!cat)return;
+  const target=document.getElementById('galleryFilters');
+  if(!target){return;}
+  /* label filter: Semua/All untuk fun/events/community; Tobaladies/Tobadeli untuk kategorinya.
+     Panel yang berkategori 'all' memfilter ke tab Semua (koleksi master lengkap). */
+  const want=cat.key==='deli'?'Tobadeli':(cat.key==='ladies'?'Tobaladies':'All');
+  let btn=null;
+  document.querySelectorAll('#galleryFilters [data-filter]').forEach(b=>{
+    const k=(b.dataset.filter||'').toLowerCase();
+    if((want==='All'&&(k==='all'||k==='semua'))||want.toLowerCase()===k)btn=b;
+  });
+  if(btn){btn.click();}
+  /* scroll halus ke koleksi foto */
+  const grid=document.getElementById('galleryGrid')||target;
+  if(grid)grid.scrollIntoView({behavior:REDUCE_MQ.matches?'auto':'smooth',block:'start'});
+}
+/* featured section: komposisi asimetris dari foto asli terpilih */
+let featuredBound=false;
+function renderGalleryFeatured(){
+  const sec=document.getElementById('galleryFeatured'),grid=document.getElementById('gfGrid');
+  if(!sec||!grid||featuredBound)return;
+  if(galleryState!=='ok'||galleryPhotos.length<4)return;
+  const REDUCE=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const FINE=window.matchMedia('(pointer: fine)').matches;
+  const picks=galleryPhotos.slice(0,5);
+  grid.innerHTML=picks.map((p,i)=>`
+    <figure class="gf-shot gf-${i+1}${i===0?' gf-lead':''}" data-idx="${galleryPhotos.indexOf(p)}" tabindex="0" role="button" aria-label="${galleryAlt(p)}">
+      <img src="${p.url}" alt="${galleryAlt(p)}" loading="lazy">
+      <figcaption><span class="gf-cap">${(p.caption||p.title||'').replace(/</g,'&lt;')}</span>${p.photographer?`<span class="gf-ph">© ${p.photographer.replace(/</g,'&lt;')}</span>`:''}</figcaption>
+    </figure>`).join('');
+  sec.hidden=false;
+  requestAnimationFrame(()=>sec.classList.add('in'));
+  grid.querySelectorAll('.gf-shot').forEach(el=>{
+    const idx=Number(el.dataset.idx);
+    el.addEventListener('click',()=>openLightbox(idx,galleryPhotos));
+    el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openLightbox(idx,galleryPhotos)}});
+    if(FINE&&!REDUCE){
+      el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;el.style.transform=`perspective(900px) rotateY(${x*3}deg) rotateX(${-y*3}deg)`;});
+      el.addEventListener('pointerleave',()=>{el.style.transform='';});
+    }
+  });
+  featuredBound=true;
+}
+
+/* download via fetch blob — nama file rapi, kualitas arsip terbaik */
+
+
+function downloadPhoto(idx){
+  const p=(lightboxList&&lightboxIndex>=0?lightboxList:galleryFiltered)[idx];
+  if(!p)return;
+
+  const imageUrl=String(p.url||'');
+  const match=imageUrl.match(/[?&]id=([^&]+)/);
+  const fileId=p.archiveId||(match?match[1]:'');
+
+  if(!fileId){
+    console.error('Data foto:',p);
+    if(typeof toast==='function')toast('File arsip foto tidak ditemukan.');else alert('File arsip foto tidak ditemukan.');
+    return;
+  }
+  /* Preferensi: unduh asli arsip; kalau diblokir browser, tab fallback
+     tetap membuka foto arsip kualitas penuh (bukan thumbnail). */
+  const directUrl='https://drive.google.com/uc?export=download&id='+encodeURIComponent(fileId);
+  const fallbackUrl='https://drive.google.com/file/d/'+encodeURIComponent(fileId)+'/view';
+  let opened=false;
+  try{
+    const w=window.open(directUrl,'_blank','noopener');
+    opened=!!w;
+  }catch(err){opened=false;}
+  if(!opened){
+    /* fallback jujur: buka halaman foto arsip, bukan klaim "sudah terunduh" */
+    window.open(fallbackUrl,'_blank','noopener');
+  }
+}
+
+
 
 /* ---------- render ---------- */
 function pageSlice(){
@@ -140,6 +368,7 @@ function renderGalleryUI(){
   const prevBtn=document.getElementById('galleryPrev');
   const nextBtn=document.getElementById('galleryNext');
   const jump=document.getElementById('galleryJump');
+  const searching=gallerySearch.trim().length>0;
 
   if(galleryState==='loading'){
     if(statusBox)statusBox.innerHTML=`<div class="gallery-state"><span class="gallery-spinner" aria-hidden="true"></span><p>${t('gallery.loading')}</p></div>`;
@@ -173,26 +402,24 @@ function renderGalleryUI(){
   }
 
   if(!galleryFiltered.length){
-    if(statusBox)statusBox.innerHTML=`<div class="gallery-state"><p><strong>${t('gallery.empty')}</strong></p><p>${t('gallery.empty.sub')}</p></div>`;
+    if(statusBox){
+      statusBox.innerHTML=searching
+        ? `<div class="gallery-state"><p><strong>${t('gallery.noMatch')}</strong></p><p>${t('gallery.noMatch.sub')}</p><button class="pill" id="galleryClearSearch">${t('gallery.clearSearch')}</button></div>`
+        : `<div class="gallery-state"><p><strong>${t('gallery.empty')}</strong></p><p>${t('gallery.empty.sub')}</p></div>`;
+    }
     grid.innerHTML='';
     if(pager)pager.hidden=true;
+    document.getElementById('galleryClearSearch')?.addEventListener('click',()=>{
+      gallerySearch='';gallerySearchRaw='';galleryPage=1;
+      const inp=document.getElementById('gallerySearch');if(inp)inp.value='';
+      renderGalleryUI();
+    });
     return;
   }
 
   const base=(galleryPage-1)*galleryPerPage;
   grid.innerHTML=slice.map((p,i)=>galleryCard(p,base+i)).join('');
-  grid.querySelectorAll('img[data-api-photo]').forEach(img=>{img.addEventListener('error',()=>{img.closest('.gallery-item').classList.add('img-failed');img.replaceWith(Object.assign(document.createElement('div'),{className:'gallery-fallback',textContent:'✳'}))})});
-  /* image reveal on scroll */
-  const ro=('IntersectionObserver' in window)?new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');ro.unobserve(en.target)}})},{threshold:.1}):null;
-  grid.querySelectorAll('.gallery-item').forEach(el=>{if(!ro)el.classList.add('in');else if(el.getBoundingClientRect().top<window.innerHeight)el.classList.add('in');else ro.observe(el)});
-  /* lightbox triggers */
-  grid.querySelectorAll('.gallery-item').forEach(card=>{
-    card.addEventListener('click',e=>{if(e.target.closest('.gallery-dl'))return;openLightbox(Number(card.dataset.index));});
-    card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openLightbox(Number(card.dataset.index))}});
-  });
-  grid.querySelectorAll('.gallery-dl').forEach(btn=>{
-    btn.addEventListener('click',e=>{e.stopPropagation();downloadPhoto(Number(btn.dataset.dl));});
-  });
+  bindGalleryGrid(grid);
 
   /* pager */
   if(pager){
@@ -216,8 +443,10 @@ function galleryGoPage(n){
 }
 
 /* ---------- immersive lightbox ---------- */
-function openLightbox(i){
-  const list=galleryFiltered;if(!list.length)return;
+let lightboxList=null;
+function openLightbox(i,list){
+  lightboxList=list||galleryFiltered;
+  if(!lightboxList.length)return;
   lightboxIndex=i;showLightboxImage();
   let lb=document.getElementById('tobaLightbox');
   if(!lb){
@@ -256,7 +485,7 @@ function openLightbox(i){
   lb.classList.add('open');document.documentElement.style.overflow='hidden';
 }
 function showLightboxImage(){
-  const lb=document.getElementById('tobaLightbox'),list=galleryFiltered;
+  const lb=document.getElementById('tobaLightbox'),list=lightboxList||galleryFiltered;
   if(!lb||lightboxIndex<0||lightboxIndex>=list.length)return;
   const p=list[lightboxIndex];
   const img=lb.querySelector('img');
@@ -267,21 +496,26 @@ function showLightboxImage(){
   lb.querySelector('.lightbox-cap').textContent=[p.caption||p.title,p.community,p.photographer?('© '+p.photographer):''].filter(Boolean).join(' — ');
 }
 function stepLightbox(d){
-  const n=galleryFiltered.length;if(!n)return;
+  const n=(lightboxList||galleryFiltered).length;if(!n)return;
   lightboxIndex=(lightboxIndex+d+n)%n;showLightboxImage();
 }
 function closeLightbox(){
   const lb=document.getElementById('tobaLightbox');
   if(lb)lb.classList.remove('open');
   document.documentElement.style.overflow='';
-  lightboxIndex=-1;
+  lightboxIndex=-1;lightboxList=null;
 }
 
 /* ---------- interactions (single listener set) ---------- */
 /* filter komunitas — reset pagination + filter lain, tanpa reload */
 document.addEventListener('click',e=>{
   const b=e.target.closest('#galleryFilters [data-filter]');if(!b)return;
-  galleryCommunityFilter=b.dataset.filter;
+  /* BUGFIX: tombol memakai data-filter=label terjemahan ("Semua").
+     Normalisasi ke nilai kanonik All/Tobaladies/Tobadeli supaya tab Semua
+     tidak pernah menyaring komunitas yang tidak ada (penyebab empty state). */
+  const raw=b.dataset.filter||'';
+  const key=raw.toLowerCase();
+  galleryCommunityFilter=(key==='all'||key==='semua')?'All':(key==='tobaladies'?'Tobaladies':(key==='tobadeli'?'Tobadeli':'All'));
   document.querySelectorAll('#galleryFilters [data-filter]').forEach(x=>x.classList.toggle('active',x===b));
   if(galleryState!=='ok')return;
   galleryPage=1;

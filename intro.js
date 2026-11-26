@@ -49,8 +49,9 @@
   const skip = intro.querySelector('.obi-skip');
 
   const D = small
-    ? { court: 200, mascot: 1000, copy: 1700, out: 2800 }
-    : { court: 300, mascot: 1400, copy: 2400, out: 4000 };
+    ? { court: 400, mascot: 1400, copy: 2200, out: 4400 }   /* PROMPT 5: mobile +0.2-0.4s delay antar-elemen */
+    : { court: 500, mascot: 1800, copy: 2700, out: 5600 };   /* PROMPT 5: desktop — entrance 0.5s, delay 0.3-0.4s,
+                                                                elemen terlihat 2-3s, fade-out 0.55s */
 
   let done = false, timers = [];
   const later = (fn, ms) => timers.push(setTimeout(fn, ms));
@@ -69,9 +70,24 @@
     if (e.key === 'Escape' && !done) { document.removeEventListener('keydown', esc); finish() }
   });
 
-  requestAnimationFrame(() => stage.classList.add('run'));     /* 1-3 ivory, atmosphere, court draws */
-  later(() => figure.classList.add('in'), D.court);            /* 4 mascot surfaces */
-  later(() => { copy.classList.add('in'); stage.classList.add('dim'); figure.classList.add('settle'); }, D.copy); /* 5-6 */
-  later(finish, D.out);                                        /* 7 dissolve into hero */
-  setTimeout(finish, D.out + 1200);
+  /* PROMPT 5: jangan mulai animasi sebelum aset visual siap.
+     Mascot = aset utama; tunggu sampai gambar selesai dimuat (dengan
+     batas waktu 2.5s agar intro tidak pernah menggantung), baru jalankan
+     timeline. Jaringan lambat: intro menunggu, bukan menampilkan frame kosong. */
+  const mascotImg = figure.querySelector('img');
+  const mascotReady = new Promise(resolve => {
+    if (!mascotImg) return resolve();
+    if (mascotImg.complete && mascotImg.naturalWidth > 0) return resolve();
+    const to = setTimeout(resolve, 2500);
+    mascotImg.addEventListener('load', () => { clearTimeout(to); resolve(); }, { once: true });
+    mascotImg.addEventListener('error', () => { clearTimeout(to); resolve(); }, { once: true });
+  });
+  mascotReady.then(() => {
+    requestAnimationFrame(() => stage.classList.add('run'));     /* 1-3 ivory, atmosphere, court draws */
+    later(() => figure.classList.add('in'), D.court);            /* 4 mascot surfaces */
+    later(() => { copy.classList.add('in'); stage.classList.add('dim'); figure.classList.add('settle'); }, D.copy); /* 5-6 */
+    later(finish, D.out);                                        /* 7 dissolve into hero */
+  });
+  /* hard safety: walau apa pun terjadi, intro tidak boleh lebih dari D.out + 2.5s */
+  setTimeout(() => { if (!done) finish(); }, D.out + 2500);
 })();
