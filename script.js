@@ -49,11 +49,33 @@ const eventCard = e => { const place = e.place === 'tbc'? t('events.venue.tbc') 
 const eventScroller = cards => `<div class="event-scroll-wrap"><div class="event-grid events-scroll">${cards}</div></div>`;
 
 /* editorial facts block under the gallery – replaces flat info columns */
-const infoEditorial = () => `<aside class="info-editorial"><div class="ie-lead"><p class="eyebrow">${t('info.eyebrow')}</p><h2>${t('info.h')}</h2><p>${t('info.p')}</p><a class="text-link" href="events.html">${t('info.link')}</a></div><dl class="ie-facts">
- <div class="ie-fact"><dt>${t('info.f1')}</dt><dd>${t('info.f1v')}</dd><small>${t('info.f1s')}</small></div>
- <div class="ie-fact"><dt>${t('info.f2')}</dt><dd>${t('info.f2v')}</dd><small>${t('info.f2s')}</small></div>
- <div class="ie-fact"><dt>${t('info.f3')}</dt><dd>${t('info.f3v')}</dd><small>${t('info.f3s')}</small></div>
+const infoEditorial = () => `<aside class="info-editorial"><div class="ie-lead"><p class="eyebrow">${t('info.eyebrow')}</p><h2>${t('info.h')}</h2><p>${t('info.p')}</p></div><dl class="ie-facts">
+ <div class="ie-fact"><dt>${t('info.f1')}</dt><small>${t('info.f1s')}</small></div>
+ <div class="ie-fact"><dt>${t('info.f2')}</dt><small>${t('info.f2s')}</small></div>
+ <div class="ie-fact"><dt>${t('info.f3')}</dt><small>${t('info.f3s')}</small></div>
 </dl></aside>`;
+
+/* Prompt 9: closing CTA Gallery — singkat, santai, karakter TOBA.
+   Section lama (LEBIH DARI SEKADAR FOTO + 3 fakta) dihapus total. */
+const galleryClosingCta = () => `<aside class="gallery-cta">
+ <p class="eyebrow accent-orange">${t('cta.eyebrow')}</p>
+ <h2 class="gallery-cta-h">${t('cta.h')}</h2>
+ <p class="gallery-cta-p">${t('cta.p')}</p>
+</aside>`;
+
+/* Prompt 10: Photography Partner — hanya deretan logo, gaya sama dengan
+   deretan logo halaman Partnership (.hp-logos). Tanpa card, judul, atau CTA.
+   Konfigurasi partner asli di sini — ganti/ tambah lewat array di bawah. */
+const PHOTO_PARTNERS = [
+ { name: 'D88 Sport Photography', logo: 'assets/img/d88 photographer.svg', url: 'https://www.instagram.com/d88sportphotography/' }
+];
+const photoPartnerCredit = () => `<aside class="photo-partner" aria-label="${t('photog.logo.aria')}">
+ <div class="pp-logos" data-reveal-step>
+  ${PHOTO_PARTNERS.map(p=>p.url
+    ? `<a href="${p.url}" target="_blank" rel="noopener noreferrer" aria-label="${p.name}" translate="no"><img src="${p.logo}" alt="${p.name}" loading="lazy"></a>`
+    : `<span aria-label="${p.name}" translate="no"><img src="${p.logo}" alt="${p.name}" loading="lazy"></span>`).join('')}
+ </div>
+</aside>`;
 const productCard = (p, i) => `<article class="product-card" data-category="${p.cat}"><div class="product-art ${p.tone}"><span class="product-word">${p.name.split(' ').slice(-1)[0].toUpperCase()}</span></div><div class="pad"><div class="product-name">${p.name}</div><div class="price-row"><span class="price">${money(p.price)}</span><button class="add-cart" data-product="${i}" aria-label="${t('merch.aria')} ${p.name}">+</button></div></div></article>`;
 
 /* ---------- HOME – cinematic scroll journey ---------- */
@@ -313,14 +335,16 @@ function renderGalleryPageShell() {
  <section class="hero gallery-hero section-wrap" style="min-height:auto">
    <div class="hero-copy gallery-hero-copy">
     <p class="eyebrow">${t('gallery.hero.eyebrow')}</p>
-    <h1>${t('gallery.hero.h')}</h1>
+    <h1 class="gallery-hero-title" id="galleryHeroTitle" title="${t('gallery.hero.hint')}">${t('gallery.hero.h1')} <span class="gh-accent" data-gh-accent>${t('gallery.hero.h2')}</span></h1>
     <p class="hero-subtitle">${t('gallery.hero.lede.live')}</p>
    </div>
    <!-- Five Interactive Glass Highlight Panels — centered horizontal swap carousel -->
    <div class="hl-wrap">
-    <button class="hl-arrow hl-arrow-l" id="hlPrev" type="button" aria-label="${t('hl.prev')}">‹</button>
     <div class="hl-carousel" id="hlCarousel" role="listbox" aria-label="${t('gallery.hero.eyebrow')}"></div>
-    <button class="hl-arrow hl-arrow-r" id="hlNext" type="button" aria-label="${t('hl.next')}">›</button>
+    <div class="hl-arrows">
+     <button class="hl-arrow hl-arrow-l" id="hlPrev" type="button" aria-label="${t('hl.prev')}">‹</button>
+     <button class="hl-arrow hl-arrow-r" id="hlNext" type="button" aria-label="${t('hl.next')}">›</button>
+    </div>
    </div>
  </section>
 </section>
@@ -346,7 +370,7 @@ function renderGalleryPageShell() {
    <p class="gallery-pageinfo" id="galleryPageInfo"></p>
    <button class="gallery-pbtn" id="galleryNext" type="button" aria-label="${t('gallery.next')}">›</button>
  </div>
- <div class="venue-note" style="margin-top:35px">${t('gallery.hero.lede')}</div></div>${infoEditorial()}</section>`
+ <div class="venue-note" style="margin-top:35px">${t('gallery.hero.lede')}</div></div>${galleryClosingCta()}${photoPartnerCredit()}</section>`
 }
 
 /* ---------- PARTNERSHIP – simple premium – cinematic sports ---------- */

@@ -71,7 +71,7 @@ function loadGallery(){
 /* ---------- filter pipeline ---------- */
 function filteredPhotos(){
   const q=gallerySearch.trim().toLowerCase();
-  return galleryPhotos.filter(p=>{           /* SELALU dari master collection */
+  const out=galleryPhotos.filter(p=>{           /* SELALU dari master collection */
     if(galleryCommunityFilter!=='All'&&String(p.community||'').toLowerCase()!==galleryCommunityFilter.toLowerCase())return false;
     if(galleryPhotographer&&(p.photographer||'')!==galleryPhotographer)return false;
     if(q){
@@ -81,6 +81,7 @@ function filteredPhotos(){
     }
     return true;
   });
+  return out;
 }
 function photographerOptions(){
   const seen=new Set();
@@ -117,10 +118,19 @@ const DL_ICON='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" strok
 /* reveal-on-scroll + tilt + lightbox + download — sekali bind per render */
 let galleryRevealIO=null;
 function bindGalleryGrid(grid){
-  grid.querySelectorAll('img[data-api-photo]').forEach(img=>{img.addEventListener('error',()=>{img.closest('.gallery-item').classList.add('img-failed');img.replaceWith(Object.assign(document.createElement('div'),{className:'gallery-fallback',textContent:'✳'}))})});
+  grid.querySelectorAll('img[data-api-photo]').forEach(img=>{
+    /* decoding async + partial loading: foto yang gagal → fallback per item,
+       foto lain tetap tampil (jangan kosongkan grid) */
+    img.decoding='async';
+    img.addEventListener('error',()=>{img.closest('.gallery-item').classList.add('img-failed');img.replaceWith(Object.assign(document.createElement('div'),{className:'gallery-fallback',textContent:'✳'}))});
+    /* FIX loading bug: pastikan reveal clip-path terbuka saat foto selesai dimuat —
+       mengatasi race IO threshold vs layout (foto "hilang" sampai refresh) */
+    if(img.complete&&img.naturalWidth>0)img.closest('.gallery-item').classList.add('in');
+    else img.addEventListener('load',()=>{img.closest('.gallery-item')?.classList.add('in');},{once:true});
+  });
   /* image reveal on scroll */
   if(!galleryRevealIO){
-    galleryRevealIO=('IntersectionObserver' in window)?new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');galleryRevealIO.unobserve(en.target)}})},{threshold:.1}):null;
+    galleryRevealIO=('IntersectionObserver' in window)?new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');galleryRevealIO.unobserve(en.target)}})},{threshold:.01,rootMargin:'120px 0px'}):null;
   }
   grid.querySelectorAll('.gallery-item').forEach(el=>{
     if(!galleryRevealIO)el.classList.add('in');
@@ -159,11 +169,12 @@ const HL_CATS=[
  {key:'deli', label:['Tobadeli'], comms:['tobadeli'], fallback:'assets/img/web/toba-060.jpg'},
  {key:'ladies',label:['Tobaladies'], comms:['tobaladies'], fallback:'assets/img/web/toba-052.jpg'},
  {key:'events',label:['Events'], comms:['all'], fallback:'assets/img/web/toba-026.jpg'},
- {key:'community',label:['Community'], comms:['all'], fallback:'assets/img/web/toba-045.jpg'}
+ {key:'community',label:['Community'], comms:['all'], fallback:'assets/img/web/toba-047.jpg'} /* toba-045 diganti: terrotasi 90° (Prompt 19) */
 ];
-let hlActive=2; /* Tobaladies default */
+let hlActive=-1; /* default: belum ada foto aktif — semua grayscale */
 let hlBound=false;
-function hlPickPhoto(cat,idx,used){
+let hlInteracted=false; /* Prompt 16: sinkronisasi snap hanya setelah interaksi nyata */
+function hlPickPhoto(cat,used){
   /* 1) foto asli dari kategori terkait (urutan arsip), 2) foto lain yang belum terpakai,
      3) fallback lokal yang valid — dipilih sekali, tidak diacak tiap render. */
   const cands=cat.comms.map(c=>c==='all'?galleryPhotos:galleryPhotos.filter(p=>String(p.community||'').toLowerCase()===c)).flat();
@@ -182,8 +193,8 @@ function renderGalleryHero(){
   if(galleryState!=='ok'||!galleryPhotos.length)return; /* tunggu data */
   const used=new Set();
   const panels=HL_CATS.map((cat,i)=>{
-    const ph=hlPickPhoto(cat,i,used);
-    return `<figure class="hl-panel${i===hlActive?' active':''}" data-cat="${cat.key}" data-idx="${i}" role="option" tabindex="0" aria-selected="${i===hlActive}" aria-label="${cat.label[0]}">
+    const ph=hlPickPhoto(cat,used);
+    return `<figure class="hl-panel" data-cat="${cat.key}" data-idx="${i}" role="option" tabindex="0" aria-selected="false" aria-label="${cat.label[0]}" style="--panel-accent:${HL_ACCENTS[i]||'#E8722A'}">
       <img src="${ph.url}" alt="${ph.alt}" loading="lazy" ${ph.isApi?'data-api-photo':''}>
       <figcaption class="hl-label"><span>${cat.label[0]}</span></figcaption>
     </figure>`;
@@ -194,89 +205,136 @@ function renderGalleryHero(){
     img.addEventListener('error',()=>{const p=img.closest('.hl-panel');const cat=HL_CATS[Number(p.dataset.idx)];if(cat&&!img.dataset.fbdone){img.dataset.fbdone='1';img.src=cat.fallback;}});
   });
   bindHlPanels();
+  initHlMobile();
   carousel.classList.add('ready');
   hlBound=true;
-  requestAnimationFrame(()=>hlSetActive(hlActive)); /* posisi awal: aktif di tengah */
   renderGalleryFeatured();
 }
 function hlSetActive(i){
-  /* circular: wrap dari panel terakhir ke pertama & sebaliknya */
-  hlActive=((i % HL_CATS.length) + HL_CATS.length) % HL_CATS.length;
+  /* GALLAX-style: TANPA sliding/swapping — hanya status warna yang berpindah.
+     Panel aktif tetap full color walau mouse sudah keluar; posisi/ukuran/urutan
+     kelima panel TIDAK PERNAH berubah. */
   const carousel=document.getElementById('hlCarousel');
   if(!carousel)return;
-  const mid=Math.floor(HL_CATS.length/2); /* posisi tengah = index 2 */
+  hlActive=((i % HL_CATS.length) + HL_CATS.length) % HL_CATS.length;
   carousel.querySelectorAll('.hl-panel').forEach(el=>{
-    const idx=Number(el.dataset.idx);
-    const on=idx===hlActive;
+    const on=Number(el.dataset.idx)===hlActive;
     el.classList.toggle('active',on);
     el.setAttribute('aria-selected',String(on));
-    /* data-offset = jarak panel dari POSISI TENGAH track — mengatur tinggi/posisi
-    bertingkat mengikuti tempatnya di komposisi (kiri luar, kiri dalam, tengah, dst.) */
-    const slot=idx-hlActive+mid; /* posisi visual panel saat aktif ini di tengah */
-    const offset=slot-mid;       /* -2..+2 relatif tengah */
-    el.dataset.offset=String(Math.max(-2,Math.min(2,offset)));
   });
-  /* SELURUH TRACK BERGESER BERSAMA menuju panel aktif di tengah:
-  desktop = translateX track; mobile = scroll carousel native. */
-  const activeEl=carousel.querySelector('.hl-panel.active');
-  if(!activeEl)return;
-  if(window.innerWidth<=768){
-    const target=Math.max(0,activeEl.offsetLeft-(carousel.clientWidth-activeEl.offsetWidth)/2);
-    carousel.scrollTo({left:target,behavior:REDUCE_MQ.matches?'auto':'smooth'});
-  } else {
-    const track=carousel.querySelector('.hl-track');
-    if(!track)return;
-    const cRect=carousel.getBoundingClientRect();
-    const aRect=activeEl.getBoundingClientRect();
-    const currentCenter=aRect.left+aRect.width/2;
-    const desiredCenter=cRect.left+cRect.width/2;
-    const shift=desiredCenter-currentCenter;
-    /* akumulasi transform sebelumnya supaya selalu relatif terhadap posisi natural */
-    track.style.transform=shift?`translateX(${shift}px)`:'';
-  }
+}
+function hlClear(){
+  const carousel=document.getElementById('hlCarousel');
+  if(!carousel)return;
+  hlActive=-1;
+  carousel.querySelectorAll('.hl-panel').forEach(el=>{el.classList.remove('active');el.setAttribute('aria-selected','false');});
 }
 function bindHlPanels(){
   const carousel=document.getElementById('hlCarousel');
   if(!carousel)return;
-  const REDUCE=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const FINE=window.matchMedia('(pointer: fine)').matches;
   carousel.querySelectorAll('.hl-panel').forEach(el=>{
-    el.addEventListener('click',()=>{
-      const i=Number(el.dataset.idx);
-      if(i===hlActive){openHlCollection(i);return;} /* panel aktif diklik lagi → buka koleksi */
-      hlSetActive(i);
-    });
-    el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();
-      const i=Number(el.dataset.idx);
-      if(i===hlActive)openHlCollection(i);else hlSetActive(i);}});
-  });
-  /* panah kiri/kanan: geser satu panel (circular wrap), track bergeser bersama */
-  document.getElementById('hlPrev')?.addEventListener('click',()=>hlSetActive(hlActive-1));
-  document.getElementById('hlNext')?.addEventListener('click',()=>hlSetActive(hlActive+1));
-  /* navigasi via klik panel, panah & swipe mobile */
-  /* swipe mobile: track pointer untuk bedakan drag vs tap */
-  let sx=0,moved=false;
-  carousel.addEventListener('pointerdown',e=>{sx=e.clientX;moved=false;},{passive:true});
-  carousel.addEventListener('pointermove',e=>{if(Math.abs(e.clientX-sx)>12)moved=true;},{passive:true});
-  carousel.addEventListener('pointerup',()=>{if(moved&&!REDUCE)return;},{passive:true});
-  /* scroll snap mobile → sync active state */
-  carousel.addEventListener('scroll',()=>{
-    if(window.innerWidth>768)return;
-    let best=0,bestD=1e9;
-    carousel.querySelectorAll('.hl-panel').forEach(el=>{const d=Math.abs(el.offsetLeft-carousel.scrollLeft);if(d<bestD){bestD=d;best=Number(el.dataset.idx);}});
-    if(best!==hlActive){
-      hlActive=best;
-      carousel.querySelectorAll('.hl-panel').forEach(el=>el.classList.toggle('active',Number(el.dataset.idx)===hlActive));
+    const i=Number(el.dataset.idx);
+    if(FINE){
+      /* Desktop (Prompt 25): HOVER = satu-satunya pemicu aktivasi foto.
+         Klik TIDAK berfungsi apa pun — tidak navigasi, tidak ubah state,
+         tidak scroll (foto murni visual + pemicu hover). */
+      el.addEventListener('mouseenter',()=>{hlSetActive(i);heroStart(i);});
+      el.addEventListener('click',e=>e.preventDefault());
     }
-  },{passive:true});
-  /* keyboard global saat carousel focus */
-  carousel.addEventListener('keydown',e=>{
-    if(e.key==='ArrowLeft'){e.preventDefault();hlSetActive(hlActive-1);}
-    if(e.key==='ArrowRight'){e.preventDefault();hlSetActive(hlActive+1);}
+    el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();hlSetActive(i);heroStart(i);}});
   });
+  if(FINE){
+    /* kursor keluar dari seluruh showcase → semua foto grayscale;
+       sisa liquid terakhir tetap mengalir sampai habis (Prompt 7) */
+    carousel.addEventListener('mouseleave',()=>{hlClear();heroStop();});
+  }
 }
+/* ---------- interaksi warna headline hero gallery ----------
+  Prompt 12-18: mapping warna pemicu liquid per panel (TOBA tokens):
+  1. Weekly Fun Game → TOBA Orange
+  2. Tobadeli        → TOBA Dark Green
+  3. Tobaladies      → TOBA Pink
+  4. Events          → TOBA Dark Green
+  5. Community       → TOBA Orange */
+
+/* TOBA LIQUID COLOR PALETTE */
+const HL_ACCENTS = [
+  '#E8722A', // Weekly Fun Game - Orange
+  '#315A3B', // Tobadeli - Dark Green
+  '#D64D78', // Tobaladies - Pink
+  '#8064A8', // Events - Purple
+  '#D64D78'  // Community - Pink
+];
+
+let heroFlow = null;
+let heroFlowIdx = -1;
+
+
+function heroStart(i) {
+  if (REDUCE_MQ.matches) return;
+
+  const el = document.getElementById('galleryHeroTitle');
+  if (!el) return;
+
+  const span = el.querySelector('.gh-accent');
+  if (!span) return;
+
+  const color = HL_ACCENTS[i] || '#E8722A';
+
+  // Jika animasi sudah berjalan, cukup ganti warna.
+  // Jangan hapus atau buat ulang elemen karena posisi animasi harus tetap.
+  if (heroFlow && heroFlow.isConnected) {
+    heroFlow.style.setProperty('--flow-color', color);
+    heroFlowIdx = i;
+    return;
+  }
+
+  // Buat animasi hanya jika belum ada.
+  const flow = document.createElement('span');
+  flow.className = 'gh-flow';
+  flow.setAttribute('aria-hidden', 'true');
+  flow.textContent = span.textContent;
+
+  flow.style.setProperty('--flow-color', color);
+  flow.style.left = span.offsetLeft + 'px';
+  flow.style.top = span.offsetTop + 'px';
+  flow.style.width = span.offsetWidth + 'px';
+  flow.style.height = span.offsetHeight + 'px';
+  flow.style.font = getComputedStyle(span).font;
+
+  el.appendChild(flow);
+
+  heroFlow = flow;
+  heroFlowIdx = i;
+}
+
+function heroStop() {
+  if (!heroFlow || !heroFlow.isConnected) {
+    heroFlow = null;
+    heroFlowIdx = -1;
+    return;
+  }
+
+  const flow = heroFlow;
+
+  // Hentikan aliran baru, biarkan aliran terakhir turun.
+  flow.classList.add('gh-flow-drain');
+
+  flow.addEventListener('animationend', () => {
+    flow.remove();
+  }, { once: true });
+
+  heroFlow = null;
+  heroFlowIdx = -1;
+}
+
 const REDUCE_MQ=window.matchMedia('(prefers-reduced-motion: reduce)');
-/* panel aktif diklik → terapkan filter kategori pada gallery yang sudah ada */
-function openHlCollection(i){
+/* openHlCollection dihapus (Prompt 25): klik panel tidak lagi navigasi
+   atau mengubah state — panel murni visual + pemicu hover. */
+function openHlCollection_unused(i){
+  const FINE=window.matchMedia('(pointer: fine)').matches;
+  if(!FINE)return; /* mobile: tap hanya menjalankan interaksi panel — tanpa navigasi/scroll */
   const cat=HL_CATS[i];if(!cat)return;
   const target=document.getElementById('galleryFilters');
   if(!target){return;}
@@ -420,6 +478,13 @@ function renderGalleryUI(){
   const base=(galleryPage-1)*galleryPerPage;
   grid.innerHTML=slice.map((p,i)=>galleryCard(p,base+i)).join('');
   bindGalleryGrid(grid);
+  /* safety net anti-foto-hilang: item yang jatuh di viewport pertama
+     langsung di-reveal — tidak bergantung IO/timing sama sekali */
+  requestAnimationFrame(()=>{
+    grid.querySelectorAll('.gallery-item:not(.in)').forEach(el=>{
+      if(el.getBoundingClientRect().top<window.innerHeight*1.2)el.classList.add('in');
+    });
+  });
 
   /* pager */
   if(pager){
@@ -547,3 +612,52 @@ document.addEventListener('click',e=>{
   if(e.target.closest('#galleryNext')){galleryGoPage(galleryPage+1);return;}
   if(e.target.closest('#galleryPerPageWrap'))return; /* biarkan change yang menangani */
 });
+
+/* ---------- Prompt 16-18: kondisi awal netral & interaksi mobile ----------
+   Tidak ada panel aktif saat load: `hlActive=-1` (default). Liquid HANYA
+   berjalan setelah interaksi nyata (hover di desktop, tap di mobile).
+   Foto dipilih dari API TOBA yang sudah berjalan — tidak ada sistem kedua.
+   Panel adalah <figure> (bukan <a href>) dan TIDAK ada scrollIntoView/scrollTo
+   di interaksi panel — tap tidak pernah memindahkan posisi scroll halaman.
+
+   Mobile horizontal swipe (Prompt 18): native CSS scroll-snap di .hl-carousel
+   (overflow-x auto) — kelima panel bisa di-swipe tanpa JS gesture tambahan.
+   Scroll vertikal halaman tidak terganggu dan swipe TIDAK memicu liquid:
+   perubahan panel via swipe tidak memanggil heroAccent, hanya tap yang memicu. */
+/* sinkronisasi panel aktif saat swipe (tanpa memicu liquid — liquid hanya
+   dari tap/hover nyata) */
+function bindHlSnap(carousel){
+  if(!('IntersectionObserver' in window)||carousel.dataset.snapBound)return;
+  carousel.dataset.snapBound='1';
+  const io=new IntersectionObserver(entries=>{
+    /* Prompt 19: foto yang paling terlihat → otomatis jadi foto aktif
+       (liquid ikut berpindah ke warna kategori foto terbaru).
+       Callback PERTAMA setelah observe() diabaikan — hanya swipe nyata
+       (scroll position berubah setelah init) yang boleh mengubah aktif.
+       Ini mencegah foto aktif otomatis di desktop saat load. */
+    if(!carousel.dataset.swiped){
+      carousel.dataset.swiped='1';
+      return;
+    }
+    let best=null,bestRatio=0;
+    entries.forEach(en=>{
+      if(en.intersectionRatio>bestRatio){bestRatio=en.intersectionRatio;best=en.target;}
+    });
+    if(best&&bestRatio>0.55){
+      const i=Number(best.dataset.idx);
+      if(i!==hlActive){hlSetActive(i);heroStart(i);}
+    }
+  },{root:carousel,threshold:[0.55]});
+  carousel.querySelectorAll('.hl-panel').forEach(p=>io.observe(p));
+}
+function FINE_POINTER(){return window.matchMedia('(pointer: fine)').matches;}
+function initHlMobile(){
+  const carousel=document.getElementById('hlCarousel');
+  if(!carousel)return;
+  bindHlSnap(carousel);
+  /* Prompt 19: foto pertama otomatis aktif saat halaman dibuka (mobile) —
+     delay 1 frame agar observer tidak menimpanya dengan event threshold 0 */
+  if(!FINE_POINTER())requestAnimationFrame(()=>{
+    if(hlActive<0){hlSetActive(0);heroStart(0);}
+  });
+}

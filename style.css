@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    TOBA COMMUNITY ? PREMIUM EDITORIAL x CINEMATIC
    Design system: obsidian/deep-forest base (TOBA General),
    strong orange (Tobadeli), strong pink (Tobaladies).
@@ -5054,6 +5054,19 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
   font-size: clamp(1.9rem, 3.6vw, 3rem);
   max-width: 14ch;
   margin-bottom: 18px;
+  text-transform: uppercase;
+  line-height: 1.05;
+  color: var(--ink, #242522); /* charcoal */
+}
+
+/* aksen orange kecil: tanda hubung tipis di atas headline */
+.info-editorial .ie-lead h2::before {
+  content: '';
+  display: block;
+  width: 44px;
+  height: 3px;
+  background: var(--accent, #E8722A);
+  margin-bottom: 16px;
 }
 
 .info-editorial .ie-lead p {
@@ -5109,6 +5122,32 @@ body:not([data-page="home"]) .hero-court path { animation: obiDraw 1.6s var(--ea
 /* garis court samar di belakang blok fakta */
 .info-editorial .ie-facts {
   position: relative;
+}
+
+/* Prompt 10: Photography Partner — hanya deretan logo (gaya .hp-logos di
+   halaman Partnership), tanpa card/judul/CTA. Partner asli di array JS. */
+.photo-partner {
+  width: min(var(--container), calc(100% - 48px));
+  margin: 0 auto clamp(48px, 8vh, 88px);
+  border-top: 1px solid var(--line);
+  padding-top: clamp(26px, 4vh, 40px);
+}
+.pp-logos {
+  display: flex; align-items: center; flex-wrap: wrap;
+  gap: clamp(28px, 6vw, 72px);
+  justify-content: flex-start;
+}
+.pp-logos img {
+  height: clamp(40px, 5.4vw, 58px);
+  width: auto; max-width: min(260px, 60vw);
+  object-fit: contain;
+  display: block;
+}
+.pp-logos a { display: inline-flex; }
+.pp-logos a:hover img { opacity: .82; }
+@media (max-width: 640px) {
+  .pp-logos { justify-content: center; gap: clamp(24px, 8vw, 44px); }
+  .pp-logos img { height: clamp(36px, 9vw, 48px); }
 }
 
 @media (max-width: 900px) {
@@ -6499,6 +6538,25 @@ h3 { letter-spacing: -.015em }
 
 /* pastikan tidak ada rotate global pada foto dokumentasi */
 .photo-frame img {
+  image-orientation: from-image;
+}
+
+/* FIX orientasi EXIF (Prompt 3): semua foto dinamis dari Photo Admin/Drive
+   mengikuti metadata EXIF Orientation aslinya — portrait tetap portrait,
+   foto yang sudah diputar tidak kembali menyamping, tanpa rotasi ganda.
+   Berlaku untuk foto lama maupun baru, tanpa mengubah file aslinya. */
+.gallery-item img,
+.event-card img,
+.comm-photo img,
+.cine-g-card img,
+.cine-rbg-img,
+.hl-panel img,
+.gh-shot img,
+.comm-story-grid img,
+.two-col .photo-frame img,
+.gf-shot img,
+.product-art img,
+.mega-visual img {
   image-orientation: from-image;
 }
 
@@ -9469,65 +9527,150 @@ html[lang='en'] .hp-inner h1 {
 }
 
 
-/* =====================================================
-   FIVE INTERACTIVE GLASS HIGHLIGHT PANELS (GALLERY HERO)
-   Centered horizontal swap carousel — seluruh track
-   bergeser bersama menuju panel aktif di tengah.
-   Susunan: 2 panel samping kiri — 1 aktif besar — 2 samping kanan.
-   ===================================================== */
-.gallery-hero { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.2fr); gap: clamp(24px, 4vw, 60px); align-items: center; }
-.gallery-hero .gallery-hero-copy { max-width: 560px; }
 
+/* =====================================================
+   FIVE INTERACTIVE PHOTO PANELS (GALLERY HERO) — GALLAX STYLE
+   Lima panel foto vertikal menyatu: TANPA gap, TANPA rounded
+   corner, TANPA border. Ukuran identik. Grayscale → color on
+   hover/klik. Posisi & urutan kelima panel TIDAK PERNAH berubah.
+   ===================================================== */
+.gallery-hero { display: grid; grid-template-columns: 42% minmax(0, 1fr); gap: clamp(28px, 4.5vw, 72px); align-items: center; }
+.gallery-hero .gallery-hero-copy { max-width: 600px; }
+/* headline konsisten dengan Partnership/Merch: clamp sama, UPPERCASE, charcoal */
+.gallery-hero .gallery-hero-copy h1.gallery-hero-title {
+  font-size: clamp(2.4rem, 5.6vw, 4.4rem);
+  line-height: 1.02;
+  max-width: 14ch;
+  text-transform: uppercase;
+  color: var(--ink, #242522); /* charcoal/dark black default */
+  cursor: pointer;
+  position: relative; /* anchor untuk layer liquid .gh-flow */
+  -webkit-user-select: none; user-select: none;
+}
+/* Prompt 12-18: LIQUID POURING — cairan dituang dari atas headline, mengalir
+   turun melewati huruf, lalu jatuh & hilang di bawah. Teks DASAR selalu
+   charcoal: warna hanya terlihat pada layer .gh-flow (salinan teks aksen
+   yang di-clip ke glyph via background-clip:text). Setiap interaksi panel
+   membuat layer flow BARU yang independen — flow lama terus berjalan dan
+   bercampur secara natural, tidak ada yang di-reset, dan tidak ada warna
+   permanen tersisa di headline. */
+.gallery-hero .gallery-hero-copy h1.gallery-hero-title .gh-accent {
+  color: inherit; /* charcoal permanen — tidak pernah berubah warna */
+}
+.gh-flow {
+  position: absolute;
+  margin: 0;
+  white-space: pre-wrap;
+  pointer-events: none;
+  z-index: 1;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  /* Prompt 3-5: pita cairan pekat mengalir dari atas ke bawah — batas atas
+     dan bawah organik (tidak seragam) dengan sedikit variasi posisi pita
+     per layer (offset via --flow-phase), sehingga tidak terlihat seperti
+     gradient mekanis yang hanya bergeser. */
+  background-image: linear-gradient(180deg,
+    transparent 0%, transparent 14%,
+    rgba(255,255,255,0) 22%,
+    var(--flow-color, #E8722A) 38%,
+    var(--flow-color, #E8722A) 66%,
+    color-mix(in srgb, var(--flow-color, #E8722A) 55%, transparent) 80%,
+    transparent 94%, transparent 100%);
+  background-size: 100% 300%;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  opacity: .98; /* pekat & jelas, bukan pucat */
+  animation-name: ghBandFlow;
+  animation-duration: 7s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
+}
+/* variasi fase organik: tiap layer mulai dari posisi pita sedikit berbeda.
+   CATATAN: layer drain JANGAN delay — drain harus mulai dari posisi teratas
+   seolah aliran baru berhenti tepat saat pita kembali di atas. */
+.gh-flow:not(.gh-flow-drain):nth-of-type(2n) { animation-delay: -.35s; }
+.gh-flow:not(.gh-flow-drain):nth-of-type(3n) { animation-delay: -.7s; }
+/* drain (Prompt 7): keran ditutup — satu putaran terakhir sampai bawah,
+   lalu menipis & menghilang secara natural (jeda tetesan terakhir) */
+.gh-flow.gh-flow-drain {
+  animation: ghBandDrain var(--flow-dur, 12s) linear forwards;
+}
+@keyframes ghBandFlow {
+  from {
+    background-position: 0 0%;
+  }
+  to {
+    background-position: 0 100%;
+  }
+}
+@keyframes ghBandDrain {
+  0% {
+    background-position: 0 -8%;
+    opacity: .98;
+  }
+
+  75% {
+    opacity: .98;
+  }
+
+  100% {
+    background-position: 0 108%;
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gh-flow { display: none; }
+}
+.gallery-hero .gallery-hero-copy .hero-subtitle { max-width: 52ch; margin-top: clamp(14px, 2vw, 22px); }
+
+/* GALLAX-style statis: showcase tetap di dalam container — semua foto terlihat,
+   tidak ada overflow viewport di sisi mana pun */
+.hl-arrows { display: none !important; }
 .hl-wrap {
   min-width: 0;
   position: relative;
   z-index: 2;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
+.hl-arrows { display: contents; } /* desktop: kiri & kanan carousel */
+.hl-arrow-l { order: -1; }
+.hl-arrow-r { order: 3; }
 
 /* ===== carousel viewport ===== */
 .hl-carousel {
   position: relative;
   flex: 1;
   min-width: 0;
-  height: clamp(340px, 40vw, 540px);
-  overflow: hidden;             /* track digeser via transform */
+  height: auto; /* tinggi mengikuti tinggi panel — tanpa ruang kosong berlebih */
+  overflow: visible;
   border-radius: 24px;
 }
-/* track: seluruh panel bergerak bersama via translateX (smooth swap) */
+/* ===== track: lima panel berdempetan langsung (tanpa gap) ===== */
 .hl-track {
   display: flex;
-  align-items: flex-end;
-  gap: clamp(10px, 1.2vw, 18px);
+  align-items: center; /* showcase rata tengah vertikal dalam kolomnya */
+  gap: 0;
   height: 100%;
-  transition: transform .65s cubic-bezier(.33,1,.4,1);
-  will-change: transform;
 }
 
-/* ===== panel: tegak lurus, rasio samping ≈ 1 : 1.6 (aktif) ===== */
+/* ===== panel: ukuran SERAGAM, menyatu, TINGGI memanjang ke atas ===== */
 .hl-panel {
   position: relative;
   margin: 0;
-  flex: 0 0 clamp(140px, 15.5vw, 220px);
-  height: 86%;
-  border-radius: 20px;
+  flex: 0 0 20%; /* kelima panel IDENTIK, semua terlihat */
+  height: clamp(420px, 34vw, 500px); /* tinggi galeri desktop 420–500px, rasio ±1:2.8 */
+  width: auto;
+  border-radius: 0;      /* tanpa rounded corner */
   overflow: hidden;
   background: rgba(255, 255, 255, .34);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border: 1px solid rgba(255, 255, 255, .55);
-  box-shadow: 0 12px 30px rgba(15, 40, 25, .12);
+  border: none;          /* tanpa border putih */
+  box-shadow: none;
   cursor: pointer;
-  transition:
-    flex-basis .65s cubic-bezier(.33,1,.4,1),
-    height .65s cubic-bezier(.33,1,.4,1),
-    filter .55s ease,
-    box-shadow .55s ease,
-    border-color .55s ease,
-    opacity .55s ease,
-    transform .65s cubic-bezier(.33,1,.4,1);
+  transition: filter .5s ease;
   outline: none;
   display: flex;
   align-items: flex-end;
@@ -9536,9 +9679,9 @@ html[lang='en'] .hp-inner h1 {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
   object-fit: cover;
-  object-position: center 30%;   /* crop menjaga wajah/subjek tetap terlihat */
-  filter: grayscale(1) brightness(.92);
-  transition: filter .55s ease;
+  object-position: center 30%;   /* wajah/subjek tetap terlihat; orientasi asli */
+  filter: grayscale(1) brightness(.93);
+  transition: filter .5s ease;
 }
 .hl-panel .hl-label {
   position: relative;
@@ -9552,39 +9695,41 @@ html[lang='en'] .hp-inner h1 {
   line-height: 1.25;
   letter-spacing: .01em;
   text-shadow: 0 1px 6px rgba(8, 13, 9, .5);
-  opacity: .88;
-  transition: opacity .45s ease, font-size .55s ease;
+  opacity: .9;
+  transition: opacity .45s ease;
   pointer-events: none;
 }
 
-/* ===== komposisi bertingkat (tegal lurus, tanpa rotasi) =====
-   berdasarkan jarak panel dari posisi aktif di tengah (data-offset) */
-.hl-panel[data-offset="-2"] { height: 78%; transform: translateY(14px); opacity: .9; }
-.hl-panel[data-offset="-1"] { height: 88%; transform: translateY(2px);  opacity: .95; }
-.hl-panel[data-offset="0"]  { /* aktif */ }
-.hl-panel[data-offset="1"]  { height: 88%; transform: translateY(2px);  opacity: .95; }
-.hl-panel[data-offset="2"]  { height: 78%; transform: translateY(14px); opacity: .9; }
-.hl-panel:not(.active) { z-index: 0; }
-.hl-panel:not(.active):hover img { filter: grayscale(1) brightness(1); }
-.hl-panel:focus-visible { border-color: var(--accent, #2E7D46); box-shadow: 0 12px 30px rgba(15, 40, 25, .14), 0 0 0 3px rgba(46, 125, 70, .3); }
+/* ===== hover nonaktif: hanya warna yang berubah (tanpa border/shadow) =====
+   (hover:none): rule hover dimatikan di perangkat touch — mencegah sticky
+   hover membuat dua foto berwarna bersamaan setelah tap. */
+@media (hover: hover) {
+  .hl-panel:not(.active):hover img {
+    filter: grayscale(0) brightness(1.06) contrast(1.05);
+  }
+}
+.hl-panel:not(.active):focus-visible img {
+  filter: grayscale(0) brightness(1.06) contrast(1.05);
+}
+.hl-panel:focus-visible { outline: 2px solid var(--accent, #2E7D46); outline-offset: -2px; }
 
-/* ===== active: paling tinggi, dominan, full color, terangkat ===== */
+/* GALLAX-style: TANPA komposisi bertingkat / pergeseran — kelima panel
+   selalu rata, ukuran identik, posisi tetap. data-offset tidak dipakai lagi. */
+.hl-panel { transform: none; }
+
+/* ===== active (diklik): full color ASLI foto, UKURAN & POSISI TIDAK BERUBAH =====
+   Prompt 12-18: TIDAK ADA tint/overlay warna — foto selalu warna asli sesuai
+   sumber aset. Efek warna hanya pada teks headline (layer .gh-flow). */
 .hl-panel.active {
-  flex-basis: clamp(210px, 24vw, 340px); /* ≈1.6x panel samping */
-  height: 100%;
   opacity: 1;
-  transform: translateY(-10px);
-  border-color: rgba(255, 255, 255, .9);
-  box-shadow: 0 30px 64px rgba(15, 40, 25, .24), 0 6px 18px rgba(15, 40, 25, .12);
   z-index: 2;
 }
-.hl-panel.active img { filter: none; object-position: center; }
-.hl-panel.active .hl-label { opacity: 1; font-size: 14px; }
-
-/* hover lift halus panel nonaktif (motion-safe) */
-@media (prefers-reduced-motion: no-preference) {
-  .hl-panel:not(.active):hover { transform: translateY(-3px); }
+.hl-panel.active img {
+  filter: none;
 }
+.hl-panel.active .hl-label { opacity: 1; }
+
+/* hover HANYA mengubah warna — tidak ada lift, resize, atau border */
 
 /* ===== panah navigasi glass kiri & kanan di sisi showcase ===== */
 .hl-arrow {
@@ -9607,44 +9752,191 @@ html[lang='en'] .hp-inner h1 {
 .hl-arrow:hover { background: rgba(255, 255, 255, .85); transform: translateY(-2px); box-shadow: 0 10px 22px rgba(15, 40, 25, .16); }
 .hl-arrow:active { transform: translateY(0); }
 .hl-arrow:focus-visible { outline: 2px solid var(--accent, #2E7D46); outline-offset: 2px; }
-.hl-arrow-l { margin-left: 2px; }
-.hl-arrow-r { margin-right: 2px; }
 
 /* ---------- DESKTOP (≥769px): transform track, tanpa scroll ---------- */
 @media (min-width: 769px) {
-  .hl-carousel { overflow: hidden; }
+  .hl-carousel { overflow: visible; }
 }
 
-/* ---------- MOBILE & TABLET (≤768px): full-width swipe carousel ---------- */
+/* mobile: panah dipindah ke bawah showcase, mudah disentuh */
 @media (max-width: 768px) {
+  .hl-arrows { display: none !important; }
+
   .gallery-hero { grid-template-columns: 1fr; gap: clamp(16px, 4vw, 26px); }
   .gallery-hero { min-height: 0 !important; padding-bottom: 0 !important; }
   .gallery-hero-blur { padding-bottom: 12px; }
   .gallery-hero .gallery-hero-copy { max-width: 100%; }
-  .hl-wrap { order: 2; margin: 0 calc(50% - 50vw); gap: 6px; }
-  /* mobile: swipe via scroll natif; panah disembunyikan agar swipe jelas */
-  .hl-arrow { display: none; }
-  .hl-carousel {
-    height: clamp(300px, 72vw, 430px);
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    padding: 0 4vw 14px;
-    border-radius: 0;
-  }
-  .hl-track { transform: none !important; transition: none; }
-  .hl-panel { flex: 0 0 min(74vw, 320px); height: 86%; scroll-snap-align: center; }
-  .hl-panel[data-offset="-2"], .hl-panel[data-offset="2"] { height: 79%; transform: translateY(6px); }
-  .hl-panel[data-offset="-1"], .hl-panel[data-offset="1"] { height: 84%; transform: translateY(1px); }
-  .hl-panel.active { flex: 0 0 min(86vw, 360px); height: 96%; transform: translateY(-5px); }
+  .hl-wrap { order: 2; display: block; margin: 0; }
+  .hl-carousel { height: auto; }
+  /* mobile: 5 panel berdempetan penuh memakai seluruh lebar layar,
+     memanjang ke bawah (45–60vh), tanpa scroll & tanpa rounded corner */
+  .hl-track { gap: 0; }
+  .hl-panel, .hl-panel.active { height: clamp(280px, 52vh, 480px); }
+  .hl-panel { flex: 1 1 0; min-width: 0; border-radius: 0; }
+  /* mobile: SEMUA panel ukuran sama — panel aktif tetap sebesar panel lain,
+     hanya warna yang berbeda (tap = aktifkan warna) */
+  .hl-panel.active { flex: 1 1 0; }
+  .hl-panel .hl-label { padding: 34px 7px 9px; font-size: 9.5px; }
+  .hl-panel.active .hl-label { font-size: 12px; padding: 40px 10px 11px; }
   .gallery-shell .section-wrap { padding-top: clamp(22px, 5vw, 34px) !important; }
 }
 @media (max-width: 400px) {
-  .hl-carousel { height: min(84vw, 380px); }
-  .hl-panel { flex-basis: 80vw; }
-  .hl-panel.active { flex-basis: 90vw; }
+  .hl-panel .hl-label { font-size: 8.5px; padding: 30px 5px 8px; }
+  .hl-panel.active .hl-label { font-size: 11px; padding: 36px 8px 10px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .hl-panel, .hl-panel img, .hl-track, .hl-arrow { transition: none; }
+}
+
+
+/* ==========================================
+   MOBILE GALLERY — KELIMA PANEL
+   HORIZONTAL SWIPE (native scroll + snap)
+   Weekly Fun Game | Tobadeli | Tobaladies |
+   Events | Community
+   ========================================== */
+
+@media (max-width: 768px) {
+
+  /* Perlebar showcase hingga memenuhi viewport */
+  .gallery-hero .hl-wrap {
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  /* Prompt 18: KELIMA panel dapat dilihat lewat horizontal swipe.
+     Native horizontal scroll + scroll-snap: ringan, tanpa JS gesture,
+     scroll vertikal halaman tidak terganggu (touch-action: pan-y pan-x). */
+  .hl-carousel {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    border-radius: 0;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .hl-carousel::-webkit-scrollbar { display: none; }
+
+  .hl-track {
+    display: flex;
+    gap: 0;
+    width: max-content;
+  }
+
+  /* kelima panel menyusun horizontal, lebar identik ±78% viewport */
+  .hl-track > .hl-panel {
+    flex: 0 0 78%;
+    width: 78%;
+    min-width: 0;
+    height: clamp(280px, 52vh, 480px);
+    border-radius: 0;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+  }
+
+  /* panel aktif tidak boleh membesar */
+  .hl-track > .hl-panel.active {
+    flex: 0 0 78%;
+  }
+
+  /* petunjuk visual halus: panel samping memudar di tepi viewport */
+  .hl-carousel {
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
+  }
+
+  /* swipe horizontal HANYA di track — scroll vertikal halaman tetap normal */
+  .hl-track {
+    touch-action: pan-y pan-x;
+  }
+
+}
+
+
+/* DESKTOP — GALLERY SAFE WIDTH */
+
+@media (min-width: 769px) {
+
+  .gallery-hero-blur > .section-wrap.wide {
+    width: min(1680px, calc(100% - 96px));
+    margin-inline: auto;
+  }
+
+  .gallery-hero {
+    width: 100%;
+    max-width: 100%;
+    margin-inline: 0;
+    grid-template-columns: 36% minmax(0, 1fr);
+    gap: clamp(28px, 3vw, 52px);
+  }
+
+}
+
+/* GALLERY DESKTOP — SAFE CONTAINER */
+@media (min-width: 769px) {
+  .gallery-hero-blur > .gallery-hero.section-wrap {
+    width: min(1680px, calc(100% - 96px));
+    max-width: 1680px;
+    margin-inline: auto;
+    box-sizing: border-box;
+  }
+
+  .gallery-hero {
+    width: 100%;
+    max-width: 100%;
+    margin-inline: 0;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: clamp(28px, 3vw, 52px);
+  }
+
+  .gallery-hero-copy {
+    min-width: 0;
+  }
+
+  .hl-wrap {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .hl-carousel {
+    min-width: 0;
+    overflow: hidden;
+  }
+}
+
+/* ==========================================
+   Prompt 9: GALLERY CLOSING CTA — singkat & ekspresif
+   ========================================== */
+.gallery-cta {
+  width: min(var(--container), calc(100% - 48px));
+  margin: clamp(56px, 9vh, 110px) auto clamp(48px, 8vh, 88px);
+  padding-top: clamp(32px, 5vh, 56px);
+  border-top: 1px solid var(--line);
+}
+.gallery-cta .eyebrow { color: var(--accent-orange, #E8722A); }
+.gallery-cta-h {
+  font-size: clamp(2.4rem, 5.6vw, 4.4rem);
+  line-height: 1.02;
+  max-width: 16ch;
+  text-transform: uppercase;
+  color: var(--ink, #242522);
+  margin: 12px 0 0;
+  letter-spacing: -.03em;
+}
+.gallery-cta-p {
+  font-size: 16.5px;
+  color: #454A40;
+  max-width: 46ch;
+  line-height: 1.7;
+  margin: 18px 0 0;
+}
+@media (max-width: 640px) {
+  .gallery-cta { text-align: left; }
+  .gallery-cta-h { font-size: clamp(2rem, 9vw, 2.8rem); }
 }
